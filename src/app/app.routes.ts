@@ -12,13 +12,16 @@ import { ScheduleComponent } from './backoffice/tutor-view/schedule/schedule.com
 import { RoleGuard } from './guards/role.guard';
 import { EventsComponent } from './backoffice/admin-view/events/events.component';
 import { ClubsComponent } from './backoffice/admin-view/clubs/clubs.component';
+import { CourseListComponent } from './courses/course-list/course-list.component';
 import { ClassesComponent } from './backoffice/admin-view/classes/classes.component';
 import { PhysicalspaceComponent } from './backoffice/admin-view/physicalspace/physicalspace.component';
 export const routes: Routes = [
   { path: 'login', component: StudentLoginComponent },
   { path: 'signup', component: SignupComponent },
   { path: 'home', component: HomeComponent },
+  { path: 'courses', component: CourseListComponent },
   { path: '', redirectTo: '/home', pathMatch: 'full' },
+  
   { 
     path: 'backoffice', 
     component: BackofficeComponent,
