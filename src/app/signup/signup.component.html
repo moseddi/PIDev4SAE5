@@ -1,0 +1,193 @@
+<div class="signup-container">
+  <div class="signup-card">
+    <!-- Left side with branding -->
+    <div class="signup-branding">
+      <div class="brand-content">
+        <div class="brand-logo">WSE</div>
+        <h1>Join</h1>
+        <h2>Wall Street English</h2>
+        <div class="brand-message">
+          <p>Start your English journey today</p>
+          <div class="feature-list">
+            <div class="feature-item">
+              <i class="bi bi-check-circle-fill"></i>
+              <span>Personalized learning</span>
+            </div>
+            <div class="feature-item">
+              <i class="bi bi-check-circle-fill"></i>
+              <span>Expert teachers</span>
+            </div>
+            <div class="feature-item">
+              <i class="bi bi-check-circle-fill"></i>
+              <span>Flexible schedule</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right side with signup form -->
+    <div class="signup-form">
+      <div class="form-content">
+        <h3>Create Account</h3>
+        <p class="form-subtitle">Fill in your information to get started</p>
+        
+        <form #signupForm="ngForm" (ngSubmit)="onSubmit()">
+          <!-- Email -->
+          <div class="form-group">
+            <label for="email">Email <span class="required">*</span></label>
+            <input 
+              type="email" 
+              id="email" 
+              name="email"
+              class="form-control" 
+              placeholder="Enter your email"
+              [(ngModel)]="signupData.email"
+              required
+              email
+              #email="ngModel"
+            >
+            <div class="error-message" *ngIf="email.invalid && email.touched">
+              <span *ngIf="email.errors?.['required']">Email is required</span>
+              <span *ngIf="email.errors?.['email']">Please enter a valid email</span>
+            </div>
+          </div>
+
+          <!-- First Name -->
+          <div class="form-group">
+            <label for="firstName">First Name <span class="required">*</span></label>
+            <input 
+              type="text" 
+              id="firstName" 
+              name="firstName"
+              class="form-control" 
+              placeholder="Enter your first name"
+              [(ngModel)]="signupData.firstName"
+              required
+              #firstName="ngModel"
+            >
+            <div class="error-message" *ngIf="firstName.invalid && firstName.touched">
+              First name is required
+            </div>
+          </div>
+
+          <!-- Last Name (Optional) -->
+          <div class="form-group">
+            <label for="lastName">Last Name</label>
+            <input 
+              type="text" 
+              id="lastName" 
+              name="lastName"
+              class="form-control" 
+              placeholder="Enter your last name (optional)"
+              [(ngModel)]="signupData.lastName"
+              #lastName="ngModel"
+            >
+          </div>
+
+          <!-- Phone Number (Optional) -->
+          <div class="form-group">
+            <label for="phoneNumber">Phone Number</label>
+            <input 
+              type="tel" 
+              id="phoneNumber" 
+              name="phoneNumber"
+              class="form-control" 
+              placeholder="Enter your phone number (optional)"
+              [(ngModel)]="signupData.phoneNumber"
+              #phoneNumber="ngModel"
+            >
+          </div>
+
+          <!-- Password -->
+          <div class="form-group">
+            <label for="password">Password <span class="required">*</span></label>
+            <input 
+              type="password" 
+              id="password" 
+              name="password"
+              class="form-control" 
+              placeholder="Create a password"
+              [(ngModel)]="signupData.password"
+              required
+              minlength="6"
+              #password="ngModel"
+            >
+            <div class="error-message" *ngIf="password.invalid && password.touched">
+              <span *ngIf="password.errors?.['required']">Password is required</span>
+              <span *ngIf="password.errors?.['minlength']">Password must be at least 6 characters</span>
+            </div>
+          </div>
+
+          <!-- Confirm Password -->
+          <div class="form-group">
+            <label for="confirmPassword">Confirm Password <span class="required">*</span></label>
+            <input 
+              type="password" 
+              id="confirmPassword" 
+              name="confirmPassword"
+              class="form-control" 
+              placeholder="Confirm your password"
+              [(ngModel)]="signupData.confirmPassword"
+              required
+              #confirmPassword="ngModel"
+            >
+            <div class="error-message" *ngIf="signupData.password !== signupData.confirmPassword && confirmPassword.touched">
+              Passwords do not match
+            </div>
+          </div>
+
+          <!-- Terms Checkbox -->
+          <div class="terms-checkbox">
+            <input type="checkbox" id="terms" name="acceptTerms" [(ngModel)]="acceptTerms" required #terms="ngModel">
+            <label for="terms">
+              I agree to the <a href="javascript:void(0)">Terms of Service</a> and 
+              <a href="javascript:void(0)">Privacy Policy</a> <span class="required">*</span>
+            </label>
+          </div>
+          <div class="error-message" *ngIf="terms.invalid && terms.touched">
+            You must accept the terms
+          </div>
+
+          <!-- Submit Button -->
+          <button type="submit" class="btn-signup" [disabled]="signupForm.invalid || isLoading">
+            <span *ngIf="!isLoading">Create Account</span>
+            <span *ngIf="isLoading" class="spinner"></span>
+          </button>
+
+          <!-- Social Login -->
+          <div class="social-login">
+            <p class="social-text">Or sign up with</p>
+            <div class="social-buttons">
+              <button type="button" class="social-btn google-btn" (click)="socialSignup('google')">
+                <i class="bi bi-google"></i>
+                <span>Google</span>
+              </button>
+              <button type="button" class="social-btn facebook-btn" (click)="socialSignup('facebook')">
+                <i class="bi bi-facebook"></i>
+                <span>Facebook</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Login Link -->
+          <div class="login-link">
+            <p>Already have an account? <a routerLink="/login">Sign in</a></p>
+          </div>
+        </form>
+
+        <!-- Success Message -->
+        <div class="success-message" *ngIf="signupSuccess">
+          <i class="bi bi-check-circle-fill"></i>
+          <p>Account created successfully! Redirecting to login...</p>
+        </div>
+
+        <!-- Error Message -->
+        <div class="error-alert" *ngIf="errorMessage">
+          <i class="bi bi-exclamation-triangle-fill"></i>
+          <p>{{ errorMessage }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
