@@ -1,6 +1,6 @@
-import { Component, HostListener, OnInit } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 
 @Component({
@@ -13,28 +13,24 @@ import { AuthService } from '../services/auth.service';
 export class HomeComponent implements OnInit {
   isNavbarScrolled = false;
   isLoggedIn = false;
-  userRole: string = '';
-  canAccessBackoffice = false;
+  userRole = '';
+  canAccessBackoffice = true; // 👈 CHANGE THIS TO TRUE (was false)
 
   constructor(private authService: AuthService) {}
 
   ngOnInit() {
-    this.isLoggedIn = this.authService.isLoggedIn();
+    // You can keep this for other functionality, but backoffice is now always visible
     const user = this.authService.getUser();
+    this.isLoggedIn = !!user;
     this.userRole = user?.role || '';
     
-    // Check if user can access backoffice (ADMIN or TUTOR)
-    this.canAccessBackoffice = this.isLoggedIn && 
-      (this.userRole === 'ADMIN' || this.userRole === 'TUTOR');
-  }
-
-  @HostListener('window:scroll')
-  onWindowScroll() {
-    this.isNavbarScrolled = window.scrollY > 50;
+    // This line is no longer needed since we set canAccessBackoffice = true above
+    // this.canAccessBackoffice = this.userRole === 'ADMIN' || this.userRole === 'TUTOR';
   }
 
   logout() {
     this.authService.logout();
-    window.location.reload(); // Simple reload to update UI
+    this.isLoggedIn = false;
+    this.userRole = '';
   }
 }

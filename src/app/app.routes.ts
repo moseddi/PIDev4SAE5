@@ -10,9 +10,13 @@ import { StatsComponent } from './backoffice/admin-view/stats/stats.component';
 import { MyStudentsComponent } from './backoffice/tutor-view/my-students/my-students.component';
 import { ScheduleComponent } from './backoffice/tutor-view/schedule/schedule.component';
 import { RoleGuard } from './guards/role.guard';
+import { EventsComponent } from './backoffice/admin-view/events/events.component';
+import { ClubsComponent } from './backoffice/admin-view/clubs/clubs.component';
+import { ClassesComponent } from './backoffice/admin-view/classes/classes.component';
+import { PhysicalspaceComponent } from './backoffice/admin-view/physicalspace/physicalspace.component';
 export const routes: Routes = [
   { path: 'login', component: StudentLoginComponent },
-   { path: 'signup', component: SignupComponent },
+  { path: 'signup', component: SignupComponent },
   { path: 'home', component: HomeComponent },
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   { 
@@ -21,6 +25,14 @@ export const routes: Routes = [
     canActivate: [RoleGuard],
     data: { roles: ['ADMIN', 'TUTOR'] }, // Only ADMIN and TUTOR can access
     children: [
+      // Default route - This needs to be fixed
+      { 
+        path: '', 
+        component: AdminViewComponent, // 👈 CHANGE THIS - can't redirect to child with different guard
+        canActivate: [RoleGuard],
+        data: { roles: ['ADMIN', 'TUTOR'] }
+      },
+      
       // Admin only routes
       { 
         path: 'admin', 
@@ -60,9 +72,32 @@ export const routes: Routes = [
         canActivate: [RoleGuard],
         data: { roles: ['TUTOR'] }
       },
-      
-      // Default redirect based on role will be handled in component
-      { path: '', redirectTo: 'admin', pathMatch: 'full' }
+       { 
+        path: 'admin/events', 
+        component: EventsComponent,
+        canActivate: [RoleGuard],
+        data: { roles: ['ADMIN'] }
+      },
+      { 
+        path: 'admin/clubs', 
+        component: ClubsComponent,
+        canActivate: [RoleGuard],
+        data: { roles: ['ADMIN'] }
+      },
+       { 
+        path: 'admin/classes', 
+        component: ClassesComponent,
+        canActivate: [RoleGuard],
+        data: { roles: ['ADMIN'] }
+      },
+      { 
+        path: 'admin/physicalspace', 
+        component: PhysicalspaceComponent,
+        canActivate: [RoleGuard],
+        data: { roles: ['ADMIN'] }
+      },
+     
+       
     ]
   }
 ];

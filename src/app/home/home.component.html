@@ -6,12 +6,6 @@
       <div class="nav-logo">WSE</div>
       <span>Wall Street English</span>
     </a>
-    <li class="nav-item nav-item-wrapper">
-  <a class="nav-link nav-main-link" routerLink="/backoffice">
-    <i class="bi bi-speedometer2"></i>
-    Backoffice (Test)
-  </a>
-</li>
 
     <!-- Mobile Toggle -->
     <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#dynamicNavbar">
@@ -21,6 +15,14 @@
     <!-- Main Navigation -->
     <div class="collapse navbar-collapse" id="dynamicNavbar">
       <ul class="navbar-nav mx-auto">
+        <!-- Backoffice Link - Only visible to ADMIN and TUTOR (moved inside main ul) -->
+        <li class="nav-item nav-item-wrapper" *ngIf="canAccessBackoffice">
+          <a class="nav-link nav-main-link" routerLink="/backoffice">
+            <i class="bi bi-speedometer2"></i>
+            Dashboard
+          </a>
+        </li>
+        
         <!-- Courses Mega Menu -->
         <li class="nav-item nav-item-wrapper mega-menu">
           <a class="nav-link nav-main-link active" href="javascript:void(0)">
@@ -99,40 +101,33 @@
         </li>
       </ul>
 
-      <!-- Right Side Actions -->
+      <!-- Right Side Actions (single consolidated version) -->
       <div class="nav-actions">
-        <button class="login-icon-btn" title="Student Login">
-          <i class="bi bi-box-arrow-in-right"></i>
-        </button>
-        <button class="btn simple-login-btn full-text">
-          <i class="bi bi-box-arrow-in-right"></i>
-          Student Login
-        </button>
+        <!-- Show user info when logged in -->
+        <div *ngIf="isLoggedIn" class="d-flex align-items-center gap-2">
+          <span class="text-muted">
+            <i class="bi bi-person-circle"></i>
+            {{ userRole }}
+          </span>
+          <button class="btn btn-sm btn-outline-danger" (click)="logout()">
+            Logout
+          </button>
+        </div>
+        
+        <!-- Show login buttons when not logged in -->
+        <div *ngIf="!isLoggedIn">
+          <button class="login-icon-btn" title="Student Login">
+            <i class="bi bi-box-arrow-in-right"></i>
+          </button>
+          <button class="btn simple-login-btn full-text">
+            <i class="bi bi-box-arrow-in-right"></i>
+            Student Login
+          </button>
+        </div>
       </div>
     </div>
   </div>
 </nav>
-<!-- Backoffice Link - Only visible to ADMIN and TUTOR -->
-  <li class="nav-item nav-item-wrapper" *ngIf="canAccessBackoffice">
-    <a class="nav-link nav-main-link" routerLink="/backoffice">
-      <i class="bi bi-speedometer2"></i>
-      Dashboard
-    </a>
-  </li>
-</ul>
-
-<!-- Right Side Actions -->
-<div class="nav-actions">
-  <!-- Show user info when logged in -->
-  <div *ngIf="isLoggedIn" class="d-flex align-items-center gap-2">
-    <span class="text-muted">
-      <i class="bi bi-person-circle"></i>
-      {{ userRole }}
-    </span>
-    <button class="btn btn-sm btn-outline-danger" (click)="logout()">
-      Logout
-    </button>
-  </div>
 
 <!-- Stunning Students Background Hero Section -->
 <section class="students-hero">
