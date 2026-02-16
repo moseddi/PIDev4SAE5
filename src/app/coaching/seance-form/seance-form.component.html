@@ -1,0 +1,59 @@
+<!-- Notification Banner -->
+<div class="notification" *ngIf="notification" [ngClass]="notification.type">
+  {{ notification.message }}
+</div>
+
+<div class="form-container">
+  <div class="form-header">
+    <h2>{{ isEditMode ? '✏️ Edit Seance' : '➕ New Seance' }}</h2>
+    <a routerLink="/seances" class="btn-back">← Back to Seances</a>
+  </div>
+
+  <div class="loading-spinner" *ngIf="loading">
+    <p>Loading seance...</p>
+  </div>
+
+  <form *ngIf="!loading" (ngSubmit)="onSubmit()" class="seance-form">
+    <div class="form-group">
+      <label for="goodName">Seance Name</label>
+      <input
+        type="text"
+        id="goodName"
+        [(ngModel)]="seance.goodName"
+        name="goodName"
+        required
+        placeholder="e.g. Coaching Angular"
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="seanceDate">Date</label>
+      <input
+        type="date"
+        id="seanceDate"
+        [(ngModel)]="seance.seanceDate"
+        name="seanceDate"
+        required
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="seanceTime">Time</label>
+      <input
+        type="time"
+        id="seanceTime"
+        [(ngModel)]="seance.seanceTime"
+        name="seanceTime"
+        required
+        step="1"
+      />
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" class="btn-submit">
+        {{ isEditMode ? 'Update Seance' : 'Create Seance' }}
+      </button>
+      <a routerLink="/seances" class="btn-cancel">Cancel</a>
+    </div>
+  </form>
+</div>

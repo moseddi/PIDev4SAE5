@@ -1,17 +1,17 @@
-.courses-container {
+.seances-container {
   max-width: 1100px;
   margin: 2rem auto;
   padding: 0 1rem;
 }
 
-.courses-header {
+.seances-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 2rem;
 }
 
-.courses-header h2 {
+.seances-header h2 {
   color: #2D5757;
   font-size: 2rem;
   margin: 0;
@@ -32,13 +32,13 @@
   background-color: #1e3d3d;
 }
 
-.courses-grid {
+.seances-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
   gap: 1.5rem;
 }
 
-.course-card {
+.seance-card {
   background: #fff;
   border-radius: 20px;
   padding: 1.5rem;
@@ -46,15 +46,15 @@
   transition: transform 0.2s, box-shadow 0.2s;
 }
 
-.course-card:hover {
+.seance-card:hover {
   transform: translateY(-4px);
   box-shadow: 0 8px 24px rgba(0,0,0,0.12);
 }
 
-.course-level {
+.seance-badge {
   display: inline-block;
-  background-color: #F7EDE2;
-  color: #2D5757;
+  background-color: #e8f5e9;
+  color: #2e7d32;
   padding: 0.3rem 0.8rem;
   border-radius: 20px;
   font-size: 0.8rem;
@@ -62,36 +62,24 @@
   margin-bottom: 0.8rem;
 }
 
-.course-card h3 {
+.seance-card h3 {
   color: #2D5757;
   margin: 0.5rem 0;
   font-size: 1.2rem;
 }
 
-.course-description {
+.seance-info {
   color: #666;
   font-size: 0.9rem;
-  line-height: 1.5;
-  margin-bottom: 1rem;
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-.course-footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  line-height: 1.8;
   margin-bottom: 1rem;
 }
 
-.course-duration {
-  color: #888;
-  font-size: 0.85rem;
+.seance-info p {
+  margin: 0.2rem 0;
 }
 
-.course-actions {
+.seance-actions {
   display: flex;
   gap: 0.5rem;
   flex-wrap: wrap;
@@ -190,12 +178,12 @@
 }
 
 @media (max-width: 600px) {
-  .courses-header {
+  .seances-header {
     flex-direction: column;
     gap: 1rem;
     text-align: center;
   }
-  .courses-grid {
+  .seances-grid {
     grid-template-columns: 1fr;
   }
 }

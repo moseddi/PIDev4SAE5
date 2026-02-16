@@ -1,0 +1,70 @@
+<!-- Notification Banner -->
+<div class="notification" *ngIf="notification" [ngClass]="notification.type">
+  {{ notification.message }}
+</div>
+
+<div class="lessons-container">
+  <!-- Lesson Form Section (Inline) -->
+  <div class="lesson-form-section" *ngIf="showForm">
+    <app-lesson-form
+      [courseId]="courseId"
+      [isEditMode]="isEditMode"
+      [lessonId]="editingLessonId"
+      [showBackLink]="false"
+      [hideCancelButton]="true"
+      (lessonSaved)="onLessonSaved()"
+      (cancelForm)="hideForm()">
+    </app-lesson-form>
+  </div>
+
+  <!-- Lesson List Section -->
+  <div class="lessons-section" *ngIf="!showForm">
+    <div class="lessons-header">
+      <div>
+        <a *ngIf="showBackLink" routerLink="/courses" class="back-link">&larr; Back to Courses</a>
+        <button *ngIf="!showBackLink" class="back-link back-link-btn" (click)="backToCourses.emit()">&larr; Back to Courses</button>
+        <h2 *ngIf="course">Lessons for: {{ course.title }}</h2>
+        <p class="course-info" *ngIf="course">{{ course.level }} &bull; {{ course.duration }} hours</p>
+      </div>
+      <button class="btn-add" (click)="showNewLessonForm()">+ New Lesson</button>
+    </div>
+
+  <!-- Loading -->
+  <div class="loading-spinner" *ngIf="loading">
+    <p>Loading lessons...</p>
+  </div>
+
+  <!-- Empty State -->
+  <div class="empty-state" *ngIf="!loading && lessons.length === 0">
+    <p>No lessons found for this course. Add your first lesson!</p>
+    <button class="btn-add" (click)="showNewLessonForm()">+ Add Lesson</button>
+  </div>
+
+  <!-- Lessons Table -->
+  <div class="lessons-table-wrapper" *ngIf="!loading && lessons.length > 0">
+    <table class="lessons-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Title</th>
+          <th>Content</th>
+          <th>Order</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let lesson of lessons; let i = index">
+          <td>{{ i + 1 }}</td>
+          <td class="lesson-title">{{ lesson.lessontitle }}</td>
+          <td class="lesson-content">{{ lesson.content }}</td>
+          <td>{{ lesson.lessonorder }}</td>
+          <td class="actions-cell">
+            <button (click)="showEditLessonForm(lesson)" class="btn-small btn-edit">Edit</button>
+            <button (click)="deleteLesson(lesson)" class="btn-small btn-delete">Delete</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+</div>

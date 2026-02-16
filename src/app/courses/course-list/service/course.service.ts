@@ -1,7 +1,17 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, map } from 'rxjs';
 
+// Interface matching the actual backend JSON response (capital D in Duration)
+export interface CourseApiResponse {
+  id?: number;
+  title: string;
+  level: string;
+  Duration: number;
+  description: string;
+}
+
+// Frontend-friendly interface
 export interface Course {
   id?: number;
   title: string;
@@ -16,49 +26,99 @@ export interface Lesson {
   content: string;
   lessonorder: number;
   course?: Course;
+  pdfUrl?: string;
 }
 
 @Injectable({ providedIn: 'root' })
 export class CourseService {
-  private apiUrl = 'http://localhost:8080/api'; // adapte l'URL de ton backend
+  // Relative URL - Angular proxy forwards /Cours_Service/* to http://localhost:5059
+  private baseUrl = '/Cours_Service';
 
   constructor(private http: HttpClient) {}
 
-  // Courses
+  // Helper: map API response to frontend Course model
+  private mapCourse(apiCourse: CourseApiResponse): Course {
+    return {
+      id: apiCourse.id,
+      title: apiCourse.title,
+      level: apiCourse.level,
+      duration: apiCourse.Duration,
+      description: apiCourse.description
+    };
+  }
+
+  // Helper: map frontend Course to API request body
+  private toApiCourse(course: Course): CourseApiResponse {
+    return {
+      id: course.id,
+      title: course.title,
+      level: course.level,
+      Duration: course.duration,
+      description: course.description
+    };
+  }
+
+  // ==================== Courses ====================
+
   getAllCourses(): Observable<Course[]> {
-    return this.http.get<Course[]>(`${this.apiUrl}/courses`);
+    return this.http.get<CourseApiResponse[]>(`${this.baseUrl}/api/courses`).pipe(
+      map(courses => courses.map(c => this.mapCourse(c)))
+    );
   }
 
   getCourseById(id: number): Observable<Course> {
-    return this.http.get<Course>(`${this.apiUrl}/courses/${id}`);
+    return this.http.get<CourseApiResponse>(`${this.baseUrl}/api/courses/${id}`).pipe(
+      map(c => this.mapCourse(c))
+    );
   }
 
   createCourse(course: Course): Observable<Course> {
-    return this.http.post<Course>(`${this.apiUrl}/courses`, course);
+    return this.http.post<CourseApiResponse>(`${this.baseUrl}/api/courses`, this.toApiCourse(course)).pipe(
+      map(c => this.mapCourse(c))
+    );
   }
 
   updateCourse(id: number, course: Course): Observable<Course> {
-    return this.http.put<Course>(`${this.apiUrl}/courses/${id}`, course);
+    return this.http.put<CourseApiResponse>(`${this.baseUrl}/api/courses/${id}`, this.toApiCourse(course)).pipe(
+      map(c => this.mapCourse(c))
+    );
   }
 
   deleteCourse(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/courses/${id}`);
+    return this.http.delete<void>(`${this.baseUrl}/api/courses/${id}`);
   }
 
-  // Lessons
+  // ==================== Lessons ====================
+
+  getAllLessons(): Observable<Lesson[]> {
+    return this.http.get<Lesson[]>(`${this.baseUrl}/api/lessons`);
+  }
+
+  getLessonById(id: number): Observable<Lesson> {
+    return this.http.get<Lesson>(`${this.baseUrl}/api/lessons/${id}`);
+  }
+
   getLessonsByCourse(courseId: number): Observable<Lesson[]> {
-    return this.http.get<Lesson[]>(`${this.apiUrl}/courses/${courseId}/lessons`);
+    return this.http.get<Lesson[]>(`${this.baseUrl}/api/courses/${courseId}/lessons`);
   }
 
   createLesson(courseId: number, lesson: Lesson): Observable<Lesson> {
-    return this.http.post<Lesson>(`${this.apiUrl}/courses/${courseId}/lessons`, lesson);
+    return this.http.post<Lesson>(`${this.baseUrl}/api/courses/${courseId}/lessons`, lesson);
   }
 
   updateLesson(id: number, lesson: Lesson): Observable<Lesson> {
-    return this.http.put<Lesson>(`${this.apiUrl}/lessons/${id}`, lesson);
+    return this.http.put<Lesson>(`${this.baseUrl}/api/lessons/${id}`, lesson);
   }
 
   deleteLesson(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/lessons/${id}`);
+    return this.http.delete<void>(`${this.baseUrl}/api/lessons/${id}`);
+  }
+
+  // ==================== PDF Upload ====================
+
+  uploadLessonPdf(lessonId: number, file: File): Observable<{ pdfUrl: string }> {
+    const formData = new FormData();
+    formData.append('file', file);
+    return this.http.post<{ pdfUrl: string }>(`${this.baseUrl}/api/lessons/${lessonId}/pdf`, formData);
   }
 }

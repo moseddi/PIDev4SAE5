@@ -1,20 +1,28 @@
-.courses-container {
+.reservations-container {
   max-width: 1100px;
   margin: 2rem auto;
   padding: 0 1rem;
 }
 
-.courses-header {
+.reservations-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 2rem;
+  flex-wrap: wrap;
+  gap: 1rem;
 }
 
-.courses-header h2 {
+.reservations-header h2 {
   color: #2D5757;
   font-size: 2rem;
   margin: 0;
+}
+
+.header-actions {
+  display: flex;
+  gap: 0.8rem;
+  align-items: center;
 }
 
 .btn-add {
@@ -32,69 +40,92 @@
   background-color: #1e3d3d;
 }
 
-.courses-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 1.5rem;
+.btn-back {
+  color: #2D5757;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: color 0.3s;
 }
 
-.course-card {
+.btn-back:hover {
+  color: #1e3d3d;
+}
+
+.table-wrapper {
   background: #fff;
   border-radius: 20px;
-  padding: 1.5rem;
   box-shadow: 0 4px 16px rgba(0,0,0,0.07);
-  transition: transform 0.2s, box-shadow 0.2s;
+  overflow-x: auto;
 }
 
-.course-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+.reservations-table {
+  width: 100%;
+  border-collapse: collapse;
 }
 
-.course-level {
+.reservations-table th,
+.reservations-table td {
+  padding: 1rem;
+  text-align: left;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.reservations-table th {
+  background-color: #2D5757;
+  color: white;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.reservations-table th:first-child {
+  border-radius: 20px 0 0 0;
+}
+
+.reservations-table th:last-child {
+  border-radius: 0 20px 0 0;
+}
+
+.reservations-table tbody tr:hover {
+  background-color: #f9f9f9;
+}
+
+.reservations-table td {
+  color: #444;
+  font-size: 0.9rem;
+}
+
+.status-badge {
   display: inline-block;
-  background-color: #F7EDE2;
-  color: #2D5757;
   padding: 0.3rem 0.8rem;
   border-radius: 20px;
   font-size: 0.8rem;
   font-weight: 600;
-  margin-bottom: 0.8rem;
 }
 
-.course-card h3 {
-  color: #2D5757;
-  margin: 0.5rem 0;
-  font-size: 1.2rem;
+.status-confirmed {
+  background-color: #d4edda;
+  color: #155724;
 }
 
-.course-description {
-  color: #666;
-  font-size: 0.9rem;
-  line-height: 1.5;
-  margin-bottom: 1rem;
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
+.status-cancelled {
+  background-color: #f8d7da;
+  color: #721c24;
 }
 
-.course-footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1rem;
+.status-pending {
+  background-color: #fff3cd;
+  color: #856404;
 }
 
-.course-duration {
-  color: #888;
-  font-size: 0.85rem;
+.status-default {
+  background-color: #e2e3e5;
+  color: #383d41;
 }
 
-.course-actions {
+.actions-cell {
   display: flex;
   gap: 0.5rem;
-  flex-wrap: wrap;
 }
 
 .btn-small {
@@ -106,15 +137,6 @@
   cursor: pointer;
   border: none;
   transition: background-color 0.3s, color 0.3s;
-}
-
-.btn-view {
-  background-color: #2D5757;
-  color: white;
-}
-
-.btn-view:hover {
-  background-color: #1e3d3d;
 }
 
 .btn-edit {
@@ -169,7 +191,6 @@
   to { transform: translateX(0); opacity: 1; }
 }
 
-/* Loading */
 .loading-spinner {
   text-align: center;
   padding: 3rem;
@@ -177,7 +198,6 @@
   font-size: 1.1rem;
 }
 
-/* Empty State */
 .empty-state {
   text-align: center;
   padding: 3rem;
@@ -190,12 +210,11 @@
 }
 
 @media (max-width: 600px) {
-  .courses-header {
+  .reservations-header {
     flex-direction: column;
-    gap: 1rem;
     text-align: center;
   }
-  .courses-grid {
-    grid-template-columns: 1fr;
+  .header-actions {
+    flex-direction: column;
   }
 }

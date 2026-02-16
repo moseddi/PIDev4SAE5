@@ -1,0 +1,14 @@
+{
+  "/Cours_Service": {
+    "target": "http://localhost:5059",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug"
+  },
+  "/Coaching-service": {
+    "target": "http://localhost:5057",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug"
+  }
+}
