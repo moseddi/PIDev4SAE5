@@ -14,6 +14,8 @@ import { EventsComponent } from './backoffice/admin-view/events/events.component
 import { ClubsComponent } from './backoffice/admin-view/clubs/clubs.component';
 import { ClassesComponent } from './backoffice/admin-view/classes/classes.component';
 import { PhysicalspaceComponent } from './backoffice/admin-view/physicalspace/physicalspace.component';
+import { AuthGuard } from './guards/auth.guard';
+
 export const routes: Routes = [
   { path: 'login', component: StudentLoginComponent },
   { path: 'signup', component: SignupComponent },
@@ -23,14 +25,18 @@ export const routes: Routes = [
     path: 'backoffice', 
     component: BackofficeComponent,
     canActivate: [RoleGuard],
-    data: { roles: ['ADMIN', 'TUTOR'] }, // Only ADMIN and TUTOR can access
+    data: { roles: ['ADMIN', 'TUTOR'] },
     children: [
-      // Default route - This needs to be fixed
       { 
         path: '', 
-        component: AdminViewComponent, // 👈 CHANGE THIS - can't redirect to child with different guard
+        component: AdminViewComponent,
         canActivate: [RoleGuard],
         data: { roles: ['ADMIN', 'TUTOR'] }
+      },
+      { 
+        path: 'profile-completion', 
+        loadComponent: () => import('./profile-completion/profile-completion.component').then(m => m.ProfileCompletionComponent),
+        canActivate: [AuthGuard]
       },
       
       // Admin only routes
@@ -49,6 +55,30 @@ export const routes: Routes = [
       { 
         path: 'admin/stats', 
         component: StatsComponent,
+        canActivate: [RoleGuard],
+        data: { roles: ['ADMIN'] }
+      },
+      { 
+        path: 'admin/events', 
+        component: EventsComponent,
+        canActivate: [RoleGuard],
+        data: { roles: ['ADMIN'] }
+      },
+      { 
+        path: 'admin/clubs', 
+        component: ClubsComponent,
+        canActivate: [RoleGuard],
+        data: { roles: ['ADMIN'] }
+      },
+      { 
+        path: 'admin/classes', 
+        component: ClassesComponent,
+        canActivate: [RoleGuard],
+        data: { roles: ['ADMIN'] }
+      },
+      { 
+        path: 'admin/physicalspace', 
+        component: PhysicalspaceComponent,
         canActivate: [RoleGuard],
         data: { roles: ['ADMIN'] }
       },
@@ -71,33 +101,7 @@ export const routes: Routes = [
         component: ScheduleComponent,
         canActivate: [RoleGuard],
         data: { roles: ['TUTOR'] }
-      },
-       { 
-        path: 'admin/events', 
-        component: EventsComponent,
-        canActivate: [RoleGuard],
-        data: { roles: ['ADMIN'] }
-      },
-      { 
-        path: 'admin/clubs', 
-        component: ClubsComponent,
-        canActivate: [RoleGuard],
-        data: { roles: ['ADMIN'] }
-      },
-       { 
-        path: 'admin/classes', 
-        component: ClassesComponent,
-        canActivate: [RoleGuard],
-        data: { roles: ['ADMIN'] }
-      },
-      { 
-        path: 'admin/physicalspace', 
-        component: PhysicalspaceComponent,
-        canActivate: [RoleGuard],
-        data: { roles: ['ADMIN'] }
-      },
-     
-       
+      }
     ]
   }
 ];

@@ -1,1 +1,345 @@
-<p>admin-view works!</p>
+<div class="premium-backoffice">
+  <!-- Floating Animated Background -->
+  <div class="premium-bg">
+    <div class="bg-orb orb-1"></div>
+    <div class="bg-orb orb-2"></div>
+    <div class="bg-orb orb-3"></div>
+    <div class="bg-grid"></div>
+    <div class="bg-particles"></div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="premium-container">
+    <!-- Header with 3D Effect -->
+    <div class="premium-header glass-deep">
+      <div class="header-left">
+        <div class="brand-3d">
+          <div class="brand-icon">
+            <i class="bi bi-shield-shaded"></i>
+          </div>
+          <div class="brand-text">
+            <h1>JUNGLE<span>ADMIN</span></h1>
+            <p>English School Management</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="header-right">
+        <div class="search-3d">
+          <i class="bi bi-search"></i>
+          <input type="text" placeholder="Search anything...">
+          <div class="search-glow"></div>
+        </div>
+        
+        <div class="header-actions">
+          <div class="action-3d" (click)="handleNotification()">
+            <i class="bi bi-bell"></i>
+            <span class="badge-3d">3</span>
+            <div class="action-glow"></div>
+          </div>
+          
+          <div class="profile-3d" (click)="handleProfile()">
+            <div class="profile-avatar">
+              <span>AD</span>
+            </div>
+            <div class="profile-info">
+              <span class="profile-name">Admin User</span>
+              <span class="profile-role">Super Administrator</span>
+            </div>
+            <div class="profile-glow"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Welcome Banner with Parallax -->
+    <div class="welcome-banner">
+      <div class="banner-content">
+        <h2>Welcome back, Admin! 👋</h2>
+        <p>Your school is performing exceptionally today</p>
+      </div>
+      <div class="banner-stats">
+        <div class="banner-stat">
+          <span class="stat-3d">24</span>
+          <span>Active Sessions</span>
+        </div>
+        <div class="banner-stat">
+          <span class="stat-3d">89%</span>
+          <span>Engagement</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3D KPI Cards -->
+    <div class="kpi-grid">
+      <div class="kpi-card-3d" *ngFor="let kpi of kpis" (click)="navigateTo(kpi.route)">
+        <div class="card-inner">
+          <div class="card-front">
+            <div class="card-icon" [style.background]="kpi.color + '20'">
+              <i class="bi" [ngClass]="kpi.icon" [style.color]="kpi.color"></i>
+            </div>
+            <div class="card-content">
+              <span class="card-label">{{ kpi.label }}</span>
+              <span class="card-value">{{ kpi.value }}</span>
+              <div class="card-trend" [class.up]="kpi.trend > 0" [class.down]="kpi.trend < 0">
+                <i class="bi" [ngClass]="kpi.trend > 0 ? 'bi-arrow-up' : 'bi-arrow-down'"></i>
+                {{ Math.abs(kpi.trend) }}%
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card-glow"></div>
+      </div>
+    </div>
+
+    <!-- Premium Analytics Section -->
+    <div class="analytics-premium">
+      <!-- 3D Revenue Chart -->
+      <div class="chart-3d revenue-chart">
+        <div class="chart-header">
+          <h3><i class="bi bi-graph-up"></i> Revenue Analytics</h3>
+          <div class="chart-controls">
+            <select class="premium-select">
+              <option>Last 7 days</option>
+              <option>Last 30 days</option>
+              <option>Last 12 months</option>
+            </select>
+          </div>
+        </div>
+        
+        <div class="chart-3d-container">
+          <div class="bars-3d">
+            <div class="bar-3d-group" *ngFor="let item of revenueData; let i = index">
+              <div class="bar-3d" [style.height]="item.value + '%'" [style.--delay]="i * 0.1 + 's'">
+                <div class="bar-fill" [style.background]="'linear-gradient(180deg, #2D5757, #4a8a8a)'">
+                  <div class="bar-shine"></div>
+                </div>
+                <div class="bar-top"></div>
+                <div class="bar-left"></div>
+                <div class="bar-right"></div>
+              </div>
+              <span class="bar-label">{{ item.day }}</span>
+              <div class="bar-tooltip-premium">
+                <span>${{ item.revenue }}K</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3D Donut Chart -->
+      <div class="chart-3d donut-chart">
+        <div class="chart-header">
+          <h3><i class="bi bi-pie-chart"></i> User Distribution</h3>
+        </div>
+        
+        <div class="donut-3d-container">
+          <div class="donut-3d">
+            <svg viewBox="0 0 100 100" class="donut-svg">
+              <circle cx="50" cy="50" r="40" fill="transparent" stroke="#e9ecef" stroke-width="12"/>
+              <circle *ngFor="let segment of userSegments; let i = index" 
+                      cx="50" cy="50" r="40" fill="transparent" 
+                      [attr.stroke]="segment.color" 
+                      stroke-width="12"
+                      [attr.stroke-dasharray]="segment.percent + ' ' + (100 - segment.percent)"
+                      [attr.stroke-dashoffset]="getDashOffset(i)"
+                      class="donut-segment">
+                <animate attributeName="stroke-dasharray" 
+                         [attr.values]="'0,100; ' + segment.percent + ',100'" 
+                         dur="1.5s" 
+                         fill="freeze"/>
+              </circle>
+            </svg>
+            <div class="donut-center-3d">
+              <span class="donut-total">{{ totalUsers }}</span>
+              <span>Total Users</span>
+            </div>
+          </div>
+          
+          <div class="legend-3d">
+            <div class="legend-item-3d" *ngFor="let segment of userSegments">
+              <div class="legend-dot-3d" [style.background]="segment.color"></div>
+              <span class="legend-label">{{ segment.label }}</span>
+              <span class="legend-value">{{ segment.value }}</span>
+              <span class="legend-percent">{{ segment.percent }}%</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Action Floating Panel -->
+    <div class="quick-actions-premium">
+      <div class="quick-actions-header">
+        <i class="bi bi-lightning-charge-fill"></i>
+        <span>Quick Actions</span>
+      </div>
+      <div class="quick-actions-grid">
+        <button class="quick-action-3d" *ngFor="let action of quickActions" (click)="handleAction(action)">
+          <div class="action-3d-inner">
+            <i class="bi" [ngClass]="action.icon"></i>
+            <span>{{ action.label }}</span>
+          </div>
+        </button>
+      </div>
+    </div>
+
+    <!-- Premium Tables Section -->
+    <div class="tables-premium">
+      <!-- Users Table with 3D Rows -->
+      <div class="table-3d users-table">
+        <div class="table-header-3d">
+          <h3><i class="bi bi-people"></i> Recent Users</h3>
+          <button class="view-all-3d" (click)="navigateTo('users')">
+            <span>View All</span>
+            <i class="bi bi-arrow-right"></i>
+          </button>
+        </div>
+        
+        <div class="table-3d-container">
+          <table class="table-3d">
+            <thead>
+              <tr>
+                <th>User</th>
+                <th>Role</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let user of recentUsers" class="table-row-3d" (click)="viewUser(user)">
+                <td>
+                  <div class="user-3d">
+                    <div class="user-avatar-3d" [style.background]="user.color">
+                      <span>{{ user.initials }}</span>
+                    </div>
+                    <div class="user-info-3d">
+                      <span class="user-name">{{ user.name }}</span>
+                      <span class="user-email">{{ user.email }}</span>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <span class="role-3d" [style.background]="user.roleColor + '20'" [style.color]="user.roleColor">
+                    {{ user.role }}
+                  </span>
+                </td>
+                <td>
+                  <span class="status-3d" [class.active]="user.status === 'Active'">
+                    <span class="status-pulse"></span>
+                    {{ user.status }}
+                  </span>
+                </td>
+                <td>
+                  <div class="actions-3d">
+                    <button class="action-icon-3d edit" (click)="editUser(user); $event.stopPropagation()">
+                      <i class="bi bi-pencil"></i>
+                    </button>
+                    <button class="action-icon-3d delete" (click)="deleteUser(user); $event.stopPropagation()">
+                      <i class="bi bi-trash"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Events with 3D Cards -->
+      <div class="table-3d events-table">
+        <div class="table-header-3d">
+          <h3><i class="bi bi-calendar-event"></i> Upcoming Events</h3>
+          <button class="view-all-3d" (click)="navigateTo('events')">
+            <span>View All</span>
+            <i class="bi bi-arrow-right"></i>
+          </button>
+        </div>
+        
+        <div class="events-3d-container">
+          <div class="event-card-3d" *ngFor="let event of upcomingEvents" (click)="viewEvent(event)">
+            <div class="event-3d-inner">
+              <div class="event-date-3d" [style.background]="event.color">
+                <span class="event-day">{{ event.day }}</span>
+                <span class="event-month">{{ event.month }}</span>
+              </div>
+              <div class="event-content-3d">
+                <h4>{{ event.title }}</h4>
+                <div class="event-meta-3d">
+                  <span><i class="bi bi-calendar3"></i> {{ event.date }}</span>
+                  <span><i class="bi bi-geo-alt"></i> {{ event.location }}</span>
+                </div>
+              </div>
+              <div class="event-badge-3d" [class.free]="event.isFree" [class.paid]="!event.isFree">
+                {{ event.isFree ? 'Free' : 'Paid' }}
+              </div>
+            </div>
+            <div class="event-card-glow"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Clubs with 3D Progress -->
+      <div class="table-3d clubs-table">
+        <div class="table-header-3d">
+          <h3><i class="bi bi-chat-heart"></i> Active Clubs</h3>
+          <button class="view-all-3d" (click)="navigateTo('clubs')">
+            <span>View All</span>
+            <i class="bi bi-arrow-right"></i>
+          </button>
+        </div>
+        
+        <div class="clubs-3d-container">
+          <div class="club-card-3d" *ngFor="let club of clubs" (click)="viewClub(club)">
+            <div class="club-3d-inner">
+              <div class="club-icon-3d" [style.background]="club.color + '20'" [style.color]="club.color">
+                <i class="bi" [ngClass]="club.icon"></i>
+              </div>
+              <div class="club-info-3d">
+                <h4>{{ club.name }}</h4>
+                <div class="club-stats-3d">
+                  <span><i class="bi bi-people"></i> {{ club.members }}</span>
+                  <span><i class="bi bi-calendar-week"></i> {{ club.meetings }}/month</span>
+                </div>
+              </div>
+              <div class="club-progress-3d">
+                <div class="progress-bar-3d">
+                  <div class="progress-fill-3d" [style.width]="club.members/50*100 + '%'" [style.background]="club.color"></div>
+                </div>
+                <span class="progress-value">{{ club.members }}/50</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Premium Activity Timeline -->
+    <div class="timeline-premium">
+      <div class="timeline-header">
+        <h3><i class="bi bi-clock-history"></i> Activity Timeline</h3>
+        <span class="live-indicator">LIVE</span>
+      </div>
+      
+      <div class="timeline-3d">
+        <div class="timeline-3d-item" *ngFor="let activity of activities; let i = index">
+          <div class="timeline-marker-3d" [style.background]="activity.color" [style.--delay]="i * 0.2 + 's'">
+            <div class="marker-ring"></div>
+          </div>
+          <div class="timeline-content-3d" (click)="viewActivity(activity)">
+            <div class="timeline-time-3d">{{ activity.time }}</div>
+            <h4>{{ activity.title }}</h4>
+            <p>{{ activity.desc }}</p>
+            <div class="timeline-user-3d">
+              <div class="user-avatar-3d small" [style.background]="activity.userColor">
+                {{ activity.userInitials }}
+              </div>
+              <span>{{ activity.user }}</span>
+            </div>
+          </div>
+          <div class="timeline-connector" *ngIf="i < activities.length - 1"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -23,6 +23,7 @@
           </a>
         </li>
         
+        
         <!-- Courses Mega Menu -->
         <li class="nav-item nav-item-wrapper mega-menu">
           <a class="nav-link nav-main-link active" href="javascript:void(0)">
@@ -101,30 +102,34 @@
         </li>
       </ul>
 
-      <!-- Right Side Actions (single consolidated version) -->
-      <div class="nav-actions">
-        <!-- Show user info when logged in -->
-        <div *ngIf="isLoggedIn" class="d-flex align-items-center gap-2">
-          <span class="text-muted">
-            <i class="bi bi-person-circle"></i>
-            {{ userRole }}
-          </span>
-          <button class="btn btn-sm btn-outline-danger" (click)="logout()">
-            Logout
-          </button>
-        </div>
-        
-        <!-- Show login buttons when not logged in -->
-        <div *ngIf="!isLoggedIn">
-          <button class="login-icon-btn" title="Student Login">
-            <i class="bi bi-box-arrow-in-right"></i>
-          </button>
-          <button class="btn simple-login-btn full-text">
-            <i class="bi bi-box-arrow-in-right"></i>
-            Student Login
-          </button>
-        </div>
-      </div>
+    <!-- Right Side Actions (single consolidated version) -->
+<div class="nav-actions">
+  <!-- Show user info when logged in -->
+  <div *ngIf="isLoggedIn" class="d-flex align-items-center gap-2">
+    <!-- Profile Button - This will open the modal -->
+    <button class="btn" style="background: #2D5757; color: #F7EDE2; border: none; padding: 8px 16px; border-radius: 30px; display: flex; align-items: center; gap: 8px; font-weight: 500;" 
+            (click)="openProfileModal()">
+      <i class="bi bi-person-circle"></i>
+      <span>{{ user?.firstName || user?.email }}</span>
+    </button>
+    
+    <!-- Logout Button -->
+    <button class="btn btn-sm btn-outline-danger" (click)="logout()">
+      Logout
+    </button>
+  </div>
+  
+  <!-- Show login buttons when not logged in -->
+  <div *ngIf="!isLoggedIn">
+    <button class="login-icon-btn" title="Student Login" routerLink="/login">
+      <i class="bi bi-box-arrow-in-right"></i>
+    </button>
+    <button class="btn simple-login-btn full-text" routerLink="/login">
+      <i class="bi bi-box-arrow-in-right"></i>
+      Student Login
+    </button>
+  </div>
+</div>
     </div>
   </div>
 </nav>
@@ -907,3 +912,11 @@
     </div>
   </div>
 </footer>
+<!-- Profile Modal -->
+<div class="modal fade show" [class.d-block]="showProfileModal" *ngIf="showProfileModal" (click)="closeModal()" style="background: rgba(0,0,0,0.5); position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 9999; display: flex; align-items: center; justify-content: center;">
+  <div class="modal-dialog modal-lg" (click)="$event.stopPropagation()" style="width: 90%; max-width: 900px; margin: 0 auto;">
+    <div class="modal-content" style="border-radius: 30px; overflow: hidden; box-shadow: 0 30px 60px rgba(45,87,87,0.3); background: transparent; border: none;">
+      <app-profile-completion></app-profile-completion>
+    </div>
+  </div>
+</div>

@@ -1,7 +1,7 @@
 .backoffice-container {
   display: flex;
   min-height: 100vh;
-  background: #f5f7fa;
+  background: #F7EDE2;  /* Changed to school's secondary color */
 }
 
 .main-content {
@@ -14,11 +14,294 @@
 .content-area {
   flex: 1;
   padding: 20px;
-  background: #f5f7fa;
+  background: #F7EDE2;  /* Changed to school's secondary color */
 }
 
+/* Additional styles to match the school's identity */
+.sidebar {
+  background: #2D5757;  /* Primary color for sidebar */
+  color: white;
+}
+
+.sidebar .nav-link {
+  color: rgba(255, 255, 255, 0.8);
+  transition: all 0.3s ease;
+}
+
+.sidebar .nav-link:hover,
+.sidebar .nav-link.active {
+  color: white;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* Cards and UI elements */
+.card {
+  background: white;
+  border: none;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(45, 87, 87, 0.08);  /* Using primary color with opacity */
+}
+
+.card-header {
+  background: white;
+  border-bottom: 2px solid #F7EDE2;  /* Secondary color for borders */
+  padding: 1rem 1.5rem;
+}
+
+/* Buttons */
+.btn-primary {
+  background: #2D5757;  /* Primary color */
+  border: none;
+  color: white;
+  padding: 0.6rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+  background: #1e3f3f;  /* Darker shade of primary */
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(45, 87, 87, 0.3);
+}
+
+.btn-outline-primary {
+  border: 2px solid #2D5757;
+  color: #2D5757;
+  background: transparent;
+  padding: 0.5rem 1.2rem;
+  border-radius: 8px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.btn-outline-primary:hover {
+  background: #2D5757;
+  color: white;
+}
+
+/* Table styles */
+.table thead th {
+  background: #F7EDE2;  /* Secondary color for table headers */
+  color: #2D5757;  /* Primary color for text */
+  font-weight: 600;
+  border-bottom: none;
+}
+
+.table tbody tr:hover {
+  background: rgba(45, 87, 87, 0.02);
+}
+
+/* Badges */
+.badge {
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-weight: 500;
+}
+
+.badge.bg-primary {
+  background: #2D5757 !important;
+}
+
+.badge.bg-success {
+  background: #28a745 !important;
+}
+
+.badge.bg-warning {
+  background: #ffc107 !important;
+  color: #2c3e50;
+}
+
+.badge.bg-info {
+  background: #17a2b8 !important;
+}
+
+/* Pagination */
+.pagination .page-link {
+  color: #2D5757;
+  border: none;
+  padding: 0.5rem 0.9rem;
+  margin: 0 2px;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.pagination .page-link:hover {
+  background: rgba(45, 87, 87, 0.1);
+}
+
+.pagination .page-item.active .page-link {
+  background: #2D5757;
+  color: white;
+}
+
+/* Modals */
+.modal-header {
+  background: #2D5757;  /* Primary color for modal headers */
+  color: white;
+  border-radius: 12px 12px 0 0;
+  padding: 1rem 1.5rem;
+}
+
+.modal-header .btn-close {
+  filter: brightness(0) invert(1);
+}
+
+.modal-content {
+  border: none;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(45, 87, 87, 0.15);
+}
+
+/* Form elements */
+.form-control:focus,
+.form-select:focus {
+  border-color: #2D5757;
+  box-shadow: 0 0 0 0.2rem rgba(45, 87, 87, 0.1);
+}
+
+.form-check-input:checked {
+  background-color: #2D5757;
+  border-color: #2D5757;
+}
+
+/* Avatar circles */
+.avatar-circle,
+.avatar-circle-large {
+  background: #2D5757;  /* Primary color for avatars */
+  color: white;
+}
+
+/* Alert messages */
+.alert-success {
+  background: #F7EDE2;  /* Secondary color for success alerts */
+  color: #2D5757;
+  border-left: 4px solid #28a745;
+}
+
+.alert-danger {
+  background: #F7EDE2;
+  color: #2D5757;
+  border-left: 4px solid #dc3545;
+}
+
+.alert-info {
+  background: #F7EDE2;
+  color: #2D5757;
+  border-left: 4px solid #17a2b8;
+}
+
+/* Links */
+a {
+  color: #2D5757;
+  transition: color 0.2s ease;
+}
+
+a:hover {
+  color: #1e3f3f;
+}
+
+/* Text colors */
+.text-primary {
+  color: #2D5757 !important;
+}
+
+.text-secondary {
+  color: #F7EDE2 !important;
+}
+
+.bg-primary {
+  background: #2D5757 !important;
+}
+
+.bg-secondary {
+  background: #F7EDE2 !important;
+}
+
+/* Footer or other elements */
+.footer {
+  background: #2D5757;
+  color: white;
+  padding: 1.5rem 0;
+  margin-top: auto;
+}
+
+/* Loading spinner */
+.spinner-border.text-primary {
+  color: #2D5757 !important;
+}
+
+/* Dropdowns */
+.dropdown-item:hover,
+.dropdown-item:focus {
+  background: rgba(45, 87, 87, 0.1);
+  color: #2D5757;
+}
+
+.dropdown-item.active {
+  background: #2D5757;
+  color: white;
+}
+
+/* Card headers with icons */
+.card-header i {
+  color: #2D5757;
+}
+
+/* Section titles */
+.section-title {
+  color: #2D5757;
+  font-weight: 600;
+  position: relative;
+  padding-bottom: 0.5rem;
+}
+
+.section-title::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 60px;
+  height: 3px;
+  background: #2D5757;
+  border-radius: 2px;
+}
+
+/* Hover effects */
+.hover-primary:hover {
+  color: #2D5757 !important;
+}
+
+/* Borders */
+.border-primary {
+  border-color: #2D5757 !important;
+}
+
+.border-secondary {
+  border-color: #F7EDE2 !important;
+}
+
+/* Progress bars */
+.progress-bar {
+  background: #2D5757;
+}
+
+/* Tooltips */
+.tooltip .tooltip-inner {
+  background: #2D5757;
+}
+
+.tooltip.bs-tooltip-top .tooltip-arrow::before {
+  border-top-color: #2D5757;
+}
+
+/* Media queries */
 @media (max-width: 768px) {
   .main-content {
     margin-left: 0;
+  }
+  
+  .sidebar {
+    background: #2D5757;  /* Keep primary color on mobile sidebar */
   }
 }
