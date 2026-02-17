@@ -2,17 +2,18 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { CourseService, Lesson, Course } from '../course-list/service/course.service';
-import { LessonFormComponent } from '../lesson-form/lesson-form.component';
+import { LessonFormComponent } from '../lesson-form/lesson-form.component'; // ← Import ajouté
+import { FooterFrontComponent } from '../footer-front/footer-front.component';
 
 
 @Component({
-  selector: 'app-lesson-list',
+  selector: 'app-list-lesson',
   standalone: true,
-  imports: [CommonModule, RouterLink, LessonFormComponent],
-  templateUrl: './lesson-list.component.html',
-  styleUrls: ['./lesson-list.component.css']
+  imports: [CommonModule, RouterLink , LessonFormComponent, FooterFrontComponent],
+  templateUrl: './list-lesson.component.html',
+  styleUrls: ['./list-lesson.component.css']
 })
-export class LessonListComponent implements OnInit {
+export class ListLessonComponent implements OnInit {
   @Input() courseId?: number;
   @Input() showBackLink = true;
   @Output() backToCourses = new EventEmitter<void>();
@@ -26,6 +27,9 @@ export class LessonListComponent implements OnInit {
   showForm = false;
   isEditMode = false;
   editingLessonId?: number;
+
+  // Expanded lesson
+  expandedLessonId: number | null = null;
 
   constructor(
     private route: ActivatedRoute,
@@ -118,5 +122,12 @@ export class LessonListComponent implements OnInit {
   onLessonSaved(): void {
     this.hideForm();
     this.loadLessons();
+  }
+
+  // Toggle lesson content
+  toggleLesson(id: number | undefined): void {
+    if (id) {
+      this.expandedLessonId = this.expandedLessonId === id ? null : id;
+    }
   }
 }

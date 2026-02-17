@@ -2,17 +2,16 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { CourseService, Lesson, Course } from '../course-list/service/course.service';
-import { LessonFormComponent } from '../lesson-form/lesson-form.component';
-
+import { NavbarFrontComponent } from '../navbar-front/navbar-front.component';
 
 @Component({
-  selector: 'app-lesson-list',
+  selector: 'app-list-lesson-student',
   standalone: true,
-  imports: [CommonModule, RouterLink, LessonFormComponent],
-  templateUrl: './lesson-list.component.html',
-  styleUrls: ['./lesson-list.component.css']
+  imports: [CommonModule, RouterLink, NavbarFrontComponent],
+  templateUrl: './list-lesson-student.component.html',
+  styleUrls: ['./list-lesson-student.component.css']
 })
-export class LessonListComponent implements OnInit {
+export class ListLessonStudentComponent implements OnInit {
   @Input() courseId?: number;
   @Input() showBackLink = true;
   @Output() backToCourses = new EventEmitter<void>();
@@ -22,10 +21,8 @@ export class LessonListComponent implements OnInit {
   loading = true;
   notification: { message: string; type: 'success' | 'error' } | null = null;
   
-  // Form visibility
-  showForm = false;
-  isEditMode = false;
-  editingLessonId?: number;
+  // Expanded lesson
+  expandedLessonId: number | null = null;
 
   constructor(
     private route: ActivatedRoute,
@@ -71,52 +68,20 @@ export class LessonListComponent implements OnInit {
     });
   }
 
-  deleteLesson(lesson: Lesson): void {
-    if (!lesson.id) return;
-    const confirmed = confirm(`Are you sure you want to delete "${lesson.lessontitle}"?`);
-    if (!confirmed) return;
-
-    this.courseService.deleteLesson(lesson.id).subscribe({
-      next: () => {
-        this.lessons = this.lessons.filter(l => l.id !== lesson.id);
-        this.showNotification(`Lesson "${lesson.lessontitle}" deleted successfully.`, 'success');
-      },
-      error: (err) => {
-        console.error('Error deleting lesson', err);
-        this.showNotification('Failed to delete lesson.', 'error');
-      }
-    });
-  }
-
   showNotification(message: string, type: 'success' | 'error'): void {
     this.notification = { message, type };
     setTimeout(() => this.notification = null, 4000);
   }
 
-  // Show new lesson form
-  showNewLessonForm(): void {
-    this.isEditMode = false;
-    this.editingLessonId = undefined;
-    this.showForm = true;
+  // Toggle lesson content (dropdown)
+  toggleLesson(id: number | undefined): void {
+    if (id) {
+      this.expandedLessonId = this.expandedLessonId === id ? null : id;
+    }
   }
 
-  // Show edit lesson form
-  showEditLessonForm(lesson: Lesson): void {
-    this.isEditMode = true;
-    this.editingLessonId = lesson.id;
-    this.showForm = true;
-  }
-
-  // Hide form
-  hideForm(): void {
-    this.showForm = false;
-    this.isEditMode = false;
-    this.editingLessonId = undefined;
-  }
-
-  // Handle lesson saved event
-  onLessonSaved(): void {
-    this.hideForm();
-    this.loadLessons();
+  // Check if lesson is expanded
+  isLessonExpanded(id: number | undefined): boolean {
+    return id !== undefined && this.expandedLessonId === id;
   }
 }

@@ -1,0 +1,65 @@
+<!-- Notification Banner -->
+<div class="notification" *ngIf="notification" [ngClass]="notification.type">
+  {{ notification.message }}
+</div>
+
+<div class="lessons-container">
+  <!-- Lesson Form Section (Inline) -->
+  <div class="lesson-form-section" *ngIf="showForm">
+    <app-lesson-form
+      [courseId]="courseId"
+      [isEditMode]="isEditMode"
+      [lessonId]="editingLessonId"
+      [showBackLink]="false"
+      [hideCancelButton]="true"
+      (lessonSaved)="onLessonSaved()"
+      (cancelForm)="hideForm()">
+    </app-lesson-form>
+  </div>
+
+  <!-- Lesson List Section -->
+  <div class="lessons-section" *ngIf="!showForm">
+    <div class="lessons-header">
+      <div>
+        <a *ngIf="showBackLink" routerLink="/courses" class="back-link">&larr; Back to Courses</a>
+        <button *ngIf="!showBackLink" class="back-link back-link-btn" (click)="backToCourses.emit()">&larr; Back to Courses</button>
+        <h2 *ngIf="course">Lessons for: {{ course.title }}</h2>
+        <p class="course-info" *ngIf="course">{{ course.level }} &bull; {{ course.duration }} hours</p>
+      </div>
+      <button class="btn-add" (click)="showNewLessonForm()">+ New Lesson</button>
+    </div>
+
+    <!-- Loading -->
+    <div class="loading-spinner" *ngIf="loading">
+      <p>Loading lessons...</p>
+    </div>
+
+    <!-- Empty State -->
+    <div class="empty-state" *ngIf="!loading && lessons.length === 0">
+      <p>No lessons found for this course. Add your first lesson!</p>
+      <button class="btn-add" (click)="showNewLessonForm()">+ Add Lesson</button>
+    </div>
+
+    <!-- Lessons Cards -->
+    <div class="lessons-list" *ngIf="!loading && lessons.length > 0">
+      <div class="lesson-card" *ngFor="let lesson of lessons; let i = index">
+        <div class="lesson-card-header" (click)="toggleLesson(lesson.id)">
+          <div class="lesson-header-left">
+            <span class="lesson-order">{{ lesson.lessonorder }}</span>
+            <h3 class="lesson-title">{{ lesson.lessontitle }}</h3>
+          </div>
+          <div class="lesson-header-right">
+            <button class="btn-small btn-edit" (click)="$event.stopPropagation(); showEditLessonForm(lesson)">Edit</button>
+            <button class="btn-small btn-delete" (click)="$event.stopPropagation(); deleteLesson(lesson)">Delete</button>
+            <span class="expand-icon">{{ expandedLessonId === lesson.id ? '▼' : '▶' }}</span>
+          </div>
+        </div>
+        <div class="lesson-card-content" *ngIf="expandedLessonId === lesson.id">
+          <p>{{ lesson.content }}</p>
+          <!-- Si vous avez un PDF, vous pouvez l'ajouter ici -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<app-footer-front></app-footer-front>

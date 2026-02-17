@@ -31,20 +31,60 @@
       <button class="btn-add" (click)="showNewCourseForm()">+ New Course</button>
     </div>
 
+    <!-- Search and Filter Bar -->
+    <div class="search-filter-bar">
+      <div class="search-input-container">
+        <input 
+          type="text" 
+          [(ngModel)]="searchText" 
+          placeholder="Search courses or lessons..." 
+          class="search-input"
+        />
+        <span class="search-icon">🔍</span>
+      </div>
+      <div class="filter-select-container">
+        <select 
+          [(ngModel)]="selectedLevel" 
+          class="filter-select"
+        >
+          <option value="">All Levels</option>
+          <option *ngFor="let level of availableLevels" [value]="level">{{ level }}</option>
+        </select>
+      </div>
+      <button 
+        *ngIf="searchText || selectedLevel" 
+        (click)="clearFilters()" 
+        class="btn-clear"
+      >
+        Clear Filters
+      </button>
+    </div>
+
+    <!-- Results count -->
+    <div class="results-count" *ngIf="searchText || selectedLevel">
+      Showing {{ filteredCourses.length }} of {{ courses.length }} courses
+    </div>
+
   <!-- Loading State -->
   <div class="loading-spinner" *ngIf="loading">
     <p>Loading courses...</p>
   </div>
 
   <!-- Empty State -->
+  <div class="empty-state" *ngIf="!loading && filteredCourses.length === 0 && courses.length > 0">
+    <p>No courses match your search or filter criteria.</p>
+    <button class="btn-add" (click)="clearFilters()">Clear Filters</button>
+  </div>
+
+  <!-- Empty State (no courses at all) -->
   <div class="empty-state" *ngIf="!loading && courses.length === 0">
     <p>No courses found. Create your first course!</p>
     <button class="btn-add" (click)="showNewCourseForm()">+ New Course</button>
   </div>
 
   <!-- Course Grid -->
-  <div class="courses-grid" *ngIf="!loading && courses.length > 0">
-    <div class="course-card" *ngFor="let course of courses">
+  <div class="courses-grid" *ngIf="!loading && filteredCourses.length > 0">
+    <div class="course-card" *ngFor="let course of filteredCourses">
       <span class="course-level">{{ course.level }}</span>
       <h3>{{ course.title }}</h3>
       <p class="course-description">{{ course.description }}</p>

@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { CourseService, Course } from './service/course.service';
 import { RouterLink } from '@angular/router';
 import { CourseFormComponent } from '../course-form/course-form.component';
@@ -8,7 +9,7 @@ import { LessonListComponent } from '../lesson-list/lesson-list.component';
 @Component({
   selector: 'app-course-list',
   standalone: true,
-  imports: [CommonModule, RouterLink, CourseFormComponent, LessonListComponent],
+  imports: [CommonModule, RouterLink, CourseFormComponent, LessonListComponent, FormsModule],
   templateUrl: './course-list.component.html',
   styleUrls: ['./course-list.component.css']
 })
@@ -16,6 +17,11 @@ export class CourseListComponent implements OnInit {
   courses: Course[] = [];
   loading = true;
   notification: { message: string; type: 'success' | 'error' } | null = null;
+  
+  // Search and filter
+  searchText = '';
+  selectedLevel = '';
+  availableLevels = ['Beginner', 'Intermediate', 'Advanced', 'Business'];
   
   // Form visibility
   showForm = false;
@@ -110,5 +116,35 @@ export class CourseListComponent implements OnInit {
   hideLessons(): void {
     this.showLessons = false;
     this.viewingCourseId = undefined;
+  }
+
+  // Get filtered courses based on search text and level
+  get filteredCourses(): Course[] {
+    let filtered = this.courses;
+    
+    // Filter by level
+    if (this.selectedLevel) {
+      filtered = filtered.filter(course => 
+        course.level.toLowerCase() === this.selectedLevel.toLowerCase()
+      );
+    }
+    
+    // Filter by search text (search in course title, description, and level)
+    if (this.searchText.trim()) {
+      const search = this.searchText.toLowerCase().trim();
+      filtered = filtered.filter(course =>
+        course.title.toLowerCase().includes(search) ||
+        course.description.toLowerCase().includes(search) ||
+        course.level.toLowerCase().includes(search)
+      );
+    }
+    
+    return filtered;
+  }
+
+  // Clear all filters
+  clearFilters(): void {
+    this.searchText = '';
+    this.selectedLevel = '';
   }
 }

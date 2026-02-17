@@ -1,0 +1,86 @@
+<app-navbar-front></app-navbar-front>
+<div class="courses-container">
+  <h2>Our Courses</h2>
+
+  <!-- Search and Filter Section -->
+  <div class="filter-section">
+    <!-- Search Bar -->
+    <div class="search-container">
+      <input
+        type="text"
+        [(ngModel)]="searchText"
+        placeholder="Search courses by title..."
+        class="search-input"
+      />
+      <span class="search-icon">🔍</span>
+    </div>
+
+    <!-- Level Radio Buttons -->
+    <div class="level-filter">
+      <span class="filter-label">Select your level:</span>
+      <div class="radio-group">
+        <label class="radio-option">
+          <input
+            type="radio"
+            name="level"
+            value=""
+            [(ngModel)]="selectedLevel"
+          />
+          <span class="radio-label">All Levels</span>
+        </label>
+        <label class="radio-option" *ngFor="let level of availableLevels">
+          <input
+            type="radio"
+            name="level"
+            [value]="level"
+            [(ngModel)]="selectedLevel"
+          />
+          <span class="radio-label">{{ level }}</span>
+        </label>
+      </div>
+    </div>
+
+    <!-- Clear Filters Button -->
+    <button
+      *ngIf="searchText || selectedLevel"
+      (click)="clearFilters()"
+      class="btn-clear"
+    >
+      Clear Filters
+    </button>
+  </div>
+
+  <!-- Results count -->
+  <div class="results-count" *ngIf="searchText || selectedLevel">
+    Showing {{ filteredCourses.length }} of {{ courses.length }} courses
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="loading">Loading courses...</div>
+
+  <!-- Empty state (no courses at all) -->
+  <div *ngIf="!loading && courses.length === 0">
+    <p>No courses available at the moment.</p>
+  </div>
+
+  <!-- Empty state (no filtered results) -->
+  <div *ngIf="!loading && filteredCourses.length === 0 && courses.length > 0">
+    <p>No courses match your search or filter criteria.</p>
+    <button (click)="clearFilters()" class="btn-clear">Clear Filters</button>
+  </div>
+
+  <!-- Course list -->
+  <div class="courses-grid" *ngIf="!loading && filteredCourses.length > 0">
+    <div class="course-card" *ngFor="let course of filteredCourses"
+         [routerLink]="['/cours', course.id, 'lessons']"
+         style="cursor: pointer;">
+      <span class="course-level">{{ course.level }}</span>
+      <h3>{{ course.title }}</h3>
+      <p class="course-description">{{ course.description }}</p>
+      <div class="course-footer">
+        <span class="course-duration">{{ course.duration }} hours</span>
+      </div>
+    </div>
+  </div>
+</div>
+<app-footer-front></app-footer-front>
