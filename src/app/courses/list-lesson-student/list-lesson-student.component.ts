@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { CourseService, Lesson, Course } from '../course-list/service/course.service';
 import { NavbarFrontComponent } from '../navbar-front/navbar-front.component';
+import { FooterFrontComponent } from '../footer-front/footer-front.component';
 
 @Component({
   selector: 'app-list-lesson-student',
   standalone: true,
-  imports: [CommonModule, RouterLink, NavbarFrontComponent],
+  imports: [CommonModule, RouterLink, NavbarFrontComponent, FooterFrontComponent],
   templateUrl: './list-lesson-student.component.html',
   styleUrls: ['./list-lesson-student.component.css']
 })
