@@ -1,54 +1,42 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { tap } from 'rxjs/operators';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
+  private apiUrl = 'http://localhost:8089/api/auth';
   private tokenKey = 'auth_token';
   private userKey = 'user_data';
 
-  constructor() {}
+  constructor(
+    private http: HttpClient,
+    private router: Router
+  ) {}
+
+  register(userData: any): Observable<any> {
+    console.log('Register URL:', `${this.apiUrl}/register`);
+    console.log('Register data:', userData);
+    
+    return this.http.post(`${this.apiUrl}/register`, userData);
+  }
 
   login(credentials: any): Observable<any> {
-    console.log('Login with:', credentials);
+    console.log('Login URL:', `${this.apiUrl}/login`);
+    console.log('Login data:', credentials);
     
-    // STATIC OBJECTS BASED ON EMAIL
-    let response: any;
-    
-    if (credentials.email === 'admin') {
-      // Admin login
-      response = {
-        token: 'admin-token-123',
-        email: 'admin@test.com',
-        role: 'ADMIN',
-        userId: 1
-      };
-    } 
-    else if (credentials.email === 'tutor') {
-      // Tutor login
-      response = {
-        token: 'tutor-token-456',
-        email: 'tutor@test.com',
-        role: 'TUTOR',
-        userId: 2
-      };
-    }
-    else {
-      // Student login (default)
-      response = {
-        token: 'student-token-789',
-        email: credentials.email || 'student@test.com',
-        role: 'STUDENT',
-        userId: 3
-      };
-    }
-    
-    // Save to localStorage
-    localStorage.setItem(this.tokenKey, response.token);
-    localStorage.setItem(this.userKey, JSON.stringify(response));
-    
-    return of(response);
+    return this.http.post(`${this.apiUrl}/login`, credentials).pipe(
+      tap((response: any) => {
+        console.log('Login response:', response);
+        if (response.token) {
+          localStorage.setItem(this.tokenKey, response.token);
+          localStorage.setItem(this.userKey, JSON.stringify(response));
+        }
+      })
+    );
   }
 
   getToken(): string | null {
@@ -60,6 +48,11 @@ export class AuthService {
     return user ? JSON.parse(user) : null;
   }
 
+  // ✅ NEW: Update user data in localStorage
+  updateUserData(userData: any): void {
+    localStorage.setItem(this.userKey, JSON.stringify(userData));
+  }
+
   isLoggedIn(): boolean {
     return !!this.getToken();
   }
@@ -67,5 +60,6 @@ export class AuthService {
   logout(): void {
     localStorage.removeItem(this.tokenKey);
     localStorage.removeItem(this.userKey);
+    this.router.navigate(['/login']);
   }
 }

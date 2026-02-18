@@ -21,6 +21,7 @@ import { CourseFormComponent } from './courses/course-form/course-form.component
 import { LessonListComponent } from './courses/lesson-list/lesson-list.component';
 import { LessonFormComponent } from './courses/lesson-form/lesson-form.component';
 import { PhysicalspaceComponent } from './backoffice/admin-view/physicalspace/physicalspace.component';
+<<<<<<< HEAD
 import { SeanceListComponent } from './coaching/seance-list/seance-list.component';
 import { SeanceFormComponent } from './coaching/seance-form/seance-form.component';
 import { ReservationListComponent } from './coaching/reservation-list/reservation-list.component';
@@ -31,6 +32,9 @@ import { ListLessonStudentComponent } from './courses/list-lesson-student/list-l
 import { FooterFrontComponent } from './courses/footer-front/footer-front.component';
 
 
+=======
+import { AuthGuard } from './guards/auth.guard';
+>>>>>>> frontofficebackoffice
 
 export const routes: Routes = [
   { path: 'login', component: StudentLoginComponent },
@@ -77,6 +81,11 @@ export const routes: Routes = [
         canActivate: [RoleGuard],
         data: { roles: ['ADMIN', 'TUTOR'] }
       },
+      { 
+        path: 'profile-completion', 
+        loadComponent: () => import('./profile-completion/profile-completion.component').then(m => m.ProfileCompletionComponent),
+        canActivate: [AuthGuard]
+      },
       
       // Admin only routes
       { 
@@ -106,6 +115,30 @@ export const routes: Routes = [
         canActivate: [RoleGuard],
         data: { roles: ['ADMIN'] }
       },
+      { 
+        path: 'admin/events', 
+        component: EventsComponent,
+        canActivate: [RoleGuard],
+        data: { roles: ['ADMIN'] }
+      },
+      { 
+        path: 'admin/clubs', 
+        component: ClubsComponent,
+        canActivate: [RoleGuard],
+        data: { roles: ['ADMIN'] }
+      },
+      { 
+        path: 'admin/classes', 
+        component: ClassesComponent,
+        canActivate: [RoleGuard],
+        data: { roles: ['ADMIN'] }
+      },
+      { 
+        path: 'admin/physicalspace', 
+        component: PhysicalspaceComponent,
+        canActivate: [RoleGuard],
+        data: { roles: ['ADMIN'] }
+      },
       
       // Tutor only routes
       { 
@@ -125,6 +158,7 @@ export const routes: Routes = [
         component: ScheduleComponent,
         canActivate: [RoleGuard],
         data: { roles: ['TUTOR'] }
+<<<<<<< HEAD
       },
       { 
         path: 'admin/events', 
@@ -150,6 +184,9 @@ export const routes: Routes = [
         canActivate: [RoleGuard],
         data: { roles: ['ADMIN'] }
       },
+=======
+      }
+>>>>>>> frontofficebackoffice
     ]
   }
 ];
