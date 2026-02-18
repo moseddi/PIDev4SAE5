@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wall Street English Login</title>
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather+Sans:wght@300;400;600;700&family=Merriweather:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #f7ede2;
+            font-family: 'Merriweather', serif;
+        }
+
+        .login-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #f7ede2 0%, #e8d9cc 100%);
+            padding: 20px;
+        }
+
+        .login-card {
+            display: flex;
+            width: 100%;
+            max-width: 1000px;
+            min-height: 600px;
+            background: white;
+            border-radius: 30px;
+            overflow: hidden;
+            box-shadow: 0 30px 60px rgba(45, 87, 87, 0.2);
+            animation: fadeIn 0.6s ease;
+        }
+
+        /* Left Branding Side with Photo */
+        .login-branding {
+            flex: 1;
+            background: linear-gradient(145deg, rgba(45, 87, 87, 0.85) 0%, rgba(30, 61, 61, 0.9) 100%), 
+                        url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=2071&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D') center/cover no-repeat;
+            padding: 60px 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .login-branding::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(247, 237, 226, 0.1) 0%, transparent 50%);
+            animation: rotate 20s linear infinite;
+            pointer-events: none;
+        }
+
+        .brand-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            color: #F7EDE2;
+            text-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .brand-logo {
+            width: 80px;
+            height: 80px;
+            background: #F7EDE2;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 30px;
+            font-size: 32px;
+            font-weight: 800;
+            color: #2D5757;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            transform: rotate(-5deg);
+            transition: transform 0.3s ease;
+            text-shadow: none;
+        }
+
+        .brand-logo:hover {
+            transform: rotate(0deg) scale(1.05);
+        }
+
+        .login-branding h1 {
+            font-size: 2rem;
+            font-weight: 300;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+            opacity: 0.95;
+        }
+
+        .login-branding h2 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 30px;
+            line-height: 1.3;
+            font-family: 'Merriweather Sans', sans-serif;
+            position: relative;
+            display: inline-block;
+        }
+
+        .login-branding h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 3px;
+            background: #F7EDE2;
+            border-radius: 2px;
+        }
+
+        .brand-message {
+            margin-top: 40px;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            opacity: 0.95;
+            max-width: 300px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Right Form Side */
+        .login-form {
+            flex: 1;
+            background: white;
+            padding: 60px 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .form-content {
+            width: 100%;
+            max-width: 350px;
+        }
+
+        .login-form h3 {
+            font-size: 2rem;
+            color: #2D5757;
+            margin-bottom: 40px;
+            font-family: 'Merriweather Sans', sans-serif;
+            position: relative;
+        }
+
+        .login-form h3::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background: #2D5757;
+            border-radius: 2px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #2D5757;
+            font-weight: 600;
+            font-size: 0.95rem;
+            font-family: 'Merriweather Sans', sans-serif;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e8d9cc;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: #F7EDE2;
+            color: #2D5757;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #2D5757;
+            background: white;
+            box-shadow: 0 5px 15px rgba(45, 87, 87, 0.1);
+        }
+
+        .form-control::placeholder {
+            color: #a8b5b5;
+            font-size: 0.9rem;
+        }
+
+        .btn-login {
+            width: 100%;
+            padding: 14px;
+            background: #2D5757;
+            color: #F7EDE2;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            font-family: 'Merriweather Sans', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 15px;
+            box-shadow: 0 5px 15px rgba(45, 87, 87, 0.3);
+        }
+
+        .btn-login:hover {
+            background: #1e3d3d;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(45, 87, 87, 0.4);
+        }
+
+        .form-links {
+            text-align: center;
+            margin-top: 25px;
+        }
+
+        .forgot-link {
+            color: #2D5757;
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            border-bottom: 1px dashed transparent;
+        }
+
+        .forgot-link:hover {
+            color: #1e3d3d;
+            border-bottom-color: #2D5757;
+        }
+
+        /* Social Login Section */
+        .social-login {
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .social-text {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+            position: relative;
+        }
+
+        .social-text::before,
+        .social-text::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 30%;
+            height: 1px;
+            background: #e8d9cc;
+        }
+
+        .social-text::before {
+            left: 0;
+        }
+
+        .social-text::after {
+            right: 0;
+        }
+
+        .social-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .social-btn {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 12px 20px;
+            border: 2px solid transparent;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            font-family: 'Merriweather Sans', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .social-btn i {
+            font-size: 1.2rem;
+        }
+
+        .google-btn {
+            background: #ffffff;
+            border-color: #e8d9cc;
+            color: #2D5757;
+        }
+
+        .google-btn:hover {
+            background: #f8f9fa;
+            border-color: #2D5757;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(45, 87, 87, 0.1);
+        }
+
+        .google-btn i {
+            color: #DB4437;
+        }
+
+        .facebook-btn {
+            background: #ffffff;
+            border-color: #e8d9cc;
+            color: #2D5757;
+        }
+
+        .facebook-btn:hover {
+            background: #f8f9fa;
+            border-color: #2D5757;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(45, 87, 87, 0.1);
+        }
+
+        .facebook-btn i {
+            color: #4267B2;
+        }
+
+        .signup-section {
+            margin-top: 40px;
+            text-align: center;
+            padding-top: 30px;
+            border-top: 2px solid #F7EDE2;
+        }
+
+        .signup-section p {
+            color: #666;
+            margin-bottom: 15px;
+            font-size: 0.95rem;
+        }
+
+        .btn-signup {
+            display: inline-block;
+            padding: 12px 40px;
+            background: transparent;
+            color: #2D5757;
+            border: 2px solid #2D5757;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            font-family: 'Merriweather Sans', sans-serif;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .btn-signup:hover {
+            background: #2D5757;
+            color: #F7EDE2;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(45, 87, 87, 0.2);
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes rotate {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .login-card {
+                flex-direction: column;
+                max-width: 450px;
+            }
+
+            .login-branding {
+                padding: 40px 20px;
+                min-height: 280px;
+            }
+
+            .login-branding h1 {
+                font-size: 1.6rem;
+            }
+
+            .login-branding h2 {
+                font-size: 1.8rem;
+            }
+
+            .login-form {
+                padding: 40px 30px;
+            }
+
+            .login-form h3 {
+                font-size: 1.8rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .login-container {
+                padding: 10px;
+            }
+
+            .login-form {
+                padding: 30px 20px;
+            }
+
+            .btn-signup {
+                padding: 10px 30px;
+            }
+
+            .social-buttons {
+                flex-direction: column;
+            }
+
+            .social-btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-card">
+            <!-- Left side with branding and photo background -->
+            <div class="login-branding">
+                <div class="brand-content">
+                    <div class="brand-logo">WSE</div>
+                    <h1>Welcome to</h1>
+                    <h2>Wall Street English</h2>
+                    <div class="brand-message">
+                        <p>Your journey to fluency starts here</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right side with login form -->
+            <div class="login-form">
+                <div class="form-content">
+                    <h3>Student Login</h3>
+                    
+                    <form>
+                        <div class="form-group">
+                            <label for="username">Username or Email</label>
+                            <input 
+                                type="text" 
+                                id="username" 
+                                class="form-control" 
+                                placeholder="Enter your username or email"
+                            >
+                        </div>
+
+                        <div class="form-group">
+                            <label for="password">Password</label>
+                            <input 
+                                type="password" 
+                                id="password" 
+                                class="form-control" 
+                                placeholder="Enter your password"
+                            >
+                        </div>
+
+                        <button type="submit" class="btn-login">Login</button>
+
+                        <div class="form-links">
+                            <a href="javascript:void(0)" class="forgot-link">Forgot username / password?</a>
+                        </div>
+
+                        <!-- Social Login Section -->
+                        <div class="social-login">
+                            <p class="social-text">Or continue with</p>
+                            <div class="social-buttons">
+                                <button class="social-btn google-btn">
+                                    <i class="bi bi-google"></i>
+                                    <span>Google</span>
+                                </button>
+                                <button class="social-btn facebook-btn">
+                                    <i class="bi bi-facebook"></i>
+                                    <span>Facebook</span>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="signup-section">
+  <p class="mb-2">Not a Wall Street English student?</p>
+  <a routerLink="/signup" class="btn-signup">
+    <i class="bi bi-person-plus me-2"></i>
+    Create an account
+  </a>
+</div>
+
+                        
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

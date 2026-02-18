@@ -1,0 +1,58 @@
+<!-- Notification Banner -->
+<div class="notification" *ngIf="notification" [ngClass]="notification.type">
+  {{ notification.message }}
+</div>
+
+<div class="reservations-container">
+  <div class="reservations-header">
+    <h2>📅 {{ seanceId ? 'Seance Reservations' : 'All Reservations' }}</h2>
+    <div class="header-actions">
+      <a *ngIf="seanceId" [routerLink]="['/seances', seanceId, 'reservations', 'new']" class="btn-add">+ New Reservation</a>
+      <a routerLink="/seances" class="btn-back">← Back to Seances</a>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div class="loading-spinner" *ngIf="loading">
+    <p>Loading reservations...</p>
+  </div>
+
+  <!-- Empty State -->
+  <div class="empty-state" *ngIf="!loading && reservations.length === 0">
+    <p>No reservations found.</p>
+    <a *ngIf="seanceId" [routerLink]="['/seances', seanceId, 'reservations', 'new']" class="btn-add">+ Create Reservation</a>
+  </div>
+
+  <!-- Reservation Table -->
+  <div class="table-wrapper" *ngIf="!loading && reservations.length > 0">
+    <table class="reservations-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Student Name</th>
+          <th>Date</th>
+          <th>Status</th>
+          <th>Seance</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let reservation of reservations">
+          <td>{{ reservation.id }}</td>
+          <td>{{ reservation.studidname }}</td>
+          <td>{{ reservation.merenumber }}</td>
+          <td>
+            <span class="status-badge" [ngClass]="getStatusClass(reservation.status)">
+              {{ reservation.status }}
+            </span>
+          </td>
+          <td>{{ reservation.seance?.goodName || '—' }}</td>
+          <td class="actions-cell">
+            <a [routerLink]="['/reservations/edit', reservation.id]" class="btn-small btn-edit">Edit</a>
+            <button (click)="deleteReservation(reservation)" class="btn-small btn-delete">Delete</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
