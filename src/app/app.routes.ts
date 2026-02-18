@@ -13,15 +13,12 @@ import { RoleGuard } from './guards/role.guard';
 import { EventsComponent } from './backoffice/admin-view/events/events.component';
 import { ClubsComponent } from './backoffice/admin-view/clubs/clubs.component';
 import { CourseListComponent } from './courses/course-list/course-list.component';
-
 import { ListeCoursStudentComponent } from './courses/liste-cours-student/liste-cours-student.component';
-
 import { ClassesComponent } from './backoffice/admin-view/classes/classes.component';
 import { CourseFormComponent } from './courses/course-form/course-form.component';
 import { LessonListComponent } from './courses/lesson-list/lesson-list.component';
 import { LessonFormComponent } from './courses/lesson-form/lesson-form.component';
 import { PhysicalspaceComponent } from './backoffice/admin-view/physicalspace/physicalspace.component';
-<<<<<<< HEAD
 import { SeanceListComponent } from './coaching/seance-list/seance-list.component';
 import { SeanceFormComponent } from './coaching/seance-form/seance-form.component';
 import { ReservationListComponent } from './coaching/reservation-list/reservation-list.component';
@@ -30,11 +27,7 @@ import { NavbarFrontComponent } from './courses/navbar-front/navbar-front.compon
 import { ListLessonComponent } from './courses/list-lesson/list-lesson.component';
 import { ListLessonStudentComponent } from './courses/list-lesson-student/list-lesson-student.component';
 import { FooterFrontComponent } from './courses/footer-front/footer-front.component';
-
-
-=======
 import { AuthGuard } from './guards/auth.guard';
->>>>>>> frontofficebackoffice
 
 export const routes: Routes = [
   { path: 'login', component: StudentLoginComponent },
@@ -46,6 +39,7 @@ export const routes: Routes = [
   // Student Course routes
   { path: 'cours', component: ListeCoursStudentComponent },
   { path: 'cours/:courseId/lessons', component: ListLessonStudentComponent },
+  
   // Course routes
   { path: 'courses', component: CourseListComponent },
   { path: 'courses/new', component: CourseFormComponent },
@@ -101,21 +95,6 @@ export const routes: Routes = [
         data: { roles: ['ADMIN'] }
       },
       { 
-        path: 'courses', 
-        component: CourseListComponent,
-        canActivate: [RoleGuard],
-        data: { roles: ['ADMIN'] }
-      },
-
-
-
-      { 
-        path: 'courses/new', 
-        component: CourseFormComponent,
-        canActivate: [RoleGuard],
-        data: { roles: ['ADMIN'] }
-      },
-      { 
         path: 'admin/events', 
         component: EventsComponent,
         canActivate: [RoleGuard],
@@ -136,6 +115,18 @@ export const routes: Routes = [
       { 
         path: 'admin/physicalspace', 
         component: PhysicalspaceComponent,
+        canActivate: [RoleGuard],
+        data: { roles: ['ADMIN'] }
+      },
+      { 
+        path: 'courses', 
+        component: CourseListComponent,
+        canActivate: [RoleGuard],
+        data: { roles: ['ADMIN'] }
+      },
+      { 
+        path: 'courses/new', 
+        component: CourseFormComponent,
         canActivate: [RoleGuard],
         data: { roles: ['ADMIN'] }
       },
@@ -158,35 +149,7 @@ export const routes: Routes = [
         component: ScheduleComponent,
         canActivate: [RoleGuard],
         data: { roles: ['TUTOR'] }
-<<<<<<< HEAD
-      },
-      { 
-        path: 'admin/events', 
-        component: EventsComponent,
-        canActivate: [RoleGuard],
-        data: { roles: ['ADMIN'] }
-      },
-      { 
-        path: 'admin/clubs', 
-        component: ClubsComponent,
-        canActivate: [RoleGuard],
-        data: { roles: ['ADMIN'] }
-      },
-      { 
-        path: 'admin/classes', 
-        component: ClassesComponent,
-        canActivate: [RoleGuard],
-        data: { roles: ['ADMIN'] }
-      },
-      { 
-        path: 'admin/physicalspace', 
-        component: PhysicalspaceComponent,
-        canActivate: [RoleGuard],
-        data: { roles: ['ADMIN'] }
-      },
-=======
       }
->>>>>>> frontofficebackoffice
     ]
   }
 ];
