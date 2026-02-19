@@ -20,53 +20,55 @@ export interface Reservation {
 
 @Injectable({ providedIn: 'root' })
 export class CoachingService {
-  private baseUrl = '/Coaching-service/api';
+  //private baseUrl = '/Coaching-service/api';
+
+  apiUrl = 'http://localhost:8089/Coaching-service';
 
   constructor(private http: HttpClient) {}
 
   // ---- Seances ----
   getAllSeances(): Observable<Seance[]> {
-    return this.http.get<Seance[]>(`${this.baseUrl}/seances`);
+    return this.http.get<Seance[]>(`${this.apiUrl}/api/seances`);
   }
 
   getSeanceById(id: number): Observable<Seance> {
-    return this.http.get<Seance>(`${this.baseUrl}/seances/${id}`);
+    return this.http.get<Seance>(`${this.apiUrl}/api/seances/${id}`);
   }
 
   createSeance(seance: Seance): Observable<Seance> {
-    return this.http.post<Seance>(`${this.baseUrl}/seances`, seance);
+    return this.http.post<Seance>(`${this.apiUrl}/api/seances`, seance);
   }
 
   updateSeance(id: number, seance: Seance): Observable<Seance> {
-    return this.http.put<Seance>(`${this.baseUrl}/seances/${id}`, seance);
+    return this.http.put<Seance>(`${this.apiUrl}/api/seances/${id}`, seance);
   }
 
   deleteSeance(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.baseUrl}/seances/${id}`);
+    return this.http.delete<void>(`${this.apiUrl}/api/seances/${id}`);
   }
 
   // ---- Reservations ----
   getAllReservations(): Observable<Reservation[]> {
-    return this.http.get<Reservation[]>(`${this.baseUrl}/reservations`);
+    return this.http.get<Reservation[]>(`${this.apiUrl}/api/reservations`);
   }
 
   getReservationById(id: number): Observable<Reservation> {
-    return this.http.get<Reservation>(`${this.baseUrl}/reservations/${id}`);
+    return this.http.get<Reservation>(`${this.apiUrl}/api/reservations/${id}`);
   }
 
   getReservationsBySeance(seanceId: number): Observable<Reservation[]> {
-    return this.http.get<Reservation[]>(`${this.baseUrl}/seances/${seanceId}/reservations`);
+    return this.http.get<Reservation[]>(`${this.apiUrl}/api/seances/${seanceId}/reservations`);
   }
 
   createReservation(seanceId: number, reservation: Reservation): Observable<Reservation> {
-    return this.http.post<Reservation>(`${this.baseUrl}/seances/${seanceId}/reservations`, reservation);
+    return this.http.post<Reservation>(`${this.apiUrl}/api/seances/${seanceId}/reservations`, reservation);
   }
 
   updateReservation(id: number, reservation: Reservation): Observable<Reservation> {
-    return this.http.put<Reservation>(`${this.baseUrl}/reservations/${id}`, reservation);
+    return this.http.put<Reservation>(`${this.apiUrl}/api/reservations/${id}`, reservation);
   }
 
   deleteReservation(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.baseUrl}/reservations/${id}`);
+    return this.http.delete<void>(`${this.apiUrl}/api/reservations/${id}`);
   }
 }
