@@ -729,3 +729,78 @@ html {
   color: #F7EDE2;
   font-size: 1.3rem;
 }
+.password-strength {
+  margin-top: 8px;
+}
+
+.strength-meter {
+  height: 4px;
+  background: #e0e0e0;
+  border-radius: 2px;
+  margin-bottom: 5px;
+}
+
+.strength-bar {
+  height: 100%;
+  border-radius: 2px;
+  transition: all 0.3s ease;
+  width: 0;
+}
+
+.strength-bar.weak {
+  width: 33%;
+  background: #ff4d4d;
+}
+
+.strength-bar.medium {
+  width: 66%;
+  background: #ffa64d;
+}
+
+.strength-bar.strong {
+  width: 100%;
+  background: #4CAF50;
+}
+
+.strength-text {
+  font-size: 0.8rem;
+  margin-bottom: 8px;
+}
+
+.strength-text.weak { color: #ff4d4d; }
+.strength-text.medium { color: #ffa64d; }
+.strength-text.strong { color: #4CAF50; }
+
+.password-requirements {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 5px;
+  margin-top: 5px;
+  font-size: 0.75rem;
+}
+
+.requirement {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: #999;
+}
+
+.requirement i {
+  font-size: 0.7rem;
+}
+
+.requirement.valid {
+  color: #4CAF50;
+}
+
+.requirement.valid i {
+  color: #4CAF50;
+}
+
+.optional {
+  color: #999;
+  font-size: 0.8rem;
+  font-weight: normal;
+  margin-left: 5px;
+}

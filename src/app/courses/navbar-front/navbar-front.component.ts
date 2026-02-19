@@ -1,27 +1,40 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { AuthService } from '../../services/auth.service';
+import { ProfileCompletionComponent } from '../../profile-completion/profile-completion.component'; // ADD THIS IMPORT
 
 @Component({
   selector: 'app-navbar-front',
   standalone: true,
-  imports: [CommonModule, RouterLink], // ✅ Modules nécessaires ajoutés
+  imports: [
+    CommonModule, 
+    RouterLink,
+    ProfileCompletionComponent // ADD THIS TO IMPORTS
+  ],
   templateUrl: './navbar-front.component.html',
-  styleUrls: ['./navbar-front.component.css'] // ✅ 'styleUrls' (avec 's')
+  styleUrls: ['./navbar-front.component.css']
 })
 export class NavbarFrontComponent implements OnInit {
   isNavbarScrolled = false;
   isLoggedIn = false;
   userRole: string = '';
   canAccessBackoffice = false;
+  user: any = {};
+  showProfileModal = false;
 
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private authService: AuthService
+  ) {}
 
   ngOnInit(): void {
-    // Initialisation (à remplacer par un vrai service d'authentification)
-    this.isLoggedIn = false;
-    this.userRole = '';
-    this.canAccessBackoffice = false;
+    // Get user data from AuthService
+    const user = this.authService.getUser();
+    this.user = user;
+    this.isLoggedIn = !!user;
+    this.userRole = user?.role || '';
+    this.canAccessBackoffice = this.userRole === 'ADMIN' || this.userRole === 'TUTOR';
   }
 
   @HostListener('window:scroll', [])
@@ -30,8 +43,25 @@ export class NavbarFrontComponent implements OnInit {
   }
 
   logout(): void {
-    // Logique de déconnexion
-    // this.authService.logout();
-    this.router.navigate(['/home']);
+    this.authService.logout();
+    this.isLoggedIn = false;
+    this.userRole = '';
+    this.canAccessBackoffice = false;
+    this.user = {};
+    this.showProfileModal = false;
+  }
+
+  openProfileModal(): void {
+    this.showProfileModal = true;
+  }
+
+  closeModal(): void {
+    this.showProfileModal = false;
+  }
+
+  onProfileUpdated(): void {
+    // Refresh user data when profile is updated
+    const updatedUser = this.authService.getUser();
+    this.user = updatedUser;
   }
 }

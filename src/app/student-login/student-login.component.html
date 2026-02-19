@@ -230,6 +230,11 @@
             box-shadow: 0 8px 25px rgba(45, 87, 87, 0.4);
         }
 
+        .btn-login:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
         .form-links {
             text-align: center;
             margin-top: 25px;
@@ -374,6 +379,46 @@
             box-shadow: 0 5px 15px rgba(45, 87, 87, 0.2);
         }
 
+        .error-message {
+            color: #dc3545;
+            font-size: 0.85rem;
+            margin-top: 5px;
+        }
+
+        .error-alert {
+            background: #fee;
+            color: #c33;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.9rem;
+        }
+
+        .error-alert i {
+            font-size: 1.2rem;
+        }
+
+        .required {
+            color: #dc3545;
+        }
+
+        .spinner-border {
+            width: 1.2rem;
+            height: 1.2rem;
+            border: 0.2em solid currentColor;
+            border-right-color: transparent;
+            border-radius: 50%;
+            animation: spinner-border .75s linear infinite;
+            display: inline-block;
+        }
+
+        @keyframes spinner-border {
+            to { transform: rotate(360deg); }
+        }
+
         /* Animations */
         @keyframes fadeIn {
             from {
@@ -467,56 +512,78 @@
                 <div class="form-content">
                     <h3>Student Login</h3>
                     
-                    <form>
-                        <div class="form-group">
-                            <label for="username">Username or Email</label>
-                            <input 
-                                type="text" 
-                                id="username" 
-                                class="form-control" 
-                                placeholder="Enter your username or email"
-                            >
+                    <form (ngSubmit)="onSubmit()">
+                        <!-- Error Message -->
+                        <div class="error-alert" *ngIf="errorMessage">
+                            <i class="bi bi-exclamation-triangle-fill"></i>
+                            <p>{{ errorMessage }}</p>
                         </div>
 
                         <div class="form-group">
-                            <label for="password">Password</label>
+                            <label for="email">Email <span class="required">*</span></label>
+                            <input 
+                                type="email" 
+                                id="email" 
+                                name="email"
+                                class="form-control" 
+                                placeholder="Enter your email"
+                                [(ngModel)]="loginData.email"
+                                required
+                                #email="ngModel"
+                            >
+                            <div class="error-message" *ngIf="email.invalid && email.touched">
+                                Email is required
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="password">Password <span class="required">*</span></label>
                             <input 
                                 type="password" 
                                 id="password" 
+                                name="password"
                                 class="form-control" 
                                 placeholder="Enter your password"
+                                [(ngModel)]="loginData.password"
+                                required
+                                #password="ngModel"
                             >
+                            <div class="error-message" *ngIf="password.invalid && password.touched">
+                                Password is required
+                            </div>
                         </div>
 
-                        <button type="submit" class="btn-login">Login</button>
+                        <button type="submit" class="btn-login" [disabled]="isLoading">
+                            <span *ngIf="!isLoading">Login</span>
+                            <span *ngIf="isLoading" class="spinner-border"></span>
+                        </button>
 
                         <div class="form-links">
-                            <a href="javascript:void(0)" class="forgot-link">Forgot username / password?</a>
+                            <a routerLink="/forgot-password" class="forgot-link">Forgot password?</a>
                         </div>
 
                         <!-- Social Login Section -->
                         <div class="social-login">
                             <p class="social-text">Or continue with</p>
                             <div class="social-buttons">
-                                <button class="social-btn google-btn">
+                                <button type="button" class="social-btn google-btn" (click)="socialLogin('google')">
                                     <i class="bi bi-google"></i>
                                     <span>Google</span>
                                 </button>
-                                <button class="social-btn facebook-btn">
+                                <button type="button" class="social-btn facebook-btn" (click)="socialLogin('facebook')">
                                     <i class="bi bi-facebook"></i>
                                     <span>Facebook</span>
                                 </button>
                             </div>
                         </div>
-                        <div class="signup-section">
-  <p class="mb-2">Not a Wall Street English student?</p>
-  <a routerLink="/signup" class="btn-signup">
-    <i class="bi bi-person-plus me-2"></i>
-    Create an account
-  </a>
-</div>
-
                         
+                        <div class="signup-section">
+                            <p class="mb-2">Not a Wall Street English student?</p>
+                            <a routerLink="/signup" class="btn-signup">
+                                <i class="bi bi-person-plus me-2"></i>
+                                Create an account
+                            </a>
+                        </div>
                     </form>
                 </div>
             </div>

@@ -13,9 +13,7 @@ import { RoleGuard } from './guards/role.guard';
 import { EventsComponent } from './backoffice/admin-view/events/events.component';
 import { ClubsComponent } from './backoffice/admin-view/clubs/clubs.component';
 import { CourseListComponent } from './courses/course-list/course-list.component';
-
 import { ListeCoursStudentComponent } from './courses/liste-cours-student/liste-cours-student.component';
-
 import { ClassesComponent } from './backoffice/admin-view/classes/classes.component';
 import { CourseFormComponent } from './courses/course-form/course-form.component';
 import { LessonListComponent } from './courses/lesson-list/lesson-list.component';
@@ -29,8 +27,7 @@ import { NavbarFrontComponent } from './courses/navbar-front/navbar-front.compon
 import { ListLessonComponent } from './courses/list-lesson/list-lesson.component';
 import { ListLessonStudentComponent } from './courses/list-lesson-student/list-lesson-student.component';
 import { FooterFrontComponent } from './courses/footer-front/footer-front.component';
-
-
+import { AuthGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
   { path: 'login', component: StudentLoginComponent },
@@ -42,6 +39,7 @@ export const routes: Routes = [
   // Student Course routes
   { path: 'cours', component: ListeCoursStudentComponent },
   { path: 'cours/:courseId/lessons', component: ListLessonStudentComponent },
+  
   // Course routes
   { path: 'courses', component: CourseListComponent },
   { path: 'courses/new', component: CourseFormComponent },
@@ -77,6 +75,11 @@ export const routes: Routes = [
         canActivate: [RoleGuard],
         data: { roles: ['ADMIN', 'TUTOR'] }
       },
+      { 
+        path: 'profile-completion', 
+        loadComponent: () => import('./profile-completion/profile-completion.component').then(m => m.ProfileCompletionComponent),
+        canActivate: [AuthGuard]
+      },
       
       // Admin only routes
       { 
@@ -90,41 +93,6 @@ export const routes: Routes = [
         component: UsersComponent,
         canActivate: [RoleGuard],
         data: { roles: ['ADMIN'] }
-      },
-      { 
-        path: 'courses', 
-        component: CourseListComponent,
-        canActivate: [RoleGuard],
-        data: { roles: ['ADMIN'] }
-      },
-
-
-
-      { 
-        path: 'courses/new', 
-        component: CourseFormComponent,
-        canActivate: [RoleGuard],
-        data: { roles: ['ADMIN'] }
-      },
-      
-      // Tutor only routes
-      { 
-        path: 'tutor', 
-        component: TutorViewComponent,
-        canActivate: [RoleGuard],
-        data: { roles: ['TUTOR'] }
-      },
-      { 
-        path: 'tutor/my-students', 
-        component: MyStudentsComponent,
-        canActivate: [RoleGuard],
-        data: { roles: ['TUTOR'] }
-      },
-      { 
-        path: 'tutor/schedule', 
-        component: ScheduleComponent,
-        canActivate: [RoleGuard],
-        data: { roles: ['TUTOR'] }
       },
       { 
         path: 'admin/events', 
@@ -150,6 +118,38 @@ export const routes: Routes = [
         canActivate: [RoleGuard],
         data: { roles: ['ADMIN'] }
       },
+      { 
+        path: 'courses', 
+        component: CourseListComponent,
+        canActivate: [RoleGuard],
+        data: { roles: ['ADMIN'] }
+      },
+      { 
+        path: 'courses/new', 
+        component: CourseFormComponent,
+        canActivate: [RoleGuard],
+        data: { roles: ['ADMIN'] }
+      },
+      
+      // Tutor only routes
+      { 
+        path: 'tutor', 
+        component: TutorViewComponent,
+        canActivate: [RoleGuard],
+        data: { roles: ['TUTOR'] }
+      },
+      { 
+        path: 'tutor/my-students', 
+        component: MyStudentsComponent,
+        canActivate: [RoleGuard],
+        data: { roles: ['TUTOR'] }
+      },
+      { 
+        path: 'tutor/schedule', 
+        component: ScheduleComponent,
+        canActivate: [RoleGuard],
+        data: { roles: ['TUTOR'] }
+      }
     ]
   }
 ];

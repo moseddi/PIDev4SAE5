@@ -33,7 +33,13 @@
         <p class="form-subtitle">Fill in your information to get started</p>
         
         <form #signupForm="ngForm" (ngSubmit)="onSubmit()">
-          <!-- Email -->
+          <!-- Error Message -->
+          <div class="error-alert" *ngIf="errorMessage">
+            <i class="bi bi-exclamation-triangle-fill"></i>
+            <p>{{ errorMessage }}</p>
+          </div>
+
+          <!-- Email (Required) -->
           <div class="form-group">
             <label for="email">Email <span class="required">*</span></label>
             <input 
@@ -44,18 +50,24 @@
               placeholder="Enter your email"
               [(ngModel)]="signupData.email"
               required
-              email
+              (blur)="onEmailBlur()"
+              (input)="emailTouched = true; emailExists = false"
               #email="ngModel"
             >
             <div class="error-message" *ngIf="email.invalid && email.touched">
               <span *ngIf="email.errors?.['required']">Email is required</span>
-              <span *ngIf="email.errors?.['email']">Please enter a valid email</span>
+            </div>
+            <div class="error-message" *ngIf="validateEmail()">
+              {{ validateEmail() }}
+            </div>
+            <div class="error-message" *ngIf="emailExists">
+              This email is already registered
             </div>
           </div>
 
-          <!-- First Name -->
+          <!-- First Name (Optional with validation) -->
           <div class="form-group">
-            <label for="firstName">First Name <span class="required">*</span></label>
+            <label for="firstName">First Name <span class="optional">(Optional)</span></label>
             <input 
               type="text" 
               id="firstName" 
@@ -63,43 +75,51 @@
               class="form-control" 
               placeholder="Enter your first name"
               [(ngModel)]="signupData.firstName"
-              required
+              (blur)="onFirstNameBlur()"
               #firstName="ngModel"
             >
-            <div class="error-message" *ngIf="firstName.invalid && firstName.touched">
-              First name is required
+            <div class="error-message" *ngIf="validateFirstName()">
+              {{ validateFirstName() }}
             </div>
           </div>
 
-          <!-- Last Name (Optional) -->
+          <!-- Last Name (Optional with validation) -->
           <div class="form-group">
-            <label for="lastName">Last Name</label>
+            <label for="lastName">Last Name <span class="optional">(Optional)</span></label>
             <input 
               type="text" 
               id="lastName" 
               name="lastName"
               class="form-control" 
-              placeholder="Enter your last name (optional)"
+              placeholder="Enter your last name"
               [(ngModel)]="signupData.lastName"
+              (blur)="onLastNameBlur()"
               #lastName="ngModel"
             >
+            <div class="error-message" *ngIf="validateLastName()">
+              {{ validateLastName() }}
+            </div>
           </div>
 
-          <!-- Phone Number (Optional) -->
+          <!-- Phone Number (Optional with validation) -->
           <div class="form-group">
-            <label for="phoneNumber">Phone Number</label>
+            <label for="phoneNumber">Phone Number <span class="optional">(Optional)</span></label>
             <input 
               type="tel" 
               id="phoneNumber" 
               name="phoneNumber"
               class="form-control" 
-              placeholder="Enter your phone number (optional)"
+              placeholder="Enter your phone number"
               [(ngModel)]="signupData.phoneNumber"
+              (blur)="onPhoneNumberBlur()"
               #phoneNumber="ngModel"
             >
+            <div class="error-message" *ngIf="validatePhoneNumber()">
+              {{ validatePhoneNumber() }}
+            </div>
           </div>
 
-          <!-- Password -->
+          <!-- Password (Required) -->
           <div class="form-group">
             <label for="password">Password <span class="required">*</span></label>
             <input 
@@ -110,16 +130,43 @@
               placeholder="Create a password"
               [(ngModel)]="signupData.password"
               required
-              minlength="6"
               #password="ngModel"
             >
-            <div class="error-message" *ngIf="password.invalid && password.touched">
-              <span *ngIf="password.errors?.['required']">Password is required</span>
-              <span *ngIf="password.errors?.['minlength']">Password must be at least 6 characters</span>
+
+            <!-- Password Strength Indicator -->
+            <div class="password-strength" *ngIf="signupData.password">
+              <div class="strength-meter">
+                <div class="strength-bar" [ngClass]="getPasswordStrengthClass()"></div>
+              </div>
+              <div class="strength-text" [ngClass]="getPasswordStrengthClass()">
+                {{ getPasswordStrengthText() }}
+              </div>
+              <div class="password-requirements">
+                <div class="requirement" [class.valid]="hasMinLength">
+                  <i class="bi" [ngClass]="hasMinLength ? 'bi-check-circle-fill' : 'bi-circle'"></i>
+                  At least 8 characters
+                </div>
+                <div class="requirement" [class.valid]="hasUpperCase">
+                  <i class="bi" [ngClass]="hasUpperCase ? 'bi-check-circle-fill' : 'bi-circle'"></i>
+                  One uppercase letter
+                </div>
+                <div class="requirement" [class.valid]="hasLowerCase">
+                  <i class="bi" [ngClass]="hasLowerCase ? 'bi-check-circle-fill' : 'bi-circle'"></i>
+                  One lowercase letter
+                </div>
+                <div class="requirement" [class.valid]="hasNumber">
+                  <i class="bi" [ngClass]="hasNumber ? 'bi-check-circle-fill' : 'bi-circle'"></i>
+                  One number
+                </div>
+                <div class="requirement" [class.valid]="hasSpecialChar">
+                  <i class="bi" [ngClass]="hasSpecialChar ? 'bi-check-circle-fill' : 'bi-circle'"></i>
+                  One special character (!&#64;#$%^&*)
+                </div>
+              </div>
             </div>
           </div>
 
-          <!-- Confirm Password -->
+          <!-- Confirm Password (Required) -->
           <div class="form-group">
             <label for="confirmPassword">Confirm Password <span class="required">*</span></label>
             <input 
@@ -137,7 +184,7 @@
             </div>
           </div>
 
-          <!-- Terms Checkbox -->
+          <!-- Terms Checkbox (Required) -->
           <div class="terms-checkbox">
             <input type="checkbox" id="terms" name="acceptTerms" [(ngModel)]="acceptTerms" required #terms="ngModel">
             <label for="terms">
@@ -180,12 +227,6 @@
         <div class="success-message" *ngIf="signupSuccess">
           <i class="bi bi-check-circle-fill"></i>
           <p>Account created successfully! Redirecting to login...</p>
-        </div>
-
-        <!-- Error Message -->
-        <div class="error-alert" *ngIf="errorMessage">
-          <i class="bi bi-exclamation-triangle-fill"></i>
-          <p>{{ errorMessage }}</p>
         </div>
       </div>
     </div>

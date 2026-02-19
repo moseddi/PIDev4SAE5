@@ -1,0 +1,178 @@
+<div class="signup-container" style="min-height: auto; padding: 0;">
+  <div class="signup-card" style="max-width: 100%; margin: 0; border-radius: 0;">
+    <!-- Left side with branding -->
+    <div class="signup-branding" style="flex: 0.8; background: linear-gradient(145deg, rgba(45, 87, 87, 0.95) 0%, rgba(30, 61, 61, 0.98) 100%), url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=2071&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D') center/cover no-repeat; padding: 40px 20px; display: flex; align-items: center; justify-content: center;">
+      <div class="brand-content" style="text-align: center; color: #F7EDE2;">
+        <div class="brand-logo" style="width: 60px; height: 60px; background: #F7EDE2; border-radius: 20px; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; font-size: 24px; font-weight: 800; color: #2D5757;">WSE</div>
+        <h1 style="font-size: 1.8rem;">My</h1>
+        <h2 style="font-size: 2rem;">Profile</h2>
+        <p style="margin-top: 20px;">Complete your information</p>
+      </div>
+    </div>
+
+    <!-- Right side with profile form -->
+    <div class="signup-form" style="flex: 1.2; background: white; padding: 30px;">
+      <div class="form-content" style="max-width: 500px; margin: 0 auto;">
+        <!-- Profile Header -->
+        <div style="text-align: center; margin-bottom: 25px;">
+          <div style="width: 70px; height: 70px; background: #2D5757; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 10px;">
+            <span style="color: #F7EDE2; font-size: 1.8rem; font-weight: 600;">{{ getInitials() }}</span>
+          </div>
+          <h3 style="color: #2D5757;">{{ user?.email }}</h3>
+          <span style="display: inline-block; padding: 4px 12px; background: #2D5757; color: #F7EDE2; border-radius: 20px; font-size: 0.8rem;">{{ user?.role || 'STUDENT' }}</span>
+        </div>
+
+        <!-- Messages -->
+        <div style="background: #d4edda; color: #155724; padding: 10px; border-radius: 12px; margin-bottom: 15px;" *ngIf="successMessage">
+          <i class="bi bi-check-circle-fill"></i> {{ successMessage }}
+        </div>
+        <div style="background: #fee; color: #c33; padding: 10px; border-radius: 12px; margin-bottom: 15px;" *ngIf="errorMessage"> 
+          <i class="bi bi-exclamation-triangle-fill"></i> {{ errorMessage }}
+        </div>
+
+        <!-- View Mode -->
+        <div *ngIf="!isEditing">
+          <!-- Basic Info -->
+          <div style="margin-bottom: 12px; padding-bottom: 8px; border-bottom: 2px solid #e8d9cc;">
+            <div style="color: #2D5757; font-weight: 600;">First Name</div>
+            <div style="color: #666;">{{ user?.firstName || 'Not provided' }}</div>
+          </div>
+          
+          <div style="margin-bottom: 12px; padding-bottom: 8px; border-bottom: 2px solid #e8d9cc;">
+            <div style="color: #2D5757; font-weight: 600;">Last Name</div>
+            <div style="color: #666;">{{ user?.lastName || 'Not provided' }}</div>
+          </div>
+          
+          <div style="margin-bottom: 12px; padding-bottom: 8px; border-bottom: 2px solid #e8d9cc;">
+            <div style="color: #2D5757; font-weight: 600;">Phone Number</div>
+            <div style="color: #666;">{{ user?.phoneNumber || 'Not provided' }}</div>
+          </div>
+          
+          <!-- Additional Fields -->
+          <div style="margin-bottom: 12px; padding-bottom: 8px; border-bottom: 2px solid #e8d9cc;">
+            <div style="color: #2D5757; font-weight: 600;">Date of Birth</div>
+            <div style="color: #666;">{{ user?.dateOfBirth | date:'mediumDate' || 'Not provided' }}</div>
+          </div>
+          
+          <div style="margin-bottom: 12px; padding-bottom: 8px; border-bottom: 2px solid #e8d9cc;">
+            <div style="color: #2D5757; font-weight: 600;">Address</div>
+            <div style="color: #666;">{{ user?.address || 'Not provided' }}</div>
+          </div>
+          
+          <div style="margin-bottom: 12px; padding-bottom: 8px; border-bottom: 2px solid #e8d9cc;">
+            <div style="color: #2D5757; font-weight: 600;">City</div>
+            <div style="color: #666;">{{ user?.city || 'Not provided' }}</div>
+          </div>
+          
+          <div style="margin-bottom: 12px; padding-bottom: 8px; border-bottom: 2px solid #e8d9cc;">
+            <div style="color: #2D5757; font-weight: 600;">Country</div>
+            <div style="color: #666;">{{ user?.country || 'Not provided' }}</div>
+          </div>
+
+          <!-- Edit Button -->
+          <button style="width: 100%; padding: 12px; background: #2D5757; color: #F7EDE2; border: none; border-radius: 12px; font-weight: 600; cursor: pointer; margin-top: 20px;" 
+                  (click)="toggleEdit()">
+            <i class="bi bi-pencil"></i> Edit Profile
+          </button>
+        </div>
+
+        <!-- Edit Form -->
+        <form *ngIf="isEditing" (ngSubmit)="saveProfile()">
+          <!-- Basic Fields -->
+          <div style="margin-bottom: 15px;">
+            <label style="color: #2D5757; font-weight: 600;">First Name *</label>
+            <input type="text" [(ngModel)]="editData.firstName" name="firstName" required
+                   (blur)="onFirstNameBlur()"
+                   style="width: 100%; padding: 10px; border: 2px solid #e8d9cc; border-radius: 12px; background: #F7EDE2; margin-top: 5px;">
+            <!-- Validation message for first name -->
+            <span *ngIf="firstNameTouched && validateFirstName()" style="color: #c33; font-size: 0.75rem; margin-top: 3px; display: block;">
+              {{ validateFirstName() }}
+            </span>
+          </div>
+
+          <div style="margin-bottom: 15px;">
+            <label style="color: #2D5757; font-weight: 600;">Last Name</label>
+            <input type="text" [(ngModel)]="editData.lastName" name="lastName"
+                   (blur)="onLastNameBlur()"
+                   style="width: 100%; padding: 10px; border: 2px solid #e8d9cc; border-radius: 12px; background: #F7EDE2; margin-top: 5px;">
+            <!-- Validation message for last name (only if user entered something) -->
+            <span *ngIf="lastNameTouched && editData.lastName && validateLastName()" style="color: #c33; font-size: 0.75rem; margin-top: 3px; display: block;">
+              {{ validateLastName() }}
+            </span>
+          </div>
+
+          <div style="margin-bottom: 15px;">
+            <label style="color: #2D5757; font-weight: 600;">Phone Number</label>
+            <input type="tel" [(ngModel)]="editData.phoneNumber" name="phoneNumber"
+                   (blur)="onPhoneNumberBlur()"
+                   style="width: 100%; padding: 10px; border: 2px solid #e8d9cc; border-radius: 12px; background: #F7EDE2; margin-top: 5px;">
+            <!-- Validation message for phone (only if user entered something) -->
+            <span *ngIf="phoneNumberTouched && editData.phoneNumber && validatePhoneNumber()" style="color: #c33; font-size: 0.75rem; margin-top: 3px; display: block;">
+              {{ validatePhoneNumber() }}
+            </span>
+          </div>
+
+          <!-- Additional Fields -->
+          <div style="margin-bottom: 15px;">
+            <label style="color: #2D5757; font-weight: 600;">Date of Birth</label>
+            <input type="date" [(ngModel)]="editData.dateOfBirth" name="dateOfBirth"
+                   (blur)="onDateOfBirthBlur()"
+                   style="width: 100%; padding: 10px; border: 2px solid #e8d9cc; border-radius: 12px; background: #F7EDE2; margin-top: 5px;">
+            <!-- Validation message for date (only if user entered something) -->
+            <span *ngIf="dateOfBirthTouched && editData.dateOfBirth && validateDateOfBirth()" style="color: #c33; font-size: 0.75rem; margin-top: 3px; display: block;">
+              {{ validateDateOfBirth() }}
+            </span>
+          </div>
+
+          <div style="margin-bottom: 15px;">
+            <label style="color: #2D5757; font-weight: 600;">Address</label>
+            <input type="text" [(ngModel)]="editData.address" name="address"
+                   (blur)="onAddressBlur()"
+                   style="width: 100%; padding: 10px; border: 2px solid #e8d9cc; border-radius: 12px; background: #F7EDE2; margin-top: 5px;">
+            <!-- Validation message for address (only if user entered something) -->
+            <span *ngIf="addressTouched && editData.address && validateAddress()" style="color: #c33; font-size: 0.75rem; margin-top: 3px; display: block;">
+              {{ validateAddress() }}
+            </span>
+          </div>
+
+          <div style="margin-bottom: 15px;">
+            <label style="color: #2D5757; font-weight: 600;">City</label>
+            <input type="text" [(ngModel)]="editData.city" name="city"
+                   (blur)="onCityBlur()"
+                   style="width: 100%; padding: 10px; border: 2px solid #e8d9cc; border-radius: 12px; background: #F7EDE2; margin-top: 5px;">
+            <!-- Validation message for city (only if user entered something) -->
+            <span *ngIf="cityTouched && editData.city && validateCity()" style="color: #c33; font-size: 0.75rem; margin-top: 3px; display: block;">
+              {{ validateCity() }}
+            </span>
+          </div>
+
+          <!-- Country - Professional dropdown -->
+          <div style="margin-bottom: 15px;">
+            <label style="color: #2D5757; font-weight: 600;">Country</label>
+            <select [(ngModel)]="editData.country" name="country"
+                    style="width: 100%; padding: 10px; border: 2px solid #e8d9cc; border-radius: 12px; background: #F7EDE2; margin-top: 5px;">
+              <option value="" disabled selected>Select your country</option>
+              <option *ngFor="let country of countries" [value]="country.name">
+                {{ country.name }}
+              </option>
+            </select>
+          </div>
+
+          <!-- Form Actions -->
+          <div style="display: flex; gap: 10px; margin-top: 20px;">
+            <button type="button" 
+                    style="flex: 1; padding: 12px; background: transparent; color: #2D5757; border: 2px solid #2D5757; border-radius: 12px; font-weight: 600; cursor: pointer;"
+                    (click)="toggleEdit()">
+              Cancel
+            </button>
+            <button type="submit" 
+                    style="flex: 2; padding: 12px; background: #2D5757; color: #F7EDE2; border: none; border-radius: 12px; font-weight: 600; cursor: pointer;"
+                    [disabled]="isLoading">
+              {{ isLoading ? 'Saving...' : 'Save Changes' }}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

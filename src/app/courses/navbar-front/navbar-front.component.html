@@ -16,7 +16,7 @@
     <div class="collapse navbar-collapse" id="dynamicNavbar">
       <ul class="navbar-nav mx-auto">
         <!-- Backoffice Link - Only visible to ADMIN and TUTOR -->
-        <li class="nav-item nav-item-wrapper" >
+        <li class="nav-item nav-item-wrapper" *ngIf="canAccessBackoffice">
           <a class="nav-link nav-main-link" routerLink="/backoffice">
             <i class="bi bi-speedometer2"></i>
             Dashboard
@@ -106,16 +106,16 @@
       <div class="nav-actions">
         <!-- Show user info when logged in -->
         <div *ngIf="isLoggedIn" class="d-flex align-items-center gap-2">
-          <!-- Dashboard button (visible to all logged-in users) -->
-          <button class="btn btn-sm btn-outline-primary" routerLink="/dashboard">
-            <i class="bi bi-speedometer2"></i> Dashboard
-          </button>
-          <span class="text-muted">
+          <!-- GREEN PROFILE BUTTON - This opens the modal -->
+          <button class="btn" style="background: #2D5757; color: #F7EDE2; border: none; padding: 8px 16px; border-radius: 30px; display: flex; align-items: center; gap: 8px; font-weight: 500;" 
+                  (click)="openProfileModal()">
             <i class="bi bi-person-circle"></i>
-            {{ userRole }}
-          </span>
+            <span>{{ user?.firstName || user?.email || 'My Profile' }}</span>
+          </button>
+          
+          <!-- Logout Button -->
           <button class="btn btn-sm btn-outline-danger" (click)="logout()">
-            Logout
+            <i class="bi bi-box-arrow-right"></i> Logout
           </button>
         </div>
         
@@ -133,3 +133,13 @@
     </div>
   </div>
 </nav>
+
+<!-- Profile Modal - YOUR EXACT MODAL CODE -->
+<div class="modal" [ngClass]="{'show': showProfileModal}" *ngIf="showProfileModal" (click)="closeModal()" 
+     style="display: block; background: rgba(0,0,0,0.5); position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 9999;">
+  <div class="modal-dialog modal-lg" (click)="$event.stopPropagation()" style="width: 90%; max-width: 900px; margin: 1.75rem auto;">
+    <div class="modal-content" style="border-radius: 30px; overflow: hidden; box-shadow: 0 30px 60px rgba(45,87,87,0.3); border: none;">
+      <app-profile-completion (profileUpdated)="onProfileUpdated()"></app-profile-completion>
+    </div>
+  </div>
+</div>
