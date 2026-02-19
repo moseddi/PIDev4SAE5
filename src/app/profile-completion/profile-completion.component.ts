@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core'; // Add Output, EventEmitter
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../services/auth.service';
@@ -13,6 +13,8 @@ import { COUNTRIES } from './countries';
   styleUrls: ['./profile-completion.component.css']
 })
 export class ProfileCompletionComponent implements OnInit {
+  @Output() profileUpdated = new EventEmitter<void>(); // ADD THIS LINE
+  
   user: any = {};
   isEditing = false;
   countries = COUNTRIES;
@@ -368,6 +370,7 @@ export class ProfileCompletionComponent implements OnInit {
       next: (response) => {
         console.log('Update response:', response);
         this.handleSuccess(response);
+        this.profileUpdated.emit(); // ADD THIS LINE - emits event to parent
       },
       error: (error) => {
         this.isLoading = false;

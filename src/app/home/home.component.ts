@@ -2,21 +2,13 @@ import { Component, OnInit, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { AuthService } from '../services/auth.service';
-
 import { NavbarFrontComponent } from '../courses/navbar-front/navbar-front.component';
-
-
 import { ProfileCompletionComponent } from '../profile-completion/profile-completion.component';
-
 
 @Component({
   selector: 'app-home',
   standalone: true,
-
-  imports: [CommonModule, RouterLink,NavbarFrontComponent, ProfileCompletionComponent],
-
-  
-
+  imports: [CommonModule, RouterLink, NavbarFrontComponent, ProfileCompletionComponent],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
@@ -30,7 +22,9 @@ export class HomeComponent implements OnInit {
   showDropdown = false;
   showProfileModal = false;
 
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService
+  ) {}
 
   ngOnInit() {
     const user = this.authService.getUser();
