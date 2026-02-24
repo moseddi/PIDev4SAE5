@@ -28,6 +28,7 @@ import { ListLessonComponent } from './courses/list-lesson/list-lesson.component
 import { ListLessonStudentComponent } from './courses/list-lesson-student/list-lesson-student.component';
 import { FooterFrontComponent } from './courses/footer-front/footer-front.component';
 import { AuthGuard } from './guards/auth.guard';
+import { FindCoachComponent } from './coaching/find-coach/find-coach.component';
 
 export const routes: Routes = [
   { path: 'login', component: StudentLoginComponent },
@@ -60,6 +61,9 @@ export const routes: Routes = [
   { path: 'seances/:seanceId/reservations/new', component: ReservationFormComponent },
   { path: 'reservations', component: ReservationListComponent },
   { path: 'reservations/edit/:id', component: ReservationFormComponent },
+
+  // Find Coach route
+  { path: 'find-coach', component: FindCoachComponent },
 
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   

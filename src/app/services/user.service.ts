@@ -48,4 +48,8 @@ export class UserService {
   deleteUser(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`, { headers: this.getHeaders() });
   }
+
+  getUsersByRole(role: string): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/role/${role}`, { headers: this.getHeaders() });
+  }
 }

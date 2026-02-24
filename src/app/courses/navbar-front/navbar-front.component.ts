@@ -20,6 +20,7 @@ export class NavbarFrontComponent implements OnInit {
   isLoggedIn = false;
   userRole: string = '';
   canAccessBackoffice = false;
+  isStudent = false;
   user: any = {};
   showProfileModal = false;
 
@@ -35,6 +36,7 @@ export class NavbarFrontComponent implements OnInit {
     this.isLoggedIn = !!user;
     this.userRole = user?.role || '';
     this.canAccessBackoffice = this.userRole === 'ADMIN' || this.userRole === 'TUTOR';
+    this.isStudent = this.userRole === 'STUDENT';
   }
 
   @HostListener('window:scroll', [])
@@ -47,6 +49,7 @@ export class NavbarFrontComponent implements OnInit {
     this.isLoggedIn = false;
     this.userRole = '';
     this.canAccessBackoffice = false;
+    this.isStudent = false;
     this.user = {};
     this.showProfileModal = false;
   }

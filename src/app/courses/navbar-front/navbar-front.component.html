@@ -50,6 +50,7 @@
                   <li><a href="javascript:void(0)"><i class="bi bi-person"></i> Private Lessons</a></li>
                   <li><a href="javascript:void(0)"><i class="bi bi-briefcase"></i> Corporate Training</a></li>
                   <li><a href="javascript:void(0)"><i class="bi bi-calendar-week"></i> Evening Classes</a></li>
+                  <li *ngIf="isStudent"><a routerLink="/find-coach"><i class="bi bi-person-search"></i> Find Coach <span class="nav-badge badge-new">NEW</span></a></li>
                 </ul>
               </div>
               <div class="mega-section">

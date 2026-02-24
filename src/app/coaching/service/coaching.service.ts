@@ -71,4 +71,9 @@ export class CoachingService {
   deleteReservation(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/api/reservations/${id}`);
   }
+
+  // Get seances by tutor ID
+  getSeancesByTutor(tutorId: number): Observable<Seance[]> {
+    return this.http.get<Seance[]>(`${this.apiUrl}/api/seances/tutor/${tutorId}`);
+  }
 }
