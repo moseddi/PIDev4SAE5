@@ -29,6 +29,7 @@ import { ListLessonStudentComponent } from './courses/list-lesson-student/list-l
 import { FooterFrontComponent } from './courses/footer-front/footer-front.component';
 import { AuthGuard } from './guards/auth.guard';
 import { FindCoachComponent } from './coaching/find-coach/find-coach.component';
+import { ChatComponent } from './components/chat/chat.component';
 
 export const routes: Routes = [
   { path: 'login', component: StudentLoginComponent },
@@ -64,6 +65,9 @@ export const routes: Routes = [
 
   // Find Coach route
   { path: 'find-coach', component: FindCoachComponent },
+
+  // Chat route
+  { path: 'chat', component: ChatComponent },
 
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   
