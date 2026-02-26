@@ -1,0 +1,65 @@
+<nav class="bg-[#2D5757] sticky top-0 z-50 shadow-xl border-b border-[#F7EDE2]/10 h-24 flex items-center">
+  <div class="container mx-auto px-8">
+    <div class="flex justify-between items-center">
+      <!-- Logo Section -->
+      <div class="flex items-center space-x-5 group cursor-pointer" (click)="navigateTo('')">
+        <div
+          class="w-12 h-12 bg-[#F7EDE2] rounded-2xl flex items-center justify-center shadow-lg transform group-hover:rotate-12 transition-transform duration-500">
+          <svg class="w-7 h-7 text-[#2D5757]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+              d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253">
+            </path>
+          </svg>
+        </div>
+        <h1 class="text-xl font-black text-[#F7EDE2] uppercase tracking-[0.2em]">Academix</h1>
+      </div>
+
+      <!-- Desktop Navigation -->
+      <div class="hidden lg:flex items-center space-x-12">
+        <button (click)="navigateTo('clubs')"
+          class="text-[10px] font-black uppercase tracking-[0.2em] text-[#F7EDE2]/50 hover:text-[#F7EDE2] transition-colors relative group py-2">
+          Clubs
+          <span
+            class="absolute bottom-0 left-0 w-0 h-0.5 bg-[#F7EDE2] group-hover:w-full transition-all duration-300"></span>
+        </button>
+        <button (click)="navigateTo('events')"
+          class="text-[10px] font-black uppercase tracking-[0.2em] text-[#F7EDE2]/50 hover:text-[#F7EDE2] transition-colors relative group py-2">
+          Events
+          <span
+            class="absolute bottom-0 left-0 w-0 h-0.5 bg-[#F7EDE2] group-hover:w-full transition-all duration-300"></span>
+        </button>
+        <button (click)="navigateTo('spaces')"
+          class="text-[10px] font-black uppercase tracking-[0.2em] text-[#F7EDE2]/50 hover:text-[#F7EDE2] transition-colors relative group py-2">
+          Spaces
+          <span
+            class="absolute bottom-0 left-0 w-0 h-0.5 bg-[#F7EDE2] group-hover:w-full transition-all duration-300"></span>
+        </button>
+      </div>
+
+      <!-- Right Actions -->
+      <div class="flex items-center space-x-8">
+        <button class="text-[#F7EDE2]/40 hover:text-[#F7EDE2] transition-colors duration-300 relative group">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9">
+            </path>
+          </svg>
+          <span class="absolute -top-1 -right-1 w-2.5 h-2.5 bg-[#F7EDE2] rounded-full border-2 border-[#2D5757]"></span>
+        </button>
+
+        <div class="h-10 w-[1px] bg-[#F7EDE2]/10 hidden sm:block"></div>
+
+        <div class="flex items-center space-x-4 group cursor-pointer">
+          <div class="text-right hidden sm:block">
+            <p class="text-[10px] font-black text-[#F7EDE2] uppercase tracking-widest">Admin</p>
+            <p class="text-[9px] font-bold text-[#F7EDE2]/40 uppercase tracking-tighter">Connected</p>
+          </div>
+          <div
+            class="w-12 h-12 bg-white/5 border border-[#F7EDE2]/10 rounded-2xl flex items-center justify-center group-hover:bg-[#F7EDE2] group-hover:border-transparent transition-all duration-500 overflow-hidden shadow-sm">
+            <span class="text-[#F7EDE2] group-hover:text-[#2D5757] font-black text-xs">JS</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>

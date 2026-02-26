@@ -1,0 +1,125 @@
+<div class="min-h-screen bg-[#F7EDE2] p-8">
+  <div class="max-w-7xl mx-auto">
+    <!-- Header -->
+    <div class="text-center mb-16 px-4">
+      <h1 class="text-6xl font-black text-[#2D5757] mb-6 tracking-tighter uppercase">Physical Spaces</h1>
+      <p class="text-[#2D5757]/40 text-xs font-bold uppercase tracking-[0.3em] max-w-2xl mx-auto">Book and manage campus
+        facilities for your events and activities</p>
+    </div>
+
+    <!-- Filter Section (Clean Buttons) -->
+    <div class="mb-12 flex flex-wrap justify-center gap-4">
+      <button *ngFor="let spaceType of spaceTypes" (click)="filterByType(spaceType.name)"
+        class="px-8 py-3 rounded-2xl font-black text-[10px] uppercase tracking-widest transition-all duration-300 border shadow-sm"
+        [class]="selectedType === spaceType.name ? 
+          'bg-[#2D5757] text-[#F7EDE2] border-[#2D5757] shadow-xl' : 
+          'bg-white text-[#2D5757]/40 border-black/5 hover:border-[#2D5757]/20'">
+        {{ spaceType.label }}
+      </button>
+    </div>
+
+    <!-- Spaces Grid -->
+    <div
+      class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 animate-in fade-in slide-in-from-bottom duration-700">
+      <div *ngFor="let space of filteredSpaces"
+        class="group bg-white rounded-[3rem] shadow-xl border border-black/5 p-10 hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 flex flex-col h-full">
+
+        <div class="mb-8 flex items-center justify-between">
+          <span
+            class="px-4 py-1.5 text-[10px] font-black uppercase tracking-widest rounded-full transition-all duration-300"
+            [class]="space.Status === 'available' ? 'bg-[#2D5757] text-[#F7EDE2]' : 'bg-[#2D5757]/10 text-[#2D5757]/40'">
+            {{ space.Status }}
+          </span>
+          <div class="text-right">
+            <span class="text-[#2D5757] font-black text-xl tracking-tighter block leading-none">{{ space.Capacity
+              }}</span>
+            <span class="text-[9px] font-black text-[#2D5757]/20 uppercase tracking-widest">capacity</span>
+          </div>
+        </div>
+
+        <h3
+          class="text-2xl font-black text-[#2D5757] mb-8 leading-tight group-hover:text-[#2D5757]/70 transition-colors uppercase tracking-tight">
+          {{ space.Name }}</h3>
+
+        <div class="space-y-5 mb-10 flex-grow">
+          <div class="flex items-center text-[#2D5757]/60 font-bold text-xs uppercase tracking-wider">
+            <div class="bg-[#F7EDE2] p-2.5 rounded-xl mr-5 shadow-sm">
+              <svg class="w-5 h-5 text-[#2D5757]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4">
+                </path>
+              </svg>
+            </div>
+            {{ space.Type }}
+          </div>
+
+          <div class="flex items-center text-[#2D5757]/40 text-xs font-medium">
+            <div class="bg-[#F7EDE2]/50 p-2.5 rounded-xl mr-5">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+              </svg>
+            </div>
+            {{ space.Location }}
+          </div>
+        </div>
+
+        <div class="pt-8 border-t border-black/5 mt-auto">
+          <div class="flex items-end justify-between mb-8">
+            <p class="text-[9px] font-black text-[#2D5757]/20 uppercase tracking-widest leading-none">Space Index</p>
+            <p class="text-[10px] font-black text-[#2D5757] uppercase tracking-widest leading-none">{{ space.Code }}</p>
+          </div>
+
+          <div class="flex flex-col gap-3">
+            <button
+              class="w-full px-8 py-5 bg-[#2D5757] text-[#F7EDE2] rounded-[2rem] font-black text-[10px] uppercase tracking-[0.2em] hover:bg-[#1a3a3a] transition-all shadow-xl disabled:opacity-20 disabled:cursor-not-allowed group"
+              [disabled]="space.Status !== 'available'" (click)="bookSpace(space)">
+              <span class="flex items-center justify-center">
+                {{ space.Status === 'available' ? 'Book Asset' : 'Asset Allocated' }}
+                <svg *ngIf="space.Status === 'available'"
+                  class="w-4 h-4 ml-3 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor"
+                  viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3">
+                  </path>
+                </svg>
+              </span>
+            </button>
+
+            <div class="flex gap-2">
+              <button (click)="viewDetails(space.IdPhysicalSpace)"
+                class="flex-1 px-4 py-4 bg-white text-[#2D5757] border border-black/5 rounded-2xl font-black text-[9px] uppercase tracking-widest hover:bg-[#F7EDE2]/30 transition-all">
+                Details
+              </button>
+              <button (click)="editSpace(space.IdPhysicalSpace)"
+                class="flex-1 px-4 py-4 bg-white text-[#2D5757] border border-black/5 rounded-2xl font-black text-[9px] uppercase tracking-widest hover:bg-[#F7EDE2]/30 transition-all">
+                Edit
+              </button>
+              <button (click)="deleteSpace(space.IdPhysicalSpace)"
+                class="px-4 py-4 text-red-500 hover:bg-red-50 rounded-2xl transition-all">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
+                  </path>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Add Space Button -->
+    <div class="mt-20 text-center">
+      <button (click)="navigateToCreate()"
+        class="group px-12 py-6 bg-[#2D5757] text-[#F7EDE2] rounded-[2.5rem] font-black text-xs uppercase tracking-[0.3em] hover:bg-[#1a3a3a] transition-all shadow-2xl flex items-center mx-auto">
+        <svg class="w-6 h-6 mr-4 group-hover:rotate-90 transition-transform" fill="none" stroke="currentColor"
+          viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+        </svg>
+        Register New Asset
+      </button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,145 @@
+<div class="min-h-screen bg-[#F7EDE2] p-8">
+  <div class="max-w-6xl mx-auto">
+    <!-- Header Card -->
+    <div class="bg-[#2D5757] rounded-[2.5rem] shadow-xl border border-[#F7EDE2]/10 p-8 mb-10 overflow-hidden relative">
+      <div class="relative z-10 flex items-center justify-between">
+        <div class="flex items-center space-x-6">
+          <button (click)="goBack()"
+            class="group flex items-center text-[#F7EDE2]/70 hover:text-[#F7EDE2] transition-all duration-300 bg-white/5 px-4 py-2 rounded-xl">
+            <svg class="w-5 h-5 mr-2 transform group-hover:-translate-x-1 transition-transform" fill="none"
+              stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+            </svg>
+            <span class="text-xs font-bold uppercase tracking-widest">Back to List</span>
+          </button>
+        </div>
+
+        <h1 class="text-3xl font-extrabold text-[#F7EDE2] flex items-center tracking-tight">
+          <div class="bg-[#F7EDE2] p-2.5 rounded-xl mr-4 shadow-lg">
+            <svg class="w-7 h-7 text-[#2D5757]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2h10a2 2 0 002-2z"></path>
+            </svg>
+          </div>
+          <span class="hidden sm:inline">Club Details</span>
+          <span class="ml-3 text-[#F7EDE2]/40 text-lg font-medium">#{{ club?.ID_Club }}</span>
+        </h1>
+      </div>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="isLoading" class="flex justify-center items-center py-24">
+      <div class="text-center">
+        <div class="inline-block animate-spin rounded-full h-16 w-16 border-4 border-[#2D5757]/10 border-t-[#2D5757]">
+        </div>
+        <p class="mt-6 text-[#2D5757]/40 font-bold uppercase tracking-widest text-sm">Synchronizing data...</p>
+      </div>
+    </div>
+
+    <!-- Error State -->
+    <div *ngIf="error" class="flex justify-center items-center py-20">
+      <div class="bg-white rounded-3xl border border-red-100 p-10 text-center shadow-xl max-w-md">
+        <div class="bg-red-50 w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-6">
+          <svg class="w-10 h-10 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+        </div>
+        <h3 class="text-xl font-bold text-[#2D5757] mb-2">Detailed Error</h3>
+        <p class="text-[#2D5757]/60 mb-8">{{ error }}</p>
+        <button (click)="goBack()"
+          class="px-8 py-3 bg-[#2D5757] text-[#F7EDE2] font-bold rounded-xl hover:bg-[#1a3a3a] transition-all">
+          Go Back
+        </button>
+      </div>
+    </div>
+
+    <!-- Club Details -->
+    <div *ngIf="club && !isLoading && !error" class="animate-in fade-in zoom-in duration-500">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-10">
+        <!-- Main Info -->
+        <div class="lg:col-span-2 space-y-8">
+          <div class="bg-white rounded-[2.5rem] p-10 shadow-xl border border-black/5">
+            <div class="flex items-center justify-between mb-10">
+              <h2 class="text-4xl font-black text-[#2D5757] tracking-tighter">
+                {{ club.name }}
+              </h2>
+              <span class="px-5 py-2.5 rounded-full text-xs font-black uppercase tracking-widest border"
+                [ngClass]="club.Status === 'ACTIVE' ? 'bg-green-50 text-green-700 border-green-100' : 'bg-yellow-50 text-yellow-700 border-yellow-100'">
+                {{ club.Status }}
+              </span>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-10">
+              <div class="space-y-1">
+                <span class="text-[#2D5757]/40 text-[10px] font-black uppercase tracking-widest">Internal ID</span>
+                <p class="text-[#2D5757] text-xl font-bold">#{{ club.ID_Club }}</p>
+              </div>
+
+              <div class="space-y-1">
+                <span class="text-[#2D5757]/40 text-[10px] font-black uppercase tracking-widest">Category Type</span>
+                <p class="text-[#2D5757] text-xl font-bold uppercase">{{ club.Category }}</p>
+              </div>
+
+              <div class="space-y-1">
+                <span class="text-[#2D5757]/40 text-[10px] font-black uppercase tracking-widest">Communication</span>
+                <p class="text-[#2D5757] text-xl font-bold truncate">{{ club.Email_Contact }}</p>
+              </div>
+
+              <div class="space-y-1">
+                <span class="text-[#2D5757]/40 text-[10px] font-black uppercase tracking-widest">Registered Since</span>
+                <p class="text-[#2D5757] text-xl font-bold">{{ club.CreationDate | date:'MMMM d, yyyy' }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sidebar Actions -->
+        <div class="space-y-8">
+          <div class="bg-[#2D5757] rounded-[2.5rem] p-10 shadow-xl border border-[#F7EDE2]/5">
+            <h3
+              class="text-xl font-black text-[#F7EDE2] mb-10 border-b border-[#F7EDE2]/10 pb-6 uppercase tracking-widest">
+              Interactions
+            </h3>
+
+            <div class="space-y-4">
+              <a [href]="'mailto:' + getContactEmail()"
+                class="w-full px-6 py-4 bg-[#F7EDE2] text-[#2D5757] rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-white transition-all duration-300 flex items-center justify-center shadow-lg group">
+                <svg class="w-5 h-5 mr-3 group-hover:rotate-12 transition-transform" fill="none" stroke="currentColor"
+                  viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z">
+                  </path>
+                </svg>
+                Send Message
+              </a>
+
+              <button *ngIf="registrationStatus === 'None'" (click)="openJoinModal()"
+                class="w-full px-6 py-4 bg-white/10 hover:bg-white/20 text-[#F7EDE2] rounded-2xl font-black text-xs uppercase tracking-widest border border-[#F7EDE2]/20 transition-all flex items-center justify-center">
+                <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z">
+                  </path>
+                </svg>
+                Request Access
+              </button>
+
+              <div *ngIf="registrationStatus !== 'None'"
+                class="w-full px-6 py-4 rounded-2xl font-black text-[10px] uppercase tracking-[0.2em] text-center border shadow-inner"
+                [ngClass]="registrationStatus === 'Approved' ? 'bg-green-500 text-white border-green-400' : 'bg-white/5 text-[#F7EDE2]/60 border-white/10'">
+                {{ registrationStatus === 'Approved' ? 'Membership Active' : 'Review in Progress' }}
+              </div>
+
+              <div class="pt-6 mt-6 border-t border-white/5">
+                <button (click)="goBack()"
+                  class="w-full text-[#F7EDE2]/40 hover:text-[#F7EDE2] text-[10px] font-black uppercase tracking-[0.2em] transition-all flex items-center justify-center">
+                  Dismiss View
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

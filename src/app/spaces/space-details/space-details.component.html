@@ -1,0 +1,177 @@
+<div class="min-h-screen bg-[#F7EDE2] p-8">
+  <div class="max-w-4xl mx-auto">
+    <!-- Back Button -->
+    <div class="mb-10">
+      <button (click)="goBack()"
+        class="group flex items-center text-[#2D5757]/40 hover:text-[#2D5757] font-black text-xs uppercase tracking-widest transition-all">
+        <svg class="w-5 h-5 mr-3 transform group-hover:-translate-x-1 transition-transform" fill="none"
+          stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+        </svg>
+        Back to Inventory
+      </button>
+    </div>
+
+    <div
+      class="bg-white rounded-[3rem] shadow-2xl border border-black/5 overflow-hidden animate-in fade-in zoom-in duration-500"
+      *ngIf="!isLoading && space; else loading">
+      <!-- Card Header -->
+      <div class="bg-[#2D5757] p-10 md:p-14 text-[#F7EDE2] relative">
+        <div class="flex items-center justify-between mb-10">
+          <span
+            class="px-6 py-2 text-[10px] font-black uppercase tracking-[0.2em] rounded-full flex items-center shadow-lg"
+            [class]="space.Status === 'available' ? 'bg-[#F7EDE2] text-[#2D5757]' : 'bg-red-400 text-white'">
+            <span class="mr-3 opacity-50">{{ space.Status === 'available' ? '●' : '○' }}</span>
+            Asset Status: {{ space.Status }}
+          </span>
+          <div class="text-right">
+            <span class="text-xs font-black text-[#F7EDE2]/40 uppercase tracking-[0.2em]">{{ space.Capacity }} Max
+              Occupancy</span>
+          </div>
+        </div>
+
+        <h1 class="text-5xl md:text-6xl font-black tracking-tighter mb-10 leading-tight uppercase">{{ space.Name }}</h1>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div class="flex items-center text-[#F7EDE2]/80 space-x-4">
+            <div class="bg-white/10 p-3 rounded-2xl">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4">
+                </path>
+              </svg>
+            </div>
+            <div class="flex flex-col">
+              <span class="text-[9px] font-black uppercase tracking-widest opacity-40">Classification</span>
+              <span class="text-[11px] font-black uppercase tracking-widest">{{ space.Type }}</span>
+            </div>
+          </div>
+
+          <div class="flex items-center text-[#F7EDE2]/80 space-x-4">
+            <div class="bg-white/10 p-3 rounded-2xl">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+              </svg>
+            </div>
+            <div class="flex flex-col">
+              <span class="text-[9px] font-black uppercase tracking-widest opacity-40">Deployment</span>
+              <span class="text-[11px] font-black uppercase tracking-widest">{{ space.Location }}</span>
+            </div>
+          </div>
+
+          <div class="flex items-center text-[#F7EDE2]/80 space-x-4">
+            <div class="bg-white/10 p-3 rounded-2xl">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z">
+                </path>
+              </svg>
+            </div>
+            <div class="flex flex-col">
+              <span class="text-[9px] font-black uppercase tracking-widest opacity-40">Identification</span>
+              <span class="text-[11px] font-black uppercase tracking-widest">{{ space.Code }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Content Details -->
+      <div class="p-10 md:p-14 space-y-16">
+        <!-- Equipment Available -->
+        <div class="space-y-8">
+          <h2 class="text-xs font-black text-[#2D5757] uppercase tracking-[0.3em] border-b border-[#2D5757]/10 pb-4">
+            Standard Equipment</h2>
+          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+            <div *ngFor="let item of space.Equipment"
+              class="flex items-center p-5 bg-[#F7EDE2]/30 rounded-2xl border border-[#2D5757]/5">
+              <div class="w-2 h-2 rounded-full bg-[#2D5757] mr-4 opacity-40"></div>
+              <span class="text-xs font-bold text-[#2D5757] uppercase tracking-wide">{{ item }}</span>
+            </div>
+          </div>
+          <div *ngIf="!space.Equipment || space.Equipment.length === 0"
+            class="flex flex-col items-center py-10 opacity-20">
+            <svg class="w-12 h-12 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+            </svg>
+            <p class="text-xs font-black uppercase tracking-widest">No logistics assigned</p>
+          </div>
+        </div>
+
+        <!-- Technical Specifications -->
+        <div class="grid md:grid-cols-2 gap-12">
+          <div class="space-y-8">
+            <h3 class="text-xs font-black text-[#2D5757] uppercase tracking-[0.3em] border-b border-[#2D5757]/10 pb-4">
+              Volume Metrics</h3>
+            <div class="space-y-4">
+              <div class="flex justify-between items-end p-6 bg-white border border-black/5 rounded-[2rem] shadow-sm">
+                <span class="text-[10px] font-black text-[#2D5757]/40 uppercase tracking-widest">Global Capacity</span>
+                <span class="text-2xl font-black text-[#2D5757] tracking-tighter">{{ space.Capacity }} U</span>
+              </div>
+              <div class="flex justify-between items-end p-6 bg-white border border-black/5 rounded-[2rem] shadow-sm">
+                <span class="text-[10px] font-black text-[#2D5757]/40 uppercase tracking-widest">Active Limit</span>
+                <span class="text-2xl font-black text-[#2D5757] tracking-tighter">{{ space.Max_Participants }} U</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="space-y-8">
+            <h3 class="text-xs font-black text-[#2D5757] uppercase tracking-[0.3em] border-b border-[#2D5757]/10 pb-4">
+              System Registry</h3>
+            <div class="space-y-4">
+              <div class="flex justify-between items-end p-6 bg-white border border-black/5 rounded-[2rem] shadow-sm">
+                <span class="text-[10px] font-black text-[#2D5757]/40 uppercase tracking-widest">Resource ID</span>
+                <span class="text-xl font-black text-[#2D5757] tracking-tighter">#{{ space.IdPhysicalSpace }}</span>
+              </div>
+              <div class="flex justify-between items-end p-6 bg-white border border-black/5 rounded-[2rem] shadow-sm">
+                <span class="text-[10px] font-black text-[#2D5757]/40 uppercase tracking-widest">Indexing Code</span>
+                <span class="text-xl font-black text-[#2D5757] tracking-tighter">{{ space.Code }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Actions Panel -->
+        <div class="pt-12 border-t border-[#2D5757]/5 flex flex-col sm:flex-row gap-5">
+          <button
+            class="flex-1 py-6 bg-[#2D5757] text-[#F7EDE2] rounded-[2rem] font-black text-xs uppercase tracking-[0.2em] hover:bg-[#1a3a3a] transition-all shadow-xl disabled:opacity-20 group"
+            [disabled]="space.Status !== 'available'">
+            <span class="flex items-center justify-center">
+              Provision Asset
+              <svg class="w-4 h-4 ml-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor"
+                viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3">
+                </path>
+              </svg>
+            </span>
+          </button>
+
+          <div class="flex gap-4">
+            <button (click)="editSpace()"
+              class="px-8 py-6 border border-[#2D5757]/10 text-[#2D5757] rounded-[2rem] font-black text-[10px] uppercase tracking-widest hover:bg-[#F7EDE2]/50 transition-all">
+              Edit
+            </button>
+            <button (click)="deleteSpace()"
+              class="px-8 py-6 text-red-500 hover:bg-red-50 rounded-[2rem] font-black text-[10px] uppercase tracking-widest transition-all">
+              Delete
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #loading>
+  <div class="min-h-screen flex items-center justify-center bg-[#F7EDE2]">
+    <div class="text-center">
+      <div
+        class="inline-block animate-spin rounded-full h-16 w-16 border-4 border-[#2D5757]/10 border-t-[#2D5757] mb-8">
+      </div>
+      <p class="text-[10px] font-black text-[#2D5757]/40 uppercase tracking-[0.4em]">Synchronizing Asset Data...</p>
+    </div>
+  </div>
+</ng-template>
