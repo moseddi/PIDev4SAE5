@@ -1,0 +1,217 @@
+/* Clubs User List Styles */
+.clubs-user-list {
+  min-height: 100vh;
+}
+
+.clubs-user-header {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.clubs-user-header-content {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 1rem 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.clubs-user-title {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.clubs-user-title h1 {
+  color: #F7EDE2;
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.clubs-user-main {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+}
+
+.clubs-user-filter {
+  margin-bottom: 2rem;
+}
+
+.clubs-user-filter .flex {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: center;
+}
+
+.clubs-user-filter button {
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.clubs-user-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+}
+
+.clubs-user-card {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.3s ease;
+}
+
+.clubs-user-card:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.clubs-user-card-header {
+  margin-bottom: 1rem;
+}
+
+.clubs-user-card-header h3 {
+  color: #F7EDE2;
+  font-size: 1.25rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.clubs-user-card-header span {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  background: #F6BD60;
+  color: #2D5757;
+  font-size: 0.875rem;
+  border-radius: 9999px;
+  font-weight: 500;
+}
+
+.clubs-user-card-body {
+  margin-bottom: 1rem;
+}
+
+.clubs-user-card-body p {
+  color: rgba(247, 237, 226, 0.8);
+  margin-bottom: 0.75rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.clubs-user-card-body .flex {
+  display: flex;
+  align-items: center;
+  color: rgba(247, 237, 226, 0.6);
+  font-size: 0.875rem;
+}
+
+.clubs-user-card-body .flex svg {
+  width: 1rem;
+  height: 1rem;
+  margin-right: 0.5rem;
+}
+
+.clubs-user-card-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.clubs-user-card-actions button {
+  flex: 1;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.clubs-user-card-actions button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Modal Styles */
+.fixed {
+  position: fixed;
+}
+
+.inset-0 {
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+
+.bg-black\/50 {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.backdrop-blur-sm {
+  backdrop-filter: blur(4px);
+}
+
+.flex {
+  display: flex;
+}
+
+.items-center {
+  align-items: center;
+}
+
+.justify-center {
+  justify-content: center;
+}
+
+.z-50 {
+  z-index: 50;
+}
+
+.max-w-md {
+  max-width: 28rem;
+}
+
+.w-full {
+  width: 100%;
+}
+
+.mx-4 {
+  margin-left: 1rem;
+  margin-right: 1rem;
+}
+
+.border-2 {
+  border-width: 2px;
+}
+
+.border-\[\#F6BD60\] {
+  border-color: #F6BD60;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .clubs-user-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .clubs-user-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .clubs-user-card-actions {
+    flex-direction: column;
+  }
+  
+  .clubs-user-card-actions button {
+    width: 100%;
+  }
+}

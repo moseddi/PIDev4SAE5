@@ -1,0 +1,79 @@
+<div class="min-h-screen bg-[#F7EDE2] p-8">
+  <!-- Header -->
+  <header class="bg-[#2D5757] rounded-[2.5rem] mb-16 shadow-2xl overflow-hidden relative">
+    <div class="absolute -right-20 -top-20 w-60 h-60 bg-white/5 rounded-full blur-3xl"></div>
+    <div class="container mx-auto px-10 py-8 relative z-10">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center space-x-6">
+          <div
+            class="w-14 h-14 bg-[#F7EDE2] rounded-2xl flex items-center justify-center shadow-xl transform -rotate-3">
+            <svg class="w-8 h-8 text-[#2D5757]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z">
+              </path>
+            </svg>
+          </div>
+          <div>
+            <h1 class="text-2xl font-black text-[#F7EDE2] uppercase tracking-[0.2em]">Collective Assets</h1>
+            <p class="text-[#F7EDE2]/40 text-[10px] font-bold uppercase tracking-widest mt-1">Operational Oversight</p>
+          </div>
+        </div>
+        <button (click)="navigateToDashboard()"
+          class="px-8 py-4 bg-white/5 border border-[#F7EDE2]/20 text-[#F7EDE2] rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-[#F7EDE2] hover:text-[#2D5757] transition-all duration-500 shadow-xl">
+          Terminal Menu
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="container mx-auto px-4">
+    <!-- Page Title -->
+    <div class="text-center mb-16">
+      <h2 class="text-6xl font-black text-[#2D5757] mb-4 tracking-tighter uppercase leading-none">Global Index</h2>
+      <p class="text-[#2D5757]/40 text-xs font-bold uppercase tracking-[0.4em]">Connect with operational units and
+        student collectives</p>
+    </div>
+
+    <!-- Clubs Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 max-w-7xl mx-auto">
+      <div *ngFor="let club of filteredClubs"
+        class="group bg-white rounded-[3rem] p-8 shadow-xl border border-black/5 hover:-translate-y-2 transition-all duration-500 flex flex-col">
+        <!-- Club Header -->
+        <div class="flex items-center mb-8">
+          <div
+            class="w-16 h-16 bg-[#2D5757] rounded-3xl flex items-center justify-center mr-5 shadow-xl group-hover:scale-110 transition-transform">
+            <span class="text-xl font-black text-[#F7EDE2] uppercase">{{ club.name.substring(0,2) }}</span>
+          </div>
+          <div>
+            <h3 class="text-xl font-black text-[#2D5757] tracking-tighter uppercase">{{ club.name }}</h3>
+            <p class="text-[#2D5757]/40 text-[10px] font-bold uppercase tracking-widest">{{ club.Category }}</p>
+          </div>
+        </div>
+
+        <!-- Join Status Badge -->
+        <div *ngIf="isUserJoined(club.ID_Club)" class="mb-6">
+          <span
+            class="inline-flex items-center px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-widest bg-[#2D5757]/5 text-[#2D5757] border border-[#2D5757]/10">
+            Active Member
+          </span>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="flex flex-col space-y-3 mt-auto pt-8 border-t border-black/5">
+          <button
+            class="w-full px-6 py-4 bg-[#2D5757] text-[#F7EDE2] rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-[#1a3a3a] transition-all duration-500 shadow-xl disabled:opacity-20"
+            [disabled]="isUserJoined(club.ID_Club)" (click)="joinClub(club.ID_Club)">
+            {{ isUserJoined(club.ID_Club) ? 'Deployed' : 'Join Unit' }}
+          </button>
+
+          <button
+            class="w-full px-6 py-4 bg-[#F7EDE2] text-[#2D5757] rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-[#2D5757] hover:text-[#F7EDE2] transition-all duration-500 border border-[#2D5757]/10 shadow-sm"
+            (click)="viewClubDetails(club.ID_Club)">
+            Analyze Unit
+          </button>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>

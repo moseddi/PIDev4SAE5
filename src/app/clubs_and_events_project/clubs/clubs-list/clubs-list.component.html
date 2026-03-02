@@ -1,0 +1,106 @@
+<div class="min-h-screen bg-[#F7EDE2] p-8">
+  <div class="max-w-7xl mx-auto">
+    <!-- Back Button -->
+    <div class="mb-10 px-4">
+      <a routerLink="/frontoffice"
+        class="inline-flex items-center text-[#2D5757] hover:text-[#2D5757]/60 transition-colors duration-200 font-black text-[10px] uppercase tracking-widest">
+        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M10 19l-7-7m0 0l7-7m-7 7h18">
+          </path>
+        </svg>
+        Terminal Menu
+      </a>
+    </div>
+
+    <!-- Header -->
+    <div class="text-center mb-24 px-4">
+      <h1 class="text-7xl font-black text-[#2D5757] mb-6 tracking-tighter uppercase leading-none">School Units</h1>
+      <p class="text-[#2D5757]/40 text-xs font-bold uppercase tracking-[0.4em] max-w-2xl mx-auto leading-loose">Navigate
+        student collectives and specialized interest groups in the sector.</p>
+    </div>
+
+    <!-- Filter Section -->
+    <div class="mb-16 flex flex-wrap justify-center gap-3">
+      <button *ngFor="let category of categories" (click)="filterByCategory(category.name)"
+        class="px-8 py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest transition-all duration-500 border shadow-sm"
+        [class]="selectedCategory === category.name ? 
+          'bg-[#2D5757] text-[#F7EDE2] border-[#2D5757] shadow-xl' : 
+          'bg-white text-[#2D5757]/40 border-black/5 hover:border-[#2D5757]/20 hover:text-[#2D5757]'">
+        {{ category.label }}
+      </button>
+    </div>
+
+    <!-- Clubs Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
+      <div *ngFor="let club of filteredClubs; let i = index"
+        class="group bg-white rounded-[3.5rem] p-10 shadow-xl border border-black/5 hover:shadow-2xl transition-all duration-700 flex flex-col relative overflow-hidden">
+        <div
+          class="absolute -right-10 -top-10 w-32 h-32 bg-[#2D5757]/5 rounded-full blur-2xl group-hover:bg-[#2D5757]/10 transition-colors">
+        </div>
+
+        <div class="flex items-center mb-10 relative z-10">
+          <div
+            class="w-20 h-20 bg-[#2D5757] rounded-3xl flex items-center justify-center mr-6 shadow-xl group-hover:rotate-6 transition-transform duration-500">
+            <svg class="w-10 h-10 text-[#F7EDE2]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z">
+              </path>
+            </svg>
+          </div>
+          <div>
+            <h3 class="text-2xl font-black text-[#2D5757] mb-2 tracking-tighter uppercase leading-none">{{ club.name ||
+              'Unnamed Unit' }}
+            </h3>
+            <div class="flex items-center text-[#2D5757]/40 text-[10px] font-bold uppercase tracking-widest">
+              <span>{{ club.Category }}</span>
+            </div>
+          </div>
+        </div>
+
+        <p class="text-[#2D5757]/60 mb-10 text-xs font-bold uppercase tracking-widest leading-relaxed">
+          Operational Contact:<br>
+          <span class="text-[#2D5757] lowercase">{{ club.Email_Contact }}</span>
+        </p>
+
+        <!-- Join Status Badge -->
+        <div *ngIf="isUserJoined(club.ID_Club)" class="mb-8">
+          <span
+            class="inline-flex items-center px-5 py-2 rounded-full text-[10px] font-black uppercase tracking-widest bg-[#2D5757]/5 text-[#2D5757] border border-[#2D5757]/10">
+            <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd"
+                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                clip-rule="evenodd"></path>
+            </svg>
+            Active Member
+          </span>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="flex flex-col space-y-3 mt-auto relative z-10 pt-8 border-t border-black/5">
+          <a class="px-6 py-4 bg-[#F7EDE2] text-[#2D5757] rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-[#2D5757] hover:text-[#F7EDE2] transition-all duration-500 shadow-sm block text-center"
+            [routerLink]="['/admin-clubs', club.ID_Club]" [state]="{ club: club }">
+            Analyze Unit
+          </a>
+
+          <button
+            class="px-6 py-4 bg-[#2D5757] text-[#F7EDE2] rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-[#1a3a3a] transition-all duration-500 shadow-xl disabled:opacity-20 disabled:cursor-not-allowed"
+            [disabled]="isUserJoined(club.ID_Club)" (click)="joinClub(club.ID_Club)">
+            {{ isUserJoined(club.ID_Club) ? 'Deployed' : 'Join Unit' }}
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- No clubs found -->
+    <div *ngIf="filteredClubs.length === 0"
+      class="text-center py-32 bg-white/50 rounded-[3.5rem] border-2 border-dashed border-[#2D5757]/10">
+      <h3 class="text-xl font-black text-[#2D5757] mb-2 uppercase tracking-tighter">No operational units detected</h3>
+      <p class="text-[#2D5757]/40 text-[10px] font-bold uppercase tracking-widest">Adjust sector parameters to find
+        active collectives.</p>
+    </div>
+  </div>
+
+  <!-- Join Club Modal -->
+  <app-join-club-form *ngIf="selectedClubForJoin" [clubId]="selectedClubForJoin.id"
+    [clubName]="selectedClubForJoin.name" (close)="closeJoinForm()" (joined)="onClubJoined()"></app-join-club-form>
+</div>

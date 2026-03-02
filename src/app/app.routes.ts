@@ -36,10 +36,18 @@ export const routes: Routes = [
   { path: 'nav', component: NavbarFrontComponent },
   { path: 'fot', component: FooterFrontComponent },
 
+  // Integrated User Project routes
+  { path: 'frontoffice', loadChildren: () => import('./clubs_and_events_project/frontoffice/frontoffice.module').then(m => m.FrontofficeModule) },
+  { path: 'admin-clubs', loadChildren: () => import('./clubs_and_events_project/clubs/clubs.module').then(m => m.ClubsModule) },
+  { path: 'admin-events', loadChildren: () => import('./clubs_and_events_project/events/events.module').then(m => m.EventsModule) },
+  { path: 'admin-spaces', loadChildren: () => import('./clubs_and_events_project/spaces/spaces.module').then(m => m.SpacesModule) },
+  { path: 'admin-clubs-events', loadChildren: () => import('./clubs_and_events_project/backoffice/backoffice.module').then(m => m.BackofficeModule) },
+
+
   // Student Course routes
   { path: 'cours', component: ListeCoursStudentComponent },
   { path: 'cours/:courseId/lessons', component: ListLessonStudentComponent },
-  
+
   // Course routes
   { path: 'courses', component: CourseListComponent },
   { path: 'courses/new', component: CourseFormComponent },
@@ -62,90 +70,90 @@ export const routes: Routes = [
   { path: 'reservations/edit/:id', component: ReservationFormComponent },
 
   { path: '', redirectTo: '/home', pathMatch: 'full' },
-  
-  { 
-    path: 'backoffice', 
+
+  {
+    path: 'backoffice',
     component: BackofficeComponent,
     canActivate: [RoleGuard],
     data: { roles: ['ADMIN', 'TUTOR'] },
     children: [
-      { 
-        path: '', 
+      {
+        path: '',
         component: AdminViewComponent,
         canActivate: [RoleGuard],
         data: { roles: ['ADMIN', 'TUTOR'] }
       },
-      { 
-        path: 'profile-completion', 
+      {
+        path: 'profile-completion',
         loadComponent: () => import('./profile-completion/profile-completion.component').then(m => m.ProfileCompletionComponent),
         canActivate: [AuthGuard]
       },
-      
+
       // Admin only routes
-      { 
-        path: 'admin', 
+      {
+        path: 'admin',
         component: AdminViewComponent,
         canActivate: [RoleGuard],
         data: { roles: ['ADMIN'] }
       },
-      { 
-        path: 'admin/users', 
+      {
+        path: 'admin/users',
         component: UsersComponent,
         canActivate: [RoleGuard],
         data: { roles: ['ADMIN'] }
       },
-      { 
-        path: 'admin/events', 
+      {
+        path: 'admin/events',
         component: EventsComponent,
         canActivate: [RoleGuard],
         data: { roles: ['ADMIN'] }
       },
-      { 
-        path: 'admin/clubs', 
+      {
+        path: 'admin/clubs',
         component: ClubsComponent,
         canActivate: [RoleGuard],
         data: { roles: ['ADMIN'] }
       },
-      { 
-        path: 'admin/classes', 
+      {
+        path: 'admin/classes',
         component: ClassesComponent,
         canActivate: [RoleGuard],
         data: { roles: ['ADMIN'] }
       },
-      { 
-        path: 'admin/physicalspace', 
+      {
+        path: 'admin/physicalspace',
         component: PhysicalspaceComponent,
         canActivate: [RoleGuard],
         data: { roles: ['ADMIN'] }
       },
-      { 
-        path: 'courses', 
+      {
+        path: 'courses',
         component: CourseListComponent,
         canActivate: [RoleGuard],
         data: { roles: ['ADMIN'] }
       },
-      { 
-        path: 'courses/new', 
+      {
+        path: 'courses/new',
         component: CourseFormComponent,
         canActivate: [RoleGuard],
         data: { roles: ['ADMIN'] }
       },
-      
+
       // Tutor only routes
-      { 
-        path: 'tutor', 
+      {
+        path: 'tutor',
         component: TutorViewComponent,
         canActivate: [RoleGuard],
         data: { roles: ['TUTOR'] }
       },
-      { 
-        path: 'tutor/my-students', 
+      {
+        path: 'tutor/my-students',
         component: MyStudentsComponent,
         canActivate: [RoleGuard],
         data: { roles: ['TUTOR'] }
       },
-      { 
-        path: 'tutor/schedule', 
+      {
+        path: 'tutor/schedule',
         component: ScheduleComponent,
         canActivate: [RoleGuard],
         data: { roles: ['TUTOR'] }

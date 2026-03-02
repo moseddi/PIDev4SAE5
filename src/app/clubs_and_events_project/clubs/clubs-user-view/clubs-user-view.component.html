@@ -1,0 +1,103 @@
+<div class="min-h-screen bg-[#F7EDE2] p-8">
+  <div class="max-w-7xl mx-auto">
+    <!-- Header -->
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-16 px-4">
+      <div class="flex items-center space-x-6">
+        <div class="bg-[#2D5757] w-16 h-16 rounded-3xl flex items-center justify-center shadow-xl">
+          <svg class="w-8 h-8 text-[#F7EDE2]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z">
+            </path>
+          </svg>
+        </div>
+        <div>
+          <h1 class="text-4xl font-black text-[#2D5757] tracking-tighter uppercase">Collectives</h1>
+          <p class="text-[#2D5757]/40 text-[10px] font-bold uppercase tracking-[0.3em]">Operational Index of Student
+            Entities</p>
+        </div>
+      </div>
+      <button (click)="navigateToBackoffice()"
+        class="group px-8 py-4 bg-[#2D5757] text-[#F7EDE2] rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-[#1a3a3a] transition-all shadow-xl flex items-center">
+        <span>Terminal</span>
+        <svg class="w-4 h-4 ml-3 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor"
+          viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Filter Section -->
+    <div class="mb-12 flex flex-wrap gap-3 justify-center">
+      <button *ngFor="let category of categories" (click)="filterByCategory(category.value)"
+        class="px-6 py-3 rounded-xl font-black text-[10px] uppercase tracking-widest transition-all duration-300 border shadow-sm"
+        [class]="selectedCategory === category.value ? 
+          'bg-[#2D5757] text-[#F7EDE2] border-[#2D5757]' : 
+          'bg-white text-[#2D5757]/40 border-black/5 hover:border-[#2D5757]/20 hover:text-[#2D5757]'">
+        {{ category.label }}
+      </button>
+    </div>
+
+    <!-- Clubs Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+      <div *ngFor="let club of filteredClubs"
+        class="group bg-white rounded-[3rem] p-8 shadow-xl border border-black/5 hover:shadow-2xl transition-all duration-500 flex flex-col">
+        <div class="flex items-start justify-between mb-8">
+          <div
+            class="bg-[#F7EDE2] w-14 h-14 rounded-2xl flex items-center justify-center shadow-inner group-hover:scale-110 transition-transform">
+            <span class="text-xl font-black text-[#2D5757]">{{ club.name.substring(0,1) }}</span>
+          </div>
+          <span
+            class="px-5 py-2 bg-[#2D5757]/5 text-[#2D5757] text-[10px] font-black uppercase tracking-widest rounded-full">
+            {{ getCategoryLabel(club.Category) }}
+          </span>
+        </div>
+
+        <h3 class="text-2xl font-black text-[#2D5757] mb-6 tracking-tighter uppercase leading-none">{{ club.name ||
+          'Unnamed Unit' }}</h3>
+
+        <div class="space-y-4 mb-10">
+          <div class="flex items-center text-[#2D5757]/40 text-[10px] font-bold uppercase tracking-widest">
+            <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z">
+              </path>
+            </svg>
+            <span>Active Collective</span>
+          </div>
+          <div class="flex items-center text-[#2D5757]/40 text-[10px] font-bold uppercase tracking-widest">
+            <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z">
+              </path>
+            </svg>
+            <span class="truncate">{{ club.Email_Contact || 'No contact email' }}</span>
+          </div>
+        </div>
+
+        <div class="mt-auto flex gap-3">
+          <button (click)="viewDetails(club.ID_Club)"
+            class="flex-1 px-4 py-4 bg-[#F7EDE2] text-[#2D5757] rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-[#2D5757] hover:text-[#F7EDE2] transition-all">
+            Inspect
+          </button>
+
+          <button *ngIf="!isUserRegistered(club.ID_Club)" (click)="joinClub(club.ID_Club)"
+            class="flex-1 px-4 py-4 bg-[#2D5757] text-[#F7EDE2] rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-[#1a3a3a] transition-all shadow-lg">
+            Deploy
+          </button>
+
+          <button *ngIf="isUserRegistered(club.ID_Club)" (click)="leaveClub(club.ID_Club)"
+            class="flex-1 px-4 py-4 bg-red-50 text-white rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-red-600 transition-all">
+            Retract
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="filteredClubs.length === 0"
+      class="text-center py-24 bg-white/50 rounded-[3rem] border-2 border-dashed border-[#2D5757]/10">
+      <div class="text-[#2D5757]/40 text-xs font-bold uppercase tracking-[0.2em]">No operational units detected in this
+        sector.</div>
+    </div>
+  </div>
+</div>

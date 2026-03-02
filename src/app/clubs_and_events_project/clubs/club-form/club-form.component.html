@@ -1,0 +1,132 @@
+<div class="min-h-screen bg-[#F7EDE2] py-20 px-4">
+  <div class="max-w-2xl mx-auto">
+    <!-- Header -->
+    <div class="text-center mb-16 animate-in fade-in slide-in-from-top duration-700">
+      <div class="bg-[#2D5757] p-5 rounded-3xl shadow-2xl inline-block mb-8">
+        <svg class="w-10 h-10 text-[#F7EDE2]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2h10a2 2 0 002-2z"></path>
+        </svg>
+      </div>
+      <h1 class="text-4xl font-black text-[#2D5757] mb-4 tracking-tighter">
+        {{ isEditMode ? 'Edit Club' : 'New Club' }}
+      </h1>
+      <p class="text-[#2D5757]/60 font-medium lowercase tracking-wide">
+        {{ isEditMode ? 'Update club information' : 'Fill in the details to expand our community' }}
+      </p>
+    </div>
+
+    <!-- Form Card -->
+    <div class="bg-white rounded-[3rem] p-10 shadow-2xl border border-black/5 relative overflow-hidden">
+      <form [formGroup]="clubForm" (ngSubmit)="onSubmit()" class="space-y-8 relative z-10">
+
+        <!-- Name Field -->
+        <div class="space-y-3">
+          <label for="name" class="block text-[10px] font-black uppercase tracking-[0.2em] text-[#2D5757]/40 ml-1">Club
+            Name</label>
+          <input id="name" type="text" formControlName="name"
+            class="w-full px-6 py-4 bg-[#F7EDE2]/30 border border-[#2D5757]/10 rounded-2xl text-[#2D5757] font-bold placeholder-[#2D5757]/30 focus:outline-none focus:ring-4 focus:ring-[#2D5757]/5 focus:border-[#2D5757] transition-all"
+            placeholder="e.g. Art Innovators" />
+          <div *ngIf="clubForm.get('name')?.invalid && clubForm.get('name')?.touched"
+            class="mt-2 text-red-500 text-[10px] font-bold uppercase tracking-widest pl-2">
+            <div *ngIf="clubForm.get('name')?.errors?.['required']">Club name is required</div>
+            <div *ngIf="clubForm.get('name')?.errors?.['minlength']">Minimum 3 characters required</div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <!-- Status Field -->
+          <div class="space-y-3">
+            <label for="status"
+              class="block text-[10px] font-black uppercase tracking-[0.2em] text-[#2D5757]/40 ml-1">Current
+              Status</label>
+            <div class="relative">
+              <select id="status" formControlName="Status"
+                class="w-full px-6 py-4 bg-[#F7EDE2]/30 border border-[#2D5757]/10 rounded-2xl text-[#2D5757] font-bold focus:outline-none focus:ring-4 focus:ring-[#2D5757]/5 focus:border-[#2D5757] transition-all appearance-none">
+                <option value="ACTIVE">Active</option>
+                <option value="INACTIVE">Inactive</option>
+                <option value="PENDING">Pending</option>
+                <option value="SUSPENDED">Suspended</option>
+              </select>
+              <div class="absolute right-6 top-1/2 -translate-y-1/2 pointer-events-none text-[#2D5757]/40">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <!-- Category Field -->
+          <div class="space-y-3">
+            <label for="category"
+              class="block text-[10px] font-black uppercase tracking-[0.2em] text-[#2D5757]/40 ml-1">Global
+              Category</label>
+            <div class="relative">
+              <select id="category" formControlName="Category"
+                class="w-full px-4 py-4 bg-[#F7EDE2]/30 border border-[#2D5757]/10 rounded-2xl text-[#2D5757] font-bold focus:outline-none focus:ring-4 focus:ring-[#2D5757]/5 focus:border-[#2D5757] transition-all appearance-none">
+                <option *ngFor="let cat of categories" [value]="cat.value">
+                  {{ cat.label }}
+                </option>
+              </select>
+              <div class="absolute right-6 top-1/2 -translate-y-1/2 pointer-events-none text-[#2D5757]/40">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Email Field -->
+        <div class="space-y-3">
+          <label for="email"
+            class="block text-[10px] font-black uppercase tracking-[0.2em] text-[#2D5757]/40 ml-1">Official
+            Email</label>
+          <input id="email" type="email" formControlName="Email_Contact"
+            class="w-full px-6 py-4 bg-[#F7EDE2]/30 border border-[#2D5757]/10 rounded-2xl text-[#2D5757] font-bold placeholder-[#2D5757]/30 focus:outline-none focus:ring-4 focus:ring-[#2D5757]/5 focus:border-[#2D5757] transition-all"
+            placeholder="contact@club.edu" />
+          <div *ngIf="clubForm.get('Email_Contact')?.invalid && clubForm.get('Email_Contact')?.touched"
+            class="mt-2 text-red-500 text-[10px] font-bold uppercase tracking-widest pl-2">
+            <div *ngIf="clubForm.get('Email_Contact')?.errors?.['required']">Email is essential</div>
+            <div *ngIf="clubForm.get('Email_Contact')?.errors?.['email']">Format must be valid</div>
+          </div>
+        </div>
+
+        <!-- Budget Field -->
+        <div class="space-y-3">
+          <label for="budget"
+            class="block text-[10px] font-black uppercase tracking-[0.2em] text-[#2D5757]/40 ml-1">Allocated
+            Budget (DT)</label>
+          <input id="budget" type="number" formControlName="budget"
+            class="w-full px-6 py-4 bg-[#F7EDE2]/30 border border-[#2D5757]/10 rounded-2xl text-[#2D5757] font-bold placeholder-[#2D5757]/30 focus:outline-none focus:ring-4 focus:ring-[#2D5757]/5 focus:border-[#2D5757] transition-all"
+            placeholder="e.g. 1000" />
+          <div *ngIf="clubForm.get('budget')?.invalid && clubForm.get('budget')?.touched"
+            class="mt-2 text-red-500 text-[10px] font-bold uppercase tracking-widest pl-2">
+            <div *ngIf="clubForm.get('budget')?.errors?.['required']">Budget is required</div>
+            <div *ngIf="clubForm.get('budget')?.errors?.['min']">Budget cannot be negative</div>
+          </div>
+        </div>
+
+        <!-- Form Actions -->
+        <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 pt-10">
+          <button type="submit"
+            class="flex-1 px-8 py-5 bg-[#2D5757] text-[#F7EDE2] rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-[#1a3a3a] transition-all shadow-xl disabled:opacity-50 disabled:cursor-not-allowed group">
+            <span class="flex items-center justify-center">
+              <svg class="w-5 h-5 mr-3 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor"
+                viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+              </svg>
+              {{ isEditMode ? 'Commit Changes' : 'Form Club' }}
+            </span>
+          </button>
+          <button type="button" (click)="onCancel()"
+            class="flex-1 px-8 py-5 bg-white text-[#2D5757] border border-[#2D5757]/10 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-[#F7EDE2]/50 transition-all">
+            <span class="flex items-center justify-center">
+              Dismiss
+            </span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

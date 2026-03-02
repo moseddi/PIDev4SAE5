@@ -1,0 +1,157 @@
+<div class="min-h-screen bg-[#F7EDE2] p-8">
+  <div class="max-w-7xl mx-auto">
+    <!-- Header Card -->
+    <div class="bg-[#2D5757] rounded-[2.5rem] shadow-xl border border-[#F7EDE2]/10 p-10 mb-12 overflow-hidden relative">
+      <div class="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
+        <div>
+          <h1 class="text-4xl font-black text-[#F7EDE2] flex items-center tracking-tighter">
+            <div class="bg-[#F7EDE2] p-3 rounded-2xl mr-5 shadow-lg">
+              <svg class="w-8 h-8 text-[#2D5757]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 002-2z"></path>
+              </svg>
+            </div>
+            Events Panel
+          </h1>
+          <p class="text-[#F7EDE2]/60 mt-3 font-medium lowercase tracking-wide">Orchestrate activities and school life
+          </p>
+        </div>
+
+        <div class="flex flex-col sm:flex-row gap-4">
+          <button (click)="navigateToDashboard()"
+            class="px-8 py-4 border border-[#F7EDE2]/30 text-[#F7EDE2] rounded-2xl font-black text-xs uppercase tracking-[0.2em] hover:bg-[#F7EDE2]/10 transition-all duration-300 flex items-center">
+            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6">
+              </path>
+            </svg>
+            Dashboard
+          </button>
+
+          <button (click)="createEvent()"
+            class="group px-8 py-4 bg-[#F7EDE2] text-[#2D5757] rounded-2xl font-black text-xs uppercase tracking-[0.2em] hover:bg-white transition-all duration-300 shadow-2xl flex items-center">
+            <svg class="w-5 h-5 mr-3 group-hover:rotate-90 transition-transform" fill="none" stroke="currentColor"
+              viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+            </svg>
+            Publish Event
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Loading State -->
+    @if (isLoading) {
+    <div class="flex justify-center items-center py-24">
+      <div class="text-center">
+        <div class="inline-block animate-spin rounded-full h-16 w-16 border-4 border-[#2D5757]/10 border-t-[#2D5757]">
+        </div>
+        <p class="mt-6 text-[#2D5757]/40 font-black uppercase tracking-widest text-sm">Retrieving events...</p>
+      </div>
+    </div>
+    }
+
+    <!-- Error State -->
+    @if (error && !isLoading) {
+    <div class="flex justify-center items-center py-20">
+      <div class="bg-white rounded-[2rem] border border-red-50 p-10 shadow-xl max-w-md text-center">
+        <div class="bg-red-50 w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-6 text-red-400">
+          <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+        </div>
+        <h3 class="text-xl font-black text-[#2D5757] mb-2 uppercase tracking-tight">System Outage</h3>
+        <p class="text-[#2D5757]/60 font-medium mb-8">{{ error }}</p>
+        <button (click)="isLoading = true"
+          class="px-8 py-3 bg-[#2D5757] text-[#F7EDE2] font-black rounded-xl text-xs uppercase tracking-widest hover:bg-[#1a3a3a] transition-all">
+          Retry Sync
+        </button>
+      </div>
+    </div>
+    }
+
+    <!-- Events List -->
+    @if (events && !isLoading && !error) {
+    <div
+      class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 animate-in fade-in slide-in-from-bottom duration-700">
+      @for (event of events; track event.id) {
+      <div
+        class="group bg-white rounded-[2.5rem] shadow-xl border border-black/5 p-10 hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 flex flex-col h-full">
+        <!-- Event Header -->
+        <div class="flex items-center justify-between mb-8">
+          <span
+            class="px-4 py-1.5 bg-[#2D5757] text-[#F7EDE2] text-[10px] font-black uppercase tracking-widest rounded-full">
+            {{ event.Type || $any(event).type }}
+          </span>
+          <span class="text-[#2D5757]/30 text-[10px] font-black uppercase tracking-widest">
+            Ref: #{{ event.ID_Event || event.id }}
+          </span>
+        </div>
+        <p class="text-[#2D5757]/70 font-medium text-[11px] leading-relaxed line-clamp-2 mb-6">
+          {{ event.Manifesto || $any(event).description }}
+        </p>
+
+        <!-- Event Title -->
+        <h3
+          class="text-2xl font-black text-[#2D5757] mb-6 leading-tight group-hover:text-[#2D5757]/70 transition-colors">
+          {{ event.Title || $any(event).title }}
+        </h3>
+
+        <!-- Event Details -->
+        <div class="space-y-4 mb-8 flex-grow">
+          <div class="flex items-center text-[#2D5757]/60 font-bold text-xs uppercase tracking-wider">
+            <div class="bg-[#F7EDE2] p-2 rounded-lg mr-4">
+              <svg class="w-4 h-4 text-[#2D5757]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 002-2z"></path>
+              </svg>
+            </div>
+            {{ (event.StartDate || $any(event).startDate) | date:'MMM d, yyyy' }}
+          </div>
+
+          <div class="flex items-center text-[#2D5757]/40 text-xs font-medium">
+            <div class="bg-[#F7EDE2]/50 p-2 rounded-lg mr-4">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z">
+                </path>
+              </svg>
+            </div>
+            {{ event.MaxParticipants || $any(event).maxParticipants }} spots authorized
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="flex flex-col sm:flex-row gap-3 pt-8 border-t border-black/5 mt-auto">
+          <button (click)="editEvent(event)"
+            class="flex-1 px-4 py-3 bg-[#2D5757] text-[#F7EDE2] rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-[#1a3a3a] transition-all flex items-center justify-center">
+            Edit
+          </button>
+
+          <button (click)="deleteEvent(event)"
+            class="px-4 py-3 text-red-500 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-red-50 transition-all flex items-center justify-center">
+            Delete
+          </button>
+        </div>
+      </div>
+      }
+    </div>
+    }
+
+    <!-- Empty State -->
+    @if (!isLoading && (!events || events.length === 0)) {
+    <div class="text-center py-32 animate-in fade-in duration-1000">
+      <div class="bg-white/50 p-12 rounded-[3.5rem] inline-block shadow-sm border border-black/5">
+        <svg class="w-20 h-20 mx-auto mb-8 text-[#2D5757]/10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0a2 2 0 01-2 2H6a2 2 0 01-2-2m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4">
+          </path>
+        </svg>
+        <h3 class="text-2xl font-black text-[#2D5757] mb-2">No Active Events</h3>
+        <p class="text-[#2D5757]/40 font-medium">The agenda is currently blank. Start by creating a new event.</p>
+      </div>
+    </div>
+    }
+  </div>
+</div>

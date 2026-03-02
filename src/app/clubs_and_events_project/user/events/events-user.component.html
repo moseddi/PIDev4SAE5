@@ -1,0 +1,175 @@
+<div class="min-h-screen bg-[#2D5757]">
+
+    <!-- Header -->
+    <header class="bg-[#2D5757]/80 backdrop-blur-lg border-b border-[#F7EDE2]/10 sticky top-0 z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <div class="flex items-center space-x-4">
+                    <button (click)="goBack()"
+                        class="text-[#F7EDE2]/70 hover:text-[#F7EDE2] transition-colors flex items-center space-x-2 px-3 py-1.5 rounded-lg hover:bg-white/5">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                        <span class="text-sm font-bold uppercase tracking-wide">Back</span>
+                    </button>
+                    <div class="w-px h-6 bg-[#F7EDE2]/20"></div>
+                    <div class="flex items-center space-x-3">
+                        <div class="bg-[#F7EDE2] p-2.5 rounded-xl shadow-lg">
+                            <svg class="w-6 h-6 text-[#2D5757]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+                        </div>
+                        <h1 class="text-xl font-bold text-[#F7EDE2] tracking-tight">Browse Events</h1>
+                    </div>
+                </div>
+                <span class="text-[#F7EDE2]/50 text-xs font-bold uppercase tracking-widest">{{ events.length }} events
+                    available</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+
+        <!-- Page Title -->
+        <div class="text-center mb-16">
+            <h2 class="text-4xl font-extrabold text-[#F7EDE2] mb-4 tracking-tight">Upcoming Events</h2>
+            <p class="text-[#F7EDE2]/60 text-lg max-w-2xl mx-auto">Discover and register for school events and
+                activities</p>
+        </div>
+
+        <!-- Loading State -->
+        @if (isLoading) {
+        <div class="flex justify-center items-center py-24">
+            <div class="text-center">
+                <div
+                    class="inline-block animate-spin rounded-full h-16 w-16 border-4 border-[#F7EDE2]/20 border-t-[#F7EDE2]">
+                </div>
+                <p class="mt-6 text-[#F7EDE2]/50 font-medium tracking-wide">Loading wonderful events...</p>
+            </div>
+        </div>
+        }
+
+        <!-- Error State -->
+        @if (error && !isLoading) {
+        <div class="flex justify-center items-center py-20">
+            <div
+                class="bg-[#F7EDE2]/5 border border-[#F7EDE2]/10 text-[#F7EDE2] px-10 py-10 rounded-3xl text-center max-w-md shadow-2xl">
+                <svg class="w-16 h-16 mx-auto mb-6 text-red-300/60" fill="none" stroke="currentColor"
+                    viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <p class="font-bold text-2xl mb-3">Something went wrong</p>
+                <p class="text-[#F7EDE2]/60 mb-8">{{ error }}</p>
+                <button (click)="loadEvents()"
+                    class="px-8 py-3 bg-[#F7EDE2] text-[#2D5757] font-bold rounded-xl hover:bg-white transition-all duration-300 shadow-lg">
+                    Try again
+                </button>
+            </div>
+        </div>
+        }
+
+        <!-- Empty State -->
+        @if (!isLoading && !error && events.length === 0) {
+        <div class="text-center py-24 bg-white/5 rounded-3xl border border-white/5">
+            <svg class="w-20 h-20 mx-auto mb-6 text-[#F7EDE2]/10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+            <p class="text-[#F7EDE2]/40 text-xl font-medium tracking-wide">No events available yet.</p>
+        </div>
+        }
+
+        <!-- Events Grid -->
+        @if (!isLoading && !error && events.length > 0) {
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            @for (event of events; track event.id) {
+            <div
+                class="group bg-[#F7EDE2] rounded-3xl border border-white/5 overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 flex flex-col">
+
+                <div class="p-8 flex flex-col h-full">
+                    <!-- Type Badge + Status -->
+                    <div class="flex items-center justify-between mb-6">
+                        <span
+                            class="px-4 py-1.5 text-[10px] font-extrabold rounded-full bg-[#2D5757] text-[#F7EDE2] uppercase tracking-widest">
+                            {{ event.Type || $any(event).type }}
+                        </span>
+                        <span class="px-3 py-1 text-[10px] font-extrabold rounded-full border tracking-wider uppercase"
+                            [class]="(event.Status || $any(event).status) === 'PLANNED' ? 'bg-blue-50 text-blue-600 border-blue-100' :
+                       (event.Status || $any(event).status) === 'SCHEDULED' ? 'bg-green-50 text-green-600 border-green-100' :
+                       (event.Status || $any(event).status) === 'IN_PROGRESS' ? 'bg-orange-50 text-orange-600 border-orange-100' :
+                       'bg-gray-50 text-gray-600 border-gray-100'">
+                            {{ event.Status || $any(event).status }}
+                        </span>
+                    </div>
+
+                    <!-- Event Title -->
+                    <h3 class="text-2xl font-bold text-[#2D5757] mb-3 leading-tight">
+                        {{ event.Title || $any(event).title }}
+                    </h3>
+
+                    <!-- Description -->
+                    <p class="text-[#2D5757]/60 text-sm leading-relaxed mb-6 line-clamp-3">
+                        {{ event.Manifesto || $any(event).description }}
+                    </p>
+
+                    <!-- Details -->
+                    <div class="space-y-3 mb-8 py-6 border-y border-[#2D5757]/5">
+                        <div class="flex items-center text-[#2D5757]/80 text-sm font-medium">
+                            <svg class="w-5 h-5 mr-3 text-[#2D5757]/40 flex-shrink-0" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+                            <span>{{ (event.StartDate || $any(event).startDate) | date:'dd MMM yyyy, HH:mm' }}</span>
+                        </div>
+                        <div class="flex items-center text-[#2D5757]/80 text-sm font-medium">
+                            <svg class="w-5 h-5 mr-3 text-[#2D5757]/40 flex-shrink-0" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            <span>{{ (event.EndDate || $any(event).endDate) | date:'dd MMM yyyy, HH:mm' }}</span>
+                        </div>
+                        <div class="flex items-center text-[#2D5757]/80 text-sm font-medium">
+                            <svg class="w-5 h-5 mr-3 text-[#2D5757]/40 flex-shrink-0" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
+                            </svg>
+                            <span>{{ event.MaxParticipants || $any(event).maxParticipants }} spots available</span>
+                        </div>
+                    </div>
+
+                    <!-- Register Button -->
+                    <div class="mt-auto">
+                        @if (isRegistered(event)) {
+                        <div
+                            class="w-full py-4 rounded-2xl bg-green-50 text-green-600 font-bold text-sm flex items-center justify-center space-x-2 border border-green-100">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M5 13l4 4L19 7" />
+                            </svg>
+                            <span>REGISTERED</span>
+                        </div>
+                        } @else {
+                        <button (click)="register(event)"
+                            class="w-full py-4 rounded-2xl bg-[#2D5757] text-[#F7EDE2] font-extrabold text-sm transition-all duration-300 hover:bg-[#1a3a3a] shadow-lg flex items-center justify-center space-x-3 group/btn">
+                            <svg class="w-5 h-5 group-hover/btn:scale-110 transition-transform" fill="none"
+                                stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M13 10V3L4 14h7v7l9-11h-7z" />
+                            </svg>
+                            <span>REGISTER NOW</span>
+                        </button>
+                        }
+                    </div>
+                </div>
+            </div>
+            }
+        </div>
+        }
+
+    </main>
+</div>

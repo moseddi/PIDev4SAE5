@@ -1,1 +1,72 @@
-/* You can add global styles to this file, and also import other style files */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom global styles from integrated project */
+@layer base {
+  html {
+    font-family: 'Outfit', 'Inter', system-ui, sans-serif;
+    scroll-behavior: smooth;
+  }
+
+  /* Note: We keep the existing body background if it's different, 
+     but adding the integrated project's base colors as utility classes or here if appropriate.
+     To avoid breaking friends' work, we won't override the body tag directly if it's already styled elsewhere,
+     but the integrated project uses #F7EDE2 background. */
+}
+
+@layer components {
+  .btn-primary-user {
+    @apply bg-[#2D5757] text-[#F7EDE2] font-black text-[10px] uppercase tracking-[0.2em] py-4 px-8 rounded-2xl transition-all duration-500 shadow-xl hover:bg-[#1a3a3a] hover:scale-105 active:scale-95;
+  }
+
+  .btn-secondary-user {
+    @apply bg-white border border-[#2D5757]/10 text-[#2D5757]/60 font-black text-[10px] uppercase tracking-[0.2em] py-4 px-8 rounded-2xl transition-all duration-500 hover:border-[#2D5757]/30 hover:text-[#2D5757] hover:shadow-md;
+  }
+
+  .card-user {
+    @apply bg-white rounded-[3rem] shadow-2xl border border-black/5 p-12 transition-all duration-700 hover:shadow-[0_40px_80px_-15px_rgba(45, 87, 87, 0.15)] hover:-translate-y-2;
+  }
+
+  .badge-status-user {
+    @apply px-4 py-2 bg-[#2D5757]/5 text-[#2D5757] text-[9px] font-black uppercase tracking-widest rounded-full border border-[#2D5757]/10;
+  }
+
+  .nav-link-user {
+    @apply text-[#F7EDE2]/60 font-black text-[10px] uppercase tracking-[0.2em] hover:text-[#F7EDE2] transition-colors relative after:content-[''] after:absolute after:-bottom-2 after:left-0 after:w-0 after:h-[2px] after:bg-[#F7EDE2] after:transition-all hover:after:w-full;
+  }
+
+  .animate-float-user {
+    animation: float-user 6s ease-in-out infinite;
+  }
+
+  @keyframes float-user {
+
+    0%,
+    100% {
+      transform: translateY(0px) rotate(0deg);
+    }
+
+    50% {
+      transform: translateY(-20px) rotate(1deg);
+    }
+  }
+
+  .animate-pulse-slow-user {
+    animation: pulse-user 4s ease-in-out infinite;
+  }
+
+  @keyframes pulse-user {
+
+    0%,
+    100% {
+      opacity: 1;
+      filter: brightness(1);
+    }
+
+    50% {
+      opacity: 0.8;
+      filter: brightness(1.1);
+    }
+  }
+}
