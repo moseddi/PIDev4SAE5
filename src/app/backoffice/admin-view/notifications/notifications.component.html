@@ -1,0 +1,36 @@
+<div class="notifications-page">
+  <div class="notifications-header">
+    <h2>Course Notifications</h2>
+    <div class="header-actions">
+      <span class="connection-badge" [class.connected]="isConnected" [class.disconnected]="!isConnected">
+        {{ isConnected ? 'Connected' : 'Disconnected' }}
+      </span>
+      <button *ngIf="notifications.length > 0" class="clear-btn" (click)="clearNotifications()">
+        Clear All
+      </button>
+    </div>
+  </div>
+
+  <div class="notifications-list" *ngIf="notifications.length > 0; else emptyState">
+    <div class="notification-card" *ngFor="let notification of notifications">
+      <div class="notification-icon">
+        <span class="icon-circle">&#128214;</span>
+      </div>
+      <div class="notification-content">
+        <h3>{{ notification.message }}</h3>
+        <div class="notification-meta">
+          <span class="course-id">Course ID: {{ notification.courseId }}</span>
+          <span class="timestamp">{{ formatTimestamp(notification.timestamp) }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #emptyState>
+    <div class="empty-state">
+      <div class="empty-icon">&#128276;</div>
+      <h3>No notifications yet</h3>
+      <p>When a new course is created, the notification will appear here in real-time.</p>
+    </div>
+  </ng-template>
+</div>

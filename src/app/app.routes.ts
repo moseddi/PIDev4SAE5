@@ -30,6 +30,7 @@ import { FooterFrontComponent } from './courses/footer-front/footer-front.compon
 import { AuthGuard } from './guards/auth.guard';
 import { FindCoachComponent } from './coaching/find-coach/find-coach.component';
 import { ChatComponent } from './components/chat/chat.component';
+import { NotificationsComponent } from './backoffice/admin-view/notifications/notifications.component';
 
 export const routes: Routes = [
   { path: 'login', component: StudentLoginComponent },
@@ -120,9 +121,15 @@ export const routes: Routes = [
         canActivate: [RoleGuard],
         data: { roles: ['ADMIN'] }
       },
-      { 
-        path: 'admin/physicalspace', 
+      {
+        path: 'admin/physicalspace',
         component: PhysicalspaceComponent,
+        canActivate: [RoleGuard],
+        data: { roles: ['ADMIN'] }
+      },
+      {
+        path: 'admin/notifications',
+        component: NotificationsComponent,
         canActivate: [RoleGuard],
         data: { roles: ['ADMIN'] }
       },
