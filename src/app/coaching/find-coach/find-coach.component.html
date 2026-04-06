@@ -1,0 +1,183 @@
+<app-navbar-front></app-navbar-front>
+
+<div class="coaches-container">
+  <!-- Success Message -->
+  <div *ngIf="successMessage" class="alert alert-success">
+    <i class="bi bi-check-circle"></i> {{ successMessage }}
+  </div>
+
+  <!-- Error Message -->
+  <div *ngIf="error" class="alert alert-danger">
+    <i class="bi bi-exclamation-circle"></i> {{ error }}
+  </div>
+
+  <!-- Header -->
+  <div class="coaches-header">
+    <h1 *ngIf="!selectedCoach"><i class="bi bi-person-badge"></i> Find Your Coach</h1>
+    <h1 *ngIf="selectedCoach"><i class="bi bi-calendar-check"></i> Schedule with {{ selectedCoach.firstName }} {{ selectedCoach.lastName }}</h1>
+    <p *ngIf="!selectedCoach">Choose a professional coach to help you improve your English skills</p>
+    <p *ngIf="selectedCoach">Select an available date to book your session</p>
+    
+    <button *ngIf="selectedCoach" class="btn-back" (click)="goBackToCoaches()">
+      <i class="bi bi-arrow-left"></i> Back to Coaches
+    </button>
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="loading" class="loading-spinner">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+
+  <!-- Coaches Grid -->
+  <div *ngIf="!loading && !selectedCoach" class="coaches-grid">
+    <div *ngFor="let coach of coaches" class="coach-card" (click)="selectCoach(coach)">
+      <div class="coach-avatar">
+        <i class="bi bi-person-circle"></i>
+      </div>
+      <div class="coach-info">
+        <h3>{{ coach.firstName }} {{ coach.lastName }}</h3>
+        <p class="coach-email"><i class="bi bi-envelope"></i> {{ coach.email }}</p>
+        <span class="coach-role badge">TUTOR</span>
+      </div>
+      <div class="coach-actions">
+        <button class="btn-view-schedule">
+          <i class="bi bi-calendar3"></i> View Schedule
+        </button>
+      </div>
+    </div>
+
+    <div *ngIf="coaches.length === 0" class="no-coaches">
+      <i class="bi bi-emoji-frown"></i>
+      <p>No coaches available at the moment</p>
+    </div>
+  </div>
+
+  <!-- Calendar View -->
+  <div *ngIf="selectedCoach" class="calendar-section">
+    <div *ngIf="loadingSeances" class="loading-spinner">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </div>
+
+    <div *ngIf="!loadingSeances" class="calendar-container">
+      <!-- Calendar Header -->
+      <div class="calendar-header">
+        <button class="calendar-nav" (click)="previousMonth()">
+          <i class="bi bi-chevron-left"></i>
+        </button>
+        <h2>{{ monthNames[currentMonth] }} {{ currentYear }}</h2>
+        <button class="calendar-nav" (click)="nextMonth()">
+          <i class="bi bi-chevron-right"></i>
+        </button>
+      </div>
+
+      <!-- Calendar Grid -->
+      <div class="calendar-grid">
+        <div class="calendar-day-header" *ngFor="let day of dayNames">
+          {{ day }}
+        </div>
+        
+        <div 
+          *ngFor="let day of calendarDays" 
+          class="calendar-day"
+          [class.other-month]="!day.isCurrentMonth"
+          [class.today]="day.isToday"
+          [class.available]="day.isAvailable"
+          [class.unavailable]="!day.isAvailable"
+          (click)="onDateClick(day)"
+        >
+          <span class="day-number">{{ day.dayOfMonth }}</span>
+          <span *ngIf="day.isAvailable" class="availability-dot"></span>
+        </div>
+      </div>
+
+      <!-- Legend -->
+      <div class="calendar-legend">
+        <div class="legend-item">
+          <span class="legend-color available"></span>
+          <span>Available</span>
+        </div>
+        <div class="legend-item">
+          <span class="legend-color unavailable"></span>
+          <span>Unavailable</span>
+        </div>
+      </div>
+
+      <!-- No available dates message -->
+      <div *ngIf="getAvailableDatesCount() === 0" class="no-seances">
+        <i class="bi bi-calendar-x"></i>
+        <p>No available sessions this month</p>
+        <p class="text-muted">Please check next month or choose another coach</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Reservation Modal -->
+<div class="modal-overlay" *ngIf="showReservationForm && selectedSeance" (click)="cancelReservation()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <button class="modal-close" (click)="cancelReservation()">
+      <i class="bi bi-x-lg"></i>
+    </button>
+    
+    <div class="modal-header">
+      <h3><i class="bi bi-calendar-check"></i> Confirm Your Booking</h3>
+    </div>
+    
+    <div class="modal-body">
+      <div class="booking-summary">
+        <div class="summary-item">
+          <strong>Coach:</strong> {{ selectedCoach?.firstName }} {{ selectedCoach?.lastName }}
+        </div>
+        <div class="summary-item">
+          <strong>Session:</strong> {{ selectedSeance.goodName }}
+        </div>
+        <div class="summary-item">
+          <strong>Date:</strong> {{ formatDate(selectedSeance.seanceDate) }}
+        </div>
+        <div class="summary-item">
+          <strong>Time:</strong> {{ formatTime(selectedSeance.seanceTime) }}
+        </div>
+      </div>
+
+      <form (ngSubmit)="submitReservation()" class="reservation-form">
+        <div class="form-group">
+          <label for="studidname">Your Name</label>
+          <input
+            type="text"
+            id="studidname"
+            [(ngModel)]="reservation.studidname"
+            name="studidname"
+            required
+            placeholder="Enter your name"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="merenumber">Reservation Date</label>
+          <input
+            type="date"
+            id="merenumber"
+            [(ngModel)]="reservation.merenumber"
+            name="merenumber"
+            required
+          />
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn-confirm">
+            <i class="bi bi-check2-all"></i> Confirm Booking
+          </button>
+          <button type="button" class="btn-cancel" (click)="cancelReservation()">
+            Cancel
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<app-footer-front></app-footer-front>

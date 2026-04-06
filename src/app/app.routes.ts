@@ -15,14 +15,86 @@ import { ClubsComponent } from './backoffice/admin-view/clubs/clubs.component';
 import { ClassesComponent } from './backoffice/admin-view/classes/classes.component';
 import { PhysicalspaceComponent } from './backoffice/admin-view/physicalspace/physicalspace.component';
 import { AuthGuard } from './guards/auth.guard';
+
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
  import { ReactivationComponent } from './reactivation/reactivation.component';
  import { UnblockComponent } from './unblock/unblock.component';
+
+import { FindCoachComponent } from './coaching/find-coach/find-coach.component';
+import { ChatComponent } from './components/chat/chat.component';
+import { NotificationsComponent } from './backoffice/admin-view/notifications/notifications.component';
+
+
+
+
+import { CourseListComponent } from './courses/course-list/course-list.component';
+import { ListeCoursStudentComponent } from './courses/liste-cours-student/liste-cours-student.component';
+
+import { CourseFormComponent } from './courses/course-form/course-form.component';
+import { LessonListComponent } from './courses/lesson-list/lesson-list.component';
+import { LessonFormComponent } from './courses/lesson-form/lesson-form.component';
+
+import { SeanceListComponent } from './coaching/seance-list/seance-list.component';
+import { SeanceFormComponent } from './coaching/seance-form/seance-form.component';
+import { ReservationListComponent } from './coaching/reservation-list/reservation-list.component';
+import { ReservationFormComponent } from './coaching/reservation-form/reservation-form.component';
+import { NavbarFrontComponent } from './courses/navbar-front/navbar-front.component';
+import { ListLessonComponent } from './courses/list-lesson/list-lesson.component';
+import { ListLessonStudentComponent } from './courses/list-lesson-student/list-lesson-student.component';
+import { FooterFrontComponent } from './courses/footer-front/footer-front.component';
+
+
+
+
+
+
+
+
+
+
+
+
 export const routes: Routes = [
   { path: 'login', component: StudentLoginComponent },
   { path: 'signup', component: SignupComponent },
   { path: 'home', component: HomeComponent },
+
+  { path: 'nav', component: NavbarFrontComponent },
+  { path: 'fot', component: FooterFrontComponent },
+
+  // Student Course routes
+  { path: 'cours', component: ListeCoursStudentComponent },
+  { path: 'cours/:courseId/lessons', component: ListLessonStudentComponent },
+  
+  // Course routes
+  { path: 'courses', component: CourseListComponent },
+  { path: 'courses/new', component: CourseFormComponent },
+  { path: 'courses/edit/:id', component: CourseFormComponent },
+
+  // Lesson routes
+  { path: 'courses/:courseId/lessons', component: LessonListComponent },
+  { path: 'courses/:courseId/lessons/new', component: LessonFormComponent },
+  { path: 'lessons/edit/:id', component: LessonFormComponent },
+
+  // Coaching Seance routes
+  { path: 'seances', component: SeanceListComponent },
+  { path: 'seances/new', component: SeanceFormComponent },
+  { path: 'seances/edit/:id', component: SeanceFormComponent },
+
+  // Coaching Reservation routes
+  { path: 'seances/:seanceId/reservations', component: ReservationListComponent },
+  { path: 'seances/:seanceId/reservations/new', component: ReservationFormComponent },
+  { path: 'reservations', component: ReservationListComponent },
+  { path: 'reservations/edit/:id', component: ReservationFormComponent },
+
+  // Find Coach route
+  { path: 'find-coach', component: FindCoachComponent },
+
+  // Chat route
+  { path: 'chat', component: ChatComponent },
+
+
   { path: '', redirectTo: '/home', pathMatch: 'full' },
    { path: 'forgot-password', component: ForgotPasswordComponent },
    { path: 'reset-password', component: ResetPasswordComponent },
@@ -83,12 +155,33 @@ export const routes: Routes = [
         canActivate: [RoleGuard],
         data: { roles: ['ADMIN'] }
       },
-      { 
-        path: 'admin/physicalspace', 
+      {
+        path: 'admin/physicalspace',
         component: PhysicalspaceComponent,
         canActivate: [RoleGuard],
         data: { roles: ['ADMIN'] }
       },
+
+
+      {
+        path: 'admin/notifications',
+        component: NotificationsComponent,
+        canActivate: [RoleGuard],
+        data: { roles: ['ADMIN'] }
+      },
+      { 
+        path: 'courses', 
+        component: CourseListComponent,
+        canActivate: [RoleGuard],
+        data: { roles: ['ADMIN'] }
+      },
+      { 
+        path: 'courses/new', 
+        component: CourseFormComponent,
+        canActivate: [RoleGuard],
+        data: { roles: ['ADMIN'] }
+      },
+
       
       // Tutor only routes
       { 

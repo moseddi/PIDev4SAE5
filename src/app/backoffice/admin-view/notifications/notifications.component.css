@@ -1,0 +1,143 @@
+.notifications-page {
+  padding: 30px;
+  max-width: 900px;
+}
+
+.notifications-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.notifications-header h2 {
+  color: #2D5757;
+  font-size: 1.8rem;
+  margin: 0;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.connection-badge {
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.connection-badge.connected {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.connection-badge.disconnected {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+.clear-btn {
+  padding: 8px 18px;
+  background: #2D5757;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background 0.3s;
+}
+
+.clear-btn:hover {
+  background: #1e3d3d;
+}
+
+.notifications-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.notification-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-left: 4px solid #2D5757;
+  border-radius: 8px;
+  padding: 20px;
+  animation: slideIn 0.3s ease-out;
+  transition: box-shadow 0.2s;
+}
+
+.notification-card:hover {
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+}
+
+.notification-icon .icon-circle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  background: #F7EDE2;
+  border-radius: 50%;
+  font-size: 1.3rem;
+}
+
+.notification-content {
+  flex: 1;
+}
+
+.notification-content h3 {
+  margin: 0 0 8px 0;
+  color: #333;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.notification-meta {
+  display: flex;
+  gap: 20px;
+  font-size: 0.85rem;
+  color: #888;
+}
+
+.course-id {
+  font-weight: 500;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: #999;
+}
+
+.empty-icon {
+  font-size: 3rem;
+  margin-bottom: 16px;
+}
+
+.empty-state h3 {
+  color: #666;
+  margin: 0 0 8px 0;
+}
+
+.empty-state p {
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
