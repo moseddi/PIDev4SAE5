@@ -195,7 +195,6 @@ export class UserService {
     );
   }
 
-  getUsersByRole(role: string): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/role/${role}`, { headers: this.getHeaders() });
-  }
+
+
 }
