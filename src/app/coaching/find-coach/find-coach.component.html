@@ -85,12 +85,13 @@
           class="calendar-day"
           [class.other-month]="!day.isCurrentMonth"
           [class.today]="day.isToday"
-          [class.available]="day.isAvailable"
-          [class.unavailable]="!day.isAvailable"
+          [class.available]="day.isAvailable && day.seances.length > 0"
+          [class.unavailable]="!day.isAvailable || day.seances.length === 0"
+          [class.past]="!day.isCurrentMonth && !day.isAvailable"
           (click)="onDateClick(day)"
         >
           <span class="day-number">{{ day.dayOfMonth }}</span>
-          <span *ngIf="day.isAvailable" class="availability-dot"></span>
+          <span *ngIf="day.isAvailable && day.seances.length > 0" class="availability-dot"></span>
         </div>
       </div>
 

@@ -61,7 +61,7 @@ export class FindCoachComponent implements OnInit {
   ngOnInit(): void {
     this.currentYear = this.currentDate.getFullYear();
     this.currentMonth = this.currentDate.getMonth();
-    //this.loadCoaches();
+    this.loadCoaches();
     this.loadAllSeances();
     
     // Pre-fill student name from logged in user
@@ -71,19 +71,19 @@ export class FindCoachComponent implements OnInit {
     }
   }
 
-  // loadCoaches(): void {
-  //   this.userService.getUsersByRole('STUDENT').subscribe({
-  //     next: (data) => {
-  //       this.coaches = data;
-  //       this.loading = false;
-  //     },
-  //     error: (err) => {
-  //       console.error('Error loading coaches:', err);
-  //       this.error = 'Failed to load coaches';
-  //       this.loading = false;
-  //     }
-  //   });
-  // }
+  loadCoaches(): void {
+    this.userService.getAllUsers().subscribe({
+      next: (data) => {
+        this.coaches = data.filter((u: any) => u.role === 'TUTOR');
+        this.loading = false;
+      },
+      error: (err) => {
+        console.error('Error loading coaches:', err);
+        this.error = 'Failed to load coaches';
+        this.loading = false;
+      }
+    });
+  }
 
   loadAllSeances(): void {
     this.coachingService.getAllSeances().subscribe({
@@ -99,7 +99,7 @@ export class FindCoachComponent implements OnInit {
 
   loadSeancesForCoach(tutorId: number): void {
     this.loadingSeances = true;
-    this.coachingService.getAllSeances().subscribe({
+    this.coachingService.getSeancesByTutor(tutorId).subscribe({
       next: (data) => {
         this.allSeances = data || [];
         this.buildCalendar();
@@ -129,15 +129,17 @@ export class FindCoachComponent implements OnInit {
       const date = new Date(this.currentYear, this.currentMonth - 1, dayNum);
       const dateStr = this.formatDateStr(date);
       const seancesForDay = this.allSeances.filter(s => s.seanceDate === dateStr);
-      // Available if no reservations exist for this date
+      // Available if seance exists and has no reservations and date is not in the past
+      const hasSeance = seancesForDay.length > 0;
       const hasReservations = seancesForDay.some(seance => (seance.reservations?.length || 0) > 0);
+      const isPastDate = date.getTime() < today.getTime();
       
       this.calendarDays.push({
         date: dateStr,
         dayOfMonth: dayNum,
         isCurrentMonth: false,
         isToday: false,
-        isAvailable: !hasReservations,
+        isAvailable: hasSeance && !hasReservations && !isPastDate,
         seances: seancesForDay
       });
     }
@@ -147,10 +149,12 @@ export class FindCoachComponent implements OnInit {
       const date = new Date(this.currentYear, this.currentMonth, day);
       const dateStr = this.formatDateStr(date);
       const isToday = date.getTime() === today.getTime();
+      const isPastDate = date.getTime() < today.getTime();
       
       // Find seances for this date
       const seancesForDay = this.allSeances.filter(s => s.seanceDate === dateStr);
-      // Available only if no reservations exist for this date
+      // Available if seance exists and has no reservations and date is not in the past
+      const hasSeance = seancesForDay.length > 0;
       const hasReservations = seancesForDay.some(seance => (seance.reservations?.length || 0) > 0);
 
       this.calendarDays.push({
@@ -158,7 +162,7 @@ export class FindCoachComponent implements OnInit {
         dayOfMonth: day,
         isCurrentMonth: true,
         isToday: isToday,
-        isAvailable: !hasReservations,
+        isAvailable: hasSeance && !hasReservations && !isPastDate,
         seances: seancesForDay
       });
     }
@@ -169,14 +173,16 @@ export class FindCoachComponent implements OnInit {
       const date = new Date(this.currentYear, this.currentMonth + 1, day);
       const dateStr = this.formatDateStr(date);
       const seancesForDay = this.allSeances.filter(s => s.seanceDate === dateStr);
+      const hasSeance = seancesForDay.length > 0;
       const hasReservations = seancesForDay.some(seance => (seance.reservations?.length || 0) > 0);
+      const isPastDate = date.getTime() < today.getTime();
       
       this.calendarDays.push({
         date: dateStr,
         dayOfMonth: day,
         isCurrentMonth: false,
         isToday: false,
-        isAvailable: !hasReservations,
+        isAvailable: hasSeance && !hasReservations && !isPastDate,
         seances: seancesForDay
       });
     }
@@ -225,25 +231,25 @@ export class FindCoachComponent implements OnInit {
   }
 
   onDateClick(day: CalendarDay): void {
-    // Open modal for any clicked date
-    // If there are seances, use the first one; otherwise create a placeholder
-    if (day.seances && day.seances.length > 0) {
-      this.openReservationForm(day.seances[0]);
-    } else {
-      // Create a placeholder seance for the clicked date
-      const placeholderSeance: Seance = {
-        goodName: 'New Session',
-        seanceDate: day.date,
-        seanceTime: '10:00:00'
-      };
-      this.openReservationForm(placeholderSeance);
-    }
-  }
+  console.log('Clicked day', day);
+  // Force l'ouverture du modal avec des données factices
+  this.selectedSeance = {
+    goodName: 'Test Session',
+    seanceDate: day.date,
+    seanceTime: '14:00:00'
+  } as Seance;
+  this.showReservationForm = true;
+  this.reservation.merenumber = day.date;
+  console.log('Modal should be open now');
+}
 
   openReservationForm(seance: Seance): void {
     this.selectedSeance = seance;
     this.showReservationForm = true;
     this.reservation.merenumber = seance.seanceDate;
+    if (this.selectedCoach) {
+      this.reservation.coachName = `${this.selectedCoach.firstName} ${this.selectedCoach.lastName}`;
+    }
   }
 
   cancelReservation(): void {
@@ -286,6 +292,6 @@ export class FindCoachComponent implements OnInit {
   }
 
   getAvailableDatesCount(): number {
-    return this.calendarDays.filter(d => d.isAvailable).length;
+    return this.calendarDays.filter(d => d.isAvailable && d.seances.length > 0).length;
   }
 }

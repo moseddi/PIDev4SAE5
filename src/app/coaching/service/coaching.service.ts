@@ -13,7 +13,8 @@ export interface Seance {
 export interface Reservation {
   id?: number;
   studidname: string;
-  merenumber: string;   // "YYYY-MM-DD"
+  merenumber: string;
+  coachName?: string;
   status: string;
   seance?: Seance;
 }
