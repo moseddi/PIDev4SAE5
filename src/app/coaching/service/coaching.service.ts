@@ -75,6 +75,21 @@ export class CoachingService {
 
   // Get seances by tutor ID
   getSeancesByTutor(tutorId: number): Observable<Seance[]> {
-    return this.http.get<Seance[]>(`${this.apiUrl}/api/seances/tutor/${tutorId}`);
-  }
+  return this.http.get<Seance[]>(`${this.apiUrl}/api/seances/tutor/${tutorId}`);
+}
+
+
+
+
+// Ajouter cette méthode pour la création correcte
+createSeanceForTutor(tutorEmail: string, seance: Seance, token: string): Observable<Seance> {
+  const headers = { 'Authorization': `Bearer ${token}` };
+  return this.http.post<Seance>(
+    `${this.apiUrl}/api/seances/by-tutor-email?tutorEmail=${tutorEmail}`,
+    seance,
+    { headers }
+  );
+}
+
+
 }

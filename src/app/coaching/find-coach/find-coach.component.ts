@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { UserService } from '../../services/user.service';
 import { AuthService } from '../../services/auth.service';
@@ -13,14 +13,15 @@ interface CalendarDay {
   dayOfMonth: number;
   isCurrentMonth: boolean;
   isToday: boolean;
-  isAvailable: boolean;
+  isAvailable: boolean;   // true = séance existe ET pas encore réservée ET pas passée
+  isBooked: boolean;      // true = séance existe mais déjà réservée
   seances: Seance[];
 }
 
 @Component({
   selector: 'app-find-coach',
   standalone: true,
-  imports: [CommonModule, RouterLink, FormsModule, NavbarFrontComponent, FooterFrontComponent],
+  imports: [CommonModule, FormsModule, NavbarFrontComponent, FooterFrontComponent],
   templateUrl: './find-coach.component.html',
   styleUrls: ['./find-coach.component.css']
 })
@@ -62,12 +63,11 @@ export class FindCoachComponent implements OnInit {
     this.currentYear = this.currentDate.getFullYear();
     this.currentMonth = this.currentDate.getMonth();
     this.loadCoaches();
-    this.loadAllSeances();
-    
+
     // Pre-fill student name from logged in user
     const user = this.authService.getUser();
     if (user) {
-      this.reservation.studidname = user.firstName ? `${user.firstName} ${user.lastName || ''}` : user.email;
+      this.reservation.studidname = user.firstName ? `${user.firstName} ${user.lastName || ''}`.trim() : user.email;
     }
   }
 
@@ -85,25 +85,13 @@ export class FindCoachComponent implements OnInit {
     });
   }
 
-  loadAllSeances(): void {
-    this.coachingService.getAllSeances().subscribe({
-      next: (data) => {
-        this.allSeances = data || [];
-        this.buildCalendar();
-      },
-      error: (err) => {
-        console.error('Error loading seances:', err);
-      }
-    });
-  }
-
-  loadSeancesForCoach(tutorId: number): void {
+  loadSeancesForCoach(tutorId: number) {
     this.loadingSeances = true;
     this.coachingService.getSeancesByTutor(tutorId).subscribe({
-      next: (data) => {
-        this.allSeances = data || [];
-        this.buildCalendar();
+      next: (seances) => {
+        this.allSeances = seances || [];
         this.loadingSeances = false;
+        this.buildCalendar();
       },
       error: (err) => {
         console.error('Error loading seances:', err);
@@ -118,73 +106,47 @@ export class FindCoachComponent implements OnInit {
     const lastDay = new Date(this.currentYear, this.currentMonth + 1, 0);
     const startingDay = firstDay.getDay();
     const totalDays = lastDay.getDate();
-    
+
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
-    // Previous month days - check if seances have reservations
+    const buildDay = (date: Date, isCurrentMonth: boolean): CalendarDay => {
+      const dateStr = this.formatDateStr(date);
+      const seancesForDay = this.allSeances.filter(s => s.seanceDate === dateStr);
+      const hasSeance = seancesForDay.length > 0;
+      const isBooked = seancesForDay.some(s => (s.reservations?.length || 0) > 0);
+      const isPast = date.getTime() < today.getTime();
+      const isToday = date.getTime() === today.getTime();
+
+      return {
+        date: dateStr,
+        dayOfMonth: date.getDate(),
+        isCurrentMonth,
+        isToday,
+        isAvailable: !isBooked && !isPast,
+        isBooked: isBooked,
+        seances: seancesForDay
+      };
+    };
+
+    // Previous month padding
     const prevMonthLastDay = new Date(this.currentYear, this.currentMonth, 0).getDate();
     for (let i = startingDay - 1; i >= 0; i--) {
-      const dayNum = prevMonthLastDay - i;
-      const date = new Date(this.currentYear, this.currentMonth - 1, dayNum);
-      const dateStr = this.formatDateStr(date);
-      const seancesForDay = this.allSeances.filter(s => s.seanceDate === dateStr);
-      // Available if seance exists and has no reservations and date is not in the past
-      const hasSeance = seancesForDay.length > 0;
-      const hasReservations = seancesForDay.some(seance => (seance.reservations?.length || 0) > 0);
-      const isPastDate = date.getTime() < today.getTime();
-      
-      this.calendarDays.push({
-        date: dateStr,
-        dayOfMonth: dayNum,
-        isCurrentMonth: false,
-        isToday: false,
-        isAvailable: hasSeance && !hasReservations && !isPastDate,
-        seances: seancesForDay
-      });
+      const date = new Date(this.currentYear, this.currentMonth - 1, prevMonthLastDay - i);
+      this.calendarDays.push(buildDay(date, false));
     }
 
-    // Current month days - check if seances have reservations
+    // Current month
     for (let day = 1; day <= totalDays; day++) {
       const date = new Date(this.currentYear, this.currentMonth, day);
-      const dateStr = this.formatDateStr(date);
-      const isToday = date.getTime() === today.getTime();
-      const isPastDate = date.getTime() < today.getTime();
-      
-      // Find seances for this date
-      const seancesForDay = this.allSeances.filter(s => s.seanceDate === dateStr);
-      // Available if seance exists and has no reservations and date is not in the past
-      const hasSeance = seancesForDay.length > 0;
-      const hasReservations = seancesForDay.some(seance => (seance.reservations?.length || 0) > 0);
-
-      this.calendarDays.push({
-        date: dateStr,
-        dayOfMonth: day,
-        isCurrentMonth: true,
-        isToday: isToday,
-        isAvailable: hasSeance && !hasReservations && !isPastDate,
-        seances: seancesForDay
-      });
+      this.calendarDays.push(buildDay(date, true));
     }
 
-    // Next month days - check if seances have reservations
-    const remainingDays = 42 - this.calendarDays.length;
-    for (let day = 1; day <= remainingDays; day++) {
+    // Next month padding
+    const remaining = 42 - this.calendarDays.length;
+    for (let day = 1; day <= remaining; day++) {
       const date = new Date(this.currentYear, this.currentMonth + 1, day);
-      const dateStr = this.formatDateStr(date);
-      const seancesForDay = this.allSeances.filter(s => s.seanceDate === dateStr);
-      const hasSeance = seancesForDay.length > 0;
-      const hasReservations = seancesForDay.some(seance => (seance.reservations?.length || 0) > 0);
-      const isPastDate = date.getTime() < today.getTime();
-      
-      this.calendarDays.push({
-        date: dateStr,
-        dayOfMonth: day,
-        isCurrentMonth: false,
-        isToday: false,
-        isAvailable: hasSeance && !hasReservations && !isPastDate,
-        seances: seancesForDay
-      });
+      this.calendarDays.push(buildDay(date, false));
     }
   }
 
@@ -215,10 +177,8 @@ export class FindCoachComponent implements OnInit {
     this.buildCalendar();
   }
 
-  selectCoach(coach: any): void {
+  selectCoach(coach: any) {
     this.selectedCoach = coach;
-    this.showReservationForm = false;
-    this.selectedSeance = null;
     this.loadSeancesForCoach(coach.id);
   }
 
@@ -231,22 +191,20 @@ export class FindCoachComponent implements OnInit {
   }
 
   onDateClick(day: CalendarDay): void {
-  console.log('Clicked day', day);
-  // Force l'ouverture du modal avec des données factices
-  this.selectedSeance = {
-    goodName: 'Test Session',
-    seanceDate: day.date,
-    seanceTime: '14:00:00'
-  } as Seance;
-  this.showReservationForm = true;
-  this.reservation.merenumber = day.date;
-  console.log('Modal should be open now');
-}
+    if (day.isBooked || !day.isAvailable) return;
 
-  openReservationForm(seance: Seance): void {
-    this.selectedSeance = seance;
+    if (day.seances.length > 0) {
+      this.selectedSeance = day.seances[0];
+    } else {
+      this.selectedSeance = {
+        goodName: 'Coaching Session',
+        seanceDate: day.date,
+        seanceTime: '10:00'
+      };
+    }
+
     this.showReservationForm = true;
-    this.reservation.merenumber = seance.seanceDate;
+    this.reservation.merenumber = day.date;
     if (this.selectedCoach) {
       this.reservation.coachName = `${this.selectedCoach.firstName} ${this.selectedCoach.lastName}`;
     }
@@ -258,22 +216,41 @@ export class FindCoachComponent implements OnInit {
   }
 
   submitReservation(): void {
-    if (!this.selectedSeance || !this.selectedSeance.id) {
+    if (!this.selectedSeance) {
+      this.error = 'No seance selected';
       return;
     }
 
-    this.coachingService.createReservation(this.selectedSeance.id, this.reservation).subscribe({
+    if (!this.selectedSeance.id) {
+      const token = this.authService.getToken() || '';
+      if (this.selectedSeance.seanceTime && this.selectedSeance.seanceTime.length <= 5) {
+        this.selectedSeance.seanceTime += ':00';
+      }
+      this.coachingService.createSeanceForTutor(this.selectedCoach.email, this.selectedSeance, token)
+        .subscribe({
+          next: (createdSeance) => {
+            if(createdSeance.id) {
+               this.createReservationOnly(createdSeance.id);
+            }
+          },
+          error: (err) => {
+            console.error('Error creating seance:', err);
+            this.error = 'Failed to create seance. Please try again.';
+          }
+        });
+    } else {
+      this.createReservationOnly(this.selectedSeance.id);
+    }
+  }
+
+  createReservationOnly(seanceId: number): void {
+    this.coachingService.createReservation(seanceId, this.reservation).subscribe({
       next: () => {
-        this.successMessage = 'Reservation submitted successfully! Waiting for coach confirmation.';
+        this.successMessage = 'Reservation confirmed! Your session has been booked.';
         this.showReservationForm = false;
         this.selectedSeance = null;
-        // Refresh seances
-        if (this.selectedCoach) {
-          this.loadSeancesForCoach(this.selectedCoach.id);
-        }
-        setTimeout(() => {
-          this.successMessage = '';
-        }, 5000);
+        this.loadSeancesForCoach(this.selectedCoach.id);
+        setTimeout(() => { this.successMessage = ''; }, 5000);
       },
       error: (err) => {
         console.error('Error creating reservation:', err);
@@ -292,6 +269,6 @@ export class FindCoachComponent implements OnInit {
   }
 
   getAvailableDatesCount(): number {
-    return this.calendarDays.filter(d => d.isAvailable && d.seances.length > 0).length;
+    return this.calendarDays.filter(d => d.isAvailable).length;
   }
 }

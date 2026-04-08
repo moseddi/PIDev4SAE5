@@ -470,34 +470,24 @@
   align-items: center;
   justify-content: center;
   border-radius: 12px;
-  cursor: pointer;
+  cursor: default;
   transition: all 0.3s ease;
   position: relative;
   min-height: 60px;
+  background: #f8f9fa;
+  border: 2px solid #e9ecef;
 }
 
-.calendar-day {
-  aspect-ratio: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  border-radius: 12px;
+.calendar-day.clickable {
   cursor: pointer;
-  transition: all 0.3s ease;
-  position: relative;
-  min-height: 60px;
-  background: #d4edda;
-  border: 2px solid #28a745;
 }
 
-.calendar-day:hover {
-  background: #c3e6cb;
+.calendar-day.clickable:hover {
   transform: scale(1.05);
 }
 
 .calendar-day.other-month {
-  opacity: 1;
+  opacity: 0.5;
 }
 
 .calendar-day.today {
@@ -516,36 +506,34 @@
   color: white;
 }
 
-.calendar-day.unavailable {
-  background: #e9ecef;
-  border: 2px solid #ced4da;
-  cursor: not-allowed;
-  opacity: 0.7;
+.calendar-day.available {
+  background: #d4edda;
+  border: 2px solid #28a745;
 }
 
-.calendar-day.unavailable:hover {
-  transform: none;
-  background: #e9ecef;
+.calendar-day.available:hover {
+  background: #b8dfc4;
 }
 
-.calendar-day.past {
-  background: #f5f5f5;
-  border: 2px solid #ddd;
-  cursor: not-allowed;
-  opacity: 0.5;
-}
-
-.calendar-day.past:hover {
-  transform: none;
-  background: #f5f5f5;
+.calendar-day.booked {
+  background: #f8d7da;
+  border: 2px solid #dc3545;
+  cursor: pointer;
 }
 
 .availability-dot {
   width: 8px;
   height: 8px;
-  background: #28a745;
   border-radius: 50%;
   margin-top: 4px;
+}
+
+.available-dot {
+  background: #28a745;
+}
+
+.booked-dot {
+  background: #dc3545;
 }
 
 .calendar-legend {
@@ -576,9 +564,24 @@
   border: 2px solid #28a745;
 }
 
-.legend-color.unavailable {
-  background: #f8f9fa;
-  border: 2px solid #dee2e6;
+.legend-color.booked {
+  background: #f8d7da;
+  border: 2px solid #dc3545;
+}
+
+.readonly-field {
+  background: #f8f9fa !important;
+  color: #495057 !important;
+  cursor: default !important;
+}
+
+.required {
+  color: #dc3545;
+}
+
+.btn-confirm:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
 /* Modal Styles */
