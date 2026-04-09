@@ -1,0 +1,112 @@
+<!-- Notification -->
+<div class="notif-banner" *ngIf="notification" [ngClass]="notification.type">
+  {{ notification.message }}
+</div>
+
+<div class="ar-container">
+  <div class="ar-header">
+    <div class="ar-title">
+      <i class="bi bi-calendar2-check"></i>
+      <h2>Réservations de Coaching</h2>
+    </div>
+    <span class="ar-count">{{ reservations.length }} réservation(s)</span>
+  </div>
+
+  <!-- Loading -->
+  <div class="ar-loading" *ngIf="loading">
+    <div class="spinner"></div>
+    <p>Chargement des réservations...</p>
+  </div>
+
+  <!-- Empty -->
+  <div class="ar-empty" *ngIf="!loading && reservations.length === 0">
+    <i class="bi bi-calendar-x"></i>
+    <p>Aucune réservation trouvée.</p>
+  </div>
+
+  <!-- Table -->
+  <div class="ar-table-wrapper" *ngIf="!loading && reservations.length > 0">
+    <table class="ar-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Étudiant</th>
+          <th>Tuteur / Coach</th>
+          <th>Séance</th>
+          <th>Date</th>
+          <th>Statut</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let r of reservations">
+          <td class="td-id">{{ r.id }}</td>
+          <td>
+            <div class="user-cell">
+              <div class="avatar student-avatar">{{ (r.studidname || '?')[0].toUpperCase() }}</div>
+              <span>{{ r.studidname }}</span>
+            </div>
+          </td>
+          <td>
+            <div class="user-cell" *ngIf="r.coachName; else noCoach">
+              <div class="avatar coach-avatar">{{ (r.coachName || '?')[0].toUpperCase() }}</div>
+              <span>{{ r.coachName }}</span>
+            </div>
+            <ng-template #noCoach>
+              <span class="no-data">—</span>
+            </ng-template>
+          </td>
+          <td>{{ r.seance?.goodName || '—' }}</td>
+          <td>{{ r.merenumber }}</td>
+          <td>
+            <span class="status-badge" [ngClass]="getStatusClass(r.status)">
+              {{ r.status }}
+            </span>
+          </td>
+          <td class="td-actions">
+            <button class="btn-edit" (click)="openEdit(r)">
+              <i class="bi bi-pencil"></i> Modifier
+            </button>
+            <button class="btn-delete" (click)="deleteReservation(r)">
+              <i class="bi bi-trash"></i> Supprimer
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Edit Modal -->
+<div class="modal-overlay" *ngIf="showEditModal" (click)="closeEdit()">
+  <div class="modal-box" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3><i class="bi bi-pencil-square"></i> Modifier la réservation</h3>
+      <button class="modal-close" (click)="closeEdit()">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label>Nom de l'étudiant</label>
+        <input type="text" [(ngModel)]="editingReservation.studidname" placeholder="Nom de l'étudiant" />
+      </div>
+      <div class="form-group">
+        <label>Nom du tuteur / coach</label>
+        <input type="text" [(ngModel)]="editingReservation.coachName" placeholder="Nom du coach" />
+      </div>
+      <div class="form-group">
+        <label>Date de réservation</label>
+        <input type="date" [(ngModel)]="editingReservation.merenumber" />
+      </div>
+      <div class="form-group">
+        <label>Statut</label>
+        <select [(ngModel)]="editingReservation.status">
+          <option *ngFor="let s of statusOptions" [value]="s">{{ s }}</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" (click)="closeEdit()">Annuler</button>
+      <button class="btn-save" (click)="saveEdit()">Enregistrer</button>
+    </div>
+  </div>
+</div>

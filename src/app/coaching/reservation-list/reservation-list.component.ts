@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { CoachingService, Reservation } from '../service/coaching.service';
 
 @Component({
@@ -18,7 +18,8 @@ export class ReservationListComponent implements OnInit {
 
   constructor(
     private coachingService: CoachingService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -92,5 +93,40 @@ export class ReservationListComponent implements OnInit {
     setTimeout(() => {
       this.notification = null;
     }, 4000);
+  }
+
+  isBackoffice(): boolean {
+    return this.router.url.includes('/backoffice/admin');
+  }
+
+  goToNew(): void {
+    if (this.isBackoffice()) {
+      if (this.seanceId) {
+        this.router.navigate(['/backoffice/admin/seances', this.seanceId, 'reservations', 'new']);
+      } else {
+        // Just in case
+      }
+    } else {
+      if (this.seanceId) {
+        this.router.navigate(['/seances', this.seanceId, 'reservations', 'new']);
+      }
+    }
+  }
+
+  goBack(): void {
+    if (this.isBackoffice()) {
+      this.router.navigate(['/backoffice/admin/seances']);
+    } else {
+      this.router.navigate(['/seances']);
+    }
+  }
+
+  goToEdit(id: number | undefined): void {
+    if (!id) return;
+    if (this.isBackoffice()) {
+      this.router.navigate(['/backoffice/admin/reservations/edit', id]);
+    } else {
+      this.router.navigate(['/reservations/edit', id]);
+    }
   }
 }

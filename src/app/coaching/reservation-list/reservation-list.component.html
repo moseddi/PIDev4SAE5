@@ -7,8 +7,8 @@
   <div class="reservations-header">
     <h2>📅 {{ seanceId ? 'Seance Reservations' : 'All Reservations' }}</h2>
     <div class="header-actions">
-      <a *ngIf="seanceId" [routerLink]="['/seances', seanceId, 'reservations', 'new']" class="btn-add">+ New Reservation</a>
-      <a routerLink="/seances" class="btn-back">← Back to Seances</a>
+      <button *ngIf="seanceId" (click)="goToNew()" class="btn-add" style="cursor: pointer;">+ New Reservation</button>
+      <button (click)="goBack()" class="btn-back" style="cursor: pointer;">← Back to Seances</button>
     </div>
   </div>
 
@@ -20,7 +20,7 @@
   <!-- Empty State -->
   <div class="empty-state" *ngIf="!loading && reservations.length === 0">
     <p>No reservations found.</p>
-    <a *ngIf="seanceId" [routerLink]="['/seances', seanceId, 'reservations', 'new']" class="btn-add">+ Create Reservation</a>
+    <button *ngIf="seanceId" (click)="goToNew()" class="btn-add" style="cursor: pointer;">+ Create Reservation</button>
   </div>
 
   <!-- Reservation Table -->
@@ -48,7 +48,7 @@
           </td>
           <td>{{ reservation.seance?.goodName || '—' }}</td>
           <td class="actions-cell">
-            <a [routerLink]="['/reservations/edit', reservation.id]" class="btn-small btn-edit">Edit</a>
+            <button (click)="goToEdit(reservation.id)" class="btn-small btn-edit" style="cursor: pointer;">Edit</button>
             <button (click)="deleteReservation(reservation)" class="btn-small btn-delete">Delete</button>
           </td>
         </tr>

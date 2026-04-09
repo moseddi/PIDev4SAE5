@@ -1,7 +1,45 @@
 <header class="top-bar">
   <h2>Welcome to Backoffice</h2>
-  <div class="user-menu">
-    <span>Admin User</span>
-    <button>Logout</button>
+
+  <div class="header-right">
+    <!-- Notification Bell -->
+    <div class="notif-bell-wrapper">
+      <button class="bell-btn" (click)="toggleDropdown()">
+        <i class="bi bi-bell-fill"></i>
+        <span class="badge-red" *ngIf="unreadCount > 0">{{ unreadCount }}</span>
+      </button>
+
+      <!-- Dropdown -->
+      <div class="notif-dropdown" *ngIf="showDropdown">
+        <div class="notif-dropdown-header">
+          <span>Notifications</span>
+          <button class="clear-btn" *ngIf="notifications.length > 0" (click)="clearAll()">Tout effacer</button>
+        </div>
+
+        <div class="notif-list" *ngIf="notifications.length > 0; else empty">
+          <div class="notif-item" *ngFor="let n of notifications">
+            <div class="notif-icon">
+              <i class="bi bi-book-fill"></i>
+            </div>
+            <div class="notif-body">
+              <p class="notif-msg">{{ n.message }}</p>
+              <span class="notif-time">{{ formatTime(n.timestamp) }}</span>
+            </div>
+          </div>
+        </div>
+
+        <ng-template #empty>
+          <div class="notif-empty">
+            <i class="bi bi-bell-slash"></i>
+            <p>Aucune notification</p>
+          </div>
+        </ng-template>
+      </div>
+    </div>
+
+    <div class="user-menu">
+      <span>Admin User</span>
+      <button>Logout</button>
+    </div>
   </div>
 </header>

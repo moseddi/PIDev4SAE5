@@ -10,6 +10,7 @@ export interface CourseNotification {
   courseId: number;
   courseTitle: string;
   timestamp: number;
+  read?: boolean;
 }
 
 @Injectable({
@@ -79,6 +80,11 @@ export class NotificationService implements OnDestroy {
     if (this.reconnectTimer) {
       clearTimeout(this.reconnectTimer);
     }
+  }
+
+  addNotification(notification: CourseNotification): void {
+    const current = this.notificationsSubject.value;
+    this.notificationsSubject.next([notification, ...current]);
   }
 
   clearNotifications(): void {

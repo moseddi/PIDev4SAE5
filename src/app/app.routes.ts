@@ -39,6 +39,7 @@ import { SeanceListComponent } from './coaching/seance-list/seance-list.componen
 import { SeanceFormComponent } from './coaching/seance-form/seance-form.component';
 import { ReservationListComponent } from './coaching/reservation-list/reservation-list.component';
 import { ReservationFormComponent } from './coaching/reservation-form/reservation-form.component';
+import { AdminReservationsComponent } from './backoffice/admin-view/admin-reservations/admin-reservations.component';
 import { NavbarFrontComponent } from './courses/navbar-front/navbar-front.component';
 import { ListLessonComponent } from './courses/list-lesson/list-lesson.component';
 import { ListLessonStudentComponent } from './courses/list-lesson-student/list-lesson-student.component';
@@ -178,6 +179,12 @@ export const routes: Routes = [
       { 
         path: 'courses/new', 
         component: CourseFormComponent,
+        canActivate: [RoleGuard],
+        data: { roles: ['ADMIN'] }
+      },
+      {
+        path: 'admin/coaching-reservations',
+        component: AdminReservationsComponent,
         canActivate: [RoleGuard],
         data: { roles: ['ADMIN'] }
       },

@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { CourseService, Course } from '../course-list/service/course.service';
+import { NotificationService } from '../../services/notification.service';
 
 @Component({
   selector: 'app-course-form',
@@ -28,7 +29,8 @@ export class CourseFormComponent implements OnInit {
     private fb: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
-    private courseService: CourseService
+    private courseService: CourseService,
+    private notificationService: NotificationService
   ) {
     this.courseForm = this.fb.group({
       title: ['', [Validators.required, Validators.minLength(3)]],
@@ -97,7 +99,14 @@ export class CourseFormComponent implements OnInit {
       });
     } else {
       this.courseService.createCourse(courseData).subscribe({
-        next: () => {
+        next: (created: any) => {
+          this.notificationService.addNotification({
+            type: 'COURSE_CREATED',
+            message: `Nouveau cours créé : "${courseData.title}"`,
+            courseId: created?.id ?? 0,
+            courseTitle: courseData.title,
+            timestamp: Date.now()
+          });
           this.showNotification('Course created successfully!', 'success');
           this.submitting = false;
           this.courseSaved.emit();
