@@ -1,0 +1,264 @@
+<div class="page-container">
+  <div class="page-header">
+    <h2><i class="bi bi-calendar-event"></i> Sessions Management</h2>
+    <button class="btn btn-primary" (click)="openAddModal()">
+      <i class="bi bi-plus-circle"></i> Add Session
+    </button>
+  </div>
+
+  @if (error) {
+  <div class="alert alert-danger">{{ error }}</div>
+  }
+  @if (pageWarnings.length > 0) {
+  <div class="alert alert-warning">
+    <strong>Alertes métier :</strong>
+    <ul class="mb-0 mt-1">
+      @for (w of pageWarnings; track w) {
+      <li>{{ w }}</li>
+      }
+    </ul>
+  </div>
+  }
+
+  <!-- Search and Table -->
+  <div class="card">
+    <div class="card-header bg-white border-bottom-0 pt-4 pb-0">
+      <div class="row">
+        <div class="col-md-4">
+          <div class="input-group">
+            <span class="input-group-text bg-light border-end-0"><i class="bi bi-search"></i></span>
+            <input type="text" class="form-control border-start-0 bg-light" placeholder="Search sessions..."
+              [(ngModel)]="searchTerm">
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      @if (loading) {
+      <p class="text-center text-muted">Loading...</p>
+      } @else {
+      <div class="table-responsive">
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th (click)="sortBy('dateDebut')" style="cursor:pointer">
+                Start @if (sortColumn === 'dateDebut') { <i
+                  class="bi bi-arrow-{{ sortDirection === 'asc' ? 'up' : 'down' }}"></i> }
+              </th>
+              <th (click)="sortBy('dateFin')" style="cursor:pointer">
+                End @if (sortColumn === 'dateFin') { <i
+                  class="bi bi-arrow-{{ sortDirection === 'asc' ? 'up' : 'down' }}"></i> }
+              </th>
+              <th (click)="sortBy('type')" style="cursor:pointer">
+                Type @if (sortColumn === 'type') { <i
+                  class="bi bi-arrow-{{ sortDirection === 'asc' ? 'up' : 'down' }}"></i> }
+              </th>
+              <th (click)="sortBy('jour')" style="cursor:pointer">
+                Day @if (sortColumn === 'jour') { <i
+                  class="bi bi-arrow-{{ sortDirection === 'asc' ? 'up' : 'down' }}"></i> }
+              </th>
+              <th (click)="sortBy('classe')" style="cursor:pointer">
+                Class @if (sortColumn === 'classe') { <i
+                  class="bi bi-arrow-{{ sortDirection === 'asc' ? 'up' : 'down' }}"></i> }
+              </th>
+              <th (click)="sortBy('salle')" style="cursor:pointer">
+                Room @if (sortColumn === 'salle') { <i
+                  class="bi bi-arrow-{{ sortDirection === 'asc' ? 'up' : 'down' }}"></i> }
+              </th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (seance of filteredSeances; track seance.id) {
+            <tr>
+              <td>{{ formatDate(seance.dateDebut) }}</td>
+              <td>{{ formatDate(seance.dateFin) }}</td>
+              <td>
+                <span class="badge" [ngClass]="seance.type === 'EN_LIGNE' ? 'bg-info' : 'bg-primary'">
+                  {{ seance.type }}
+                </span>
+              </td>
+              <td>{{ seance.jour ?? '-' }}</td>
+              <td>{{ seance.classe?.nom ?? '-' }}</td>
+              <td>{{ getSalleName(seance.salleId) }}</td>
+              <td>
+                <button class="btn btn-sm btn-outline-primary me-2" (click)="openEditModal(seance)">
+                  <i class="bi bi-pencil"></i>
+                </button>
+                <button class="btn btn-sm btn-outline-danger" (click)="delete(seance.id!)">
+                  <i class="bi bi-trash"></i>
+                </button>
+              </td>
+            </tr>
+            }
+            @if (filteredSeances.length === 0 && !error) {
+            <tr>
+              <td colspan="7" class="text-center text-muted">No session found matching the criteria</td>
+            </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+      }
+    </div>
+  </div>
+
+  <!-- Add/Edit Modal -->
+  <div class="modal fade" id="seanceModal" tabindex="-1" aria-labelledby="seanceModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="seanceModalLabel">
+            {{ isEditMode ? 'Edit Session' : 'Add Session' }}
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          @if (modalError) {
+          <div class="alert alert-danger">{{ modalError }}</div>
+          }
+          @if (modalWarnings.length > 0) {
+          <div class="alert alert-warning">
+            <strong>Alertes métier :</strong>
+            <ul class="mb-0 mt-1">
+              @for (w of modalWarnings; track w) {
+              <li>{{ w }}</li>
+              }
+            </ul>
+          </div>
+          }
+          <form [formGroup]="seanceForm" (ngSubmit)="saveSeance()">
+
+            <!-- Start date -->
+            <div class="mb-3">
+              <label class="form-label">Start date and time <span class="text-danger">*</span></label>
+              <input type="datetime-local" class="form-control"
+                [class.is-invalid]="seanceForm.get('dateDebut')?.invalid && seanceForm.get('dateDebut')?.touched"
+                [class.is-valid]="seanceForm.get('dateDebut')?.valid && seanceForm.get('dateDebut')?.touched"
+                formControlName="dateDebut">
+              @if (seanceForm.get('dateDebut')?.invalid && seanceForm.get('dateDebut')?.touched) {
+              <div class="invalid-feedback d-block">Start date and time are required</div>
+              }
+            </div>
+
+            <!-- End date -->
+            <div class="mb-3">
+              <label class="form-label">End date and time <span class="text-danger">*</span></label>
+              <input type="datetime-local" class="form-control"
+                [class.is-invalid]="seanceForm.get('dateFin')?.invalid && seanceForm.get('dateFin')?.touched"
+                [class.is-valid]="seanceForm.get('dateFin')?.valid && seanceForm.get('dateFin')?.touched"
+                formControlName="dateFin">
+              @if (seanceForm.get('dateFin')?.invalid && seanceForm.get('dateFin')?.touched) {
+              <div class="invalid-feedback d-block">
+                @if (seanceForm.get('dateFin')?.errors?.['required']) {
+                <div>End date and time are required</div>
+                }
+                @if (seanceForm.get('dateFin')?.errors?.['dateRange']) {
+                <div>End date must be after start date</div>
+                }
+              </div>
+              }
+            </div>
+
+            <!-- Type -->
+            <div class="mb-3">
+              <label class="form-label">Type <span class="text-danger">*</span></label>
+              <select class="form-select"
+                [class.is-invalid]="seanceForm.get('type')?.invalid && seanceForm.get('type')?.touched"
+                [class.is-valid]="seanceForm.get('type')?.valid && seanceForm.get('type')?.touched"
+                formControlName="type">
+                @for (t of types; track t) {
+                <option [value]="t">{{ t }}</option>
+                }
+              </select>
+              @if (seanceForm.get('type')?.invalid && seanceForm.get('type')?.touched) {
+              <div class="invalid-feedback d-block">Type is required</div>
+              }
+            </div>
+
+            <!-- Day -->
+            <div class="mb-3">
+              <label class="form-label">Day</label>
+              <input type="text" class="form-control"
+                [class.is-invalid]="seanceForm.get('jour')?.invalid && seanceForm.get('jour')?.touched"
+                [class.is-valid]="seanceForm.get('jour')?.valid && seanceForm.get('jour')?.touched && seanceForm.get('jour')?.value"
+                formControlName="jour" placeholder="e.g. Monday" maxlength="50">
+              @if (seanceForm.get('jour')?.invalid && seanceForm.get('jour')?.touched) {
+              <div class="invalid-feedback d-block">
+                @if (seanceForm.get('jour')?.errors?.['maxlength']) {
+                <div>Day cannot exceed 50 characters</div>
+                }
+                @if (seanceForm.get('jour')?.errors?.['pattern']) {
+                <div>Day can only contain letters and spaces</div>
+                }
+              </div>
+              }
+            </div>
+
+            <!-- Room — chargée depuis salles-materiels -->
+            <div class="mb-3">
+              <label class="form-label">
+                Room <span class="text-danger">*</span>
+                @if (sallesLoading || checkingAvailability) {
+                <span class="spinner-border spinner-border-sm ms-2 text-primary" role="status"></span>
+                }
+              </label>
+              @if (sallesError) {
+              <div class="alert alert-warning py-2 mb-2 small">
+                <i class="bi bi-wifi-off me-1"></i> {{ sallesError }}
+                <button type="button" class="btn btn-sm btn-outline-warning ms-2" (click)="loadSalles()">
+                  Retry
+                </button>
+              </div>
+              }
+              <select class="form-select"
+                [class.is-invalid]="seanceForm.get('salleId')?.invalid && seanceForm.get('salleId')?.touched"
+                [class.is-valid]="seanceForm.get('salleId')?.valid && seanceForm.get('salleId')?.touched"
+                formControlName="salleId">
+                <option [ngValue]="null">-- Select a room --</option>
+                @for (salle of salles; track salle.id) {
+                <option [ngValue]="salle.id" [disabled]="isRoomOccupied(salle.id!)">
+                  {{ salle.nom }} — {{ salle.capacite }} seats
+                  @if (isRoomOccupied(salle.id!)) { (Occupied) }
+                </option>
+                }
+              </select>
+              @if (seanceForm.get('salleId')?.invalid && seanceForm.get('salleId')?.touched) {
+              <div class="invalid-feedback d-block">Room is required</div>
+              }
+            </div>
+
+            <!-- Class -->
+            <div class="mb-3">
+              <label class="form-label">
+                Class
+                @if (checkingAvailability) {
+                <span class="spinner-border spinner-border-sm ms-2 text-primary" role="status"></span>
+                }
+              </label>
+              <select class="form-select"
+                [class.is-valid]="seanceForm.get('classeId')?.value && seanceForm.get('classeId')?.touched"
+                formControlName="classeId">
+                <option [ngValue]="null">-- None --</option>
+                @for (classe of classes; track classe.id) {
+                <option [ngValue]="classe.id" [disabled]="isClassOccupied(classe.id!)">
+                  {{ classe.nom }}
+                  @if (isClassOccupied(classe.id!)) { (Occupied) }
+                </option>
+                }
+              </select>
+            </div>
+
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+              <button type="submit" class="btn btn-primary" [disabled]="seanceForm.invalid">
+                {{ isEditMode ? 'Update' : 'Add' }}
+              </button>
+            </div>
+
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

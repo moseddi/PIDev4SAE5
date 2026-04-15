@@ -1,0 +1,74 @@
+<div class="page-container alerts-page">
+  <div class="page-header d-flex flex-wrap justify-content-between align-items-center gap-3">
+    <div>
+      <h2 class="mb-1"><i class="bi bi-bell-fill me-2"></i>Alerts Center</h2>
+    </div>
+    <div class="d-flex align-items-center gap-2 flex-wrap">
+      @let unread = (unreadCount$ | async) ?? 0;
+      @if (unread > 0) {
+        <span class="badge bg-danger rounded-pill px-3 py-2" [title]="unread + ' alerte(s) non lue(s)'">{{ unread }} non lue(s)</span>
+      }
+      @if (connectionStatus$ | async; as status) {
+        <span class="badge rounded-pill px-3 py-2" [ngClass]="{
+          'bg-success': status === 'connected',
+          'bg-warning text-dark': status === 'connecting',
+          'bg-secondary': status === 'disconnected'
+        }">
+          {{ status === 'connected' ? 'Online' : status === 'connecting' ? 'Connexion…' : 'Hors ligne' }}
+        </span>
+      }
+      <button type="button" class="btn btn-outline-secondary btn-sm px-3" (click)="markAllAsRead()">
+        <i class="bi bi-check2-circle me-1"></i> Mark all as read
+      </button>
+      <button type="button" class="btn btn-outline-danger btn-sm px-3" (click)="clearHistory()">
+        <i class="bi bi-trash me-1"></i> Clear history
+      </button>
+    </div>
+  </div>
+
+  <div class="card alerts-card">
+    <div class="card-body p-2 p-md-3">
+      @if (events$ | async; as events) {
+        @if (events.length === 0) {
+          <div class="empty-state text-center py-5">
+            <i class="bi bi-bell-slash"></i>
+            <p class="text-muted mt-3 mb-0">Aucune alerte pour l’instant. Les nouvelles alertes apparaîtront ici automatiquement.</p>
+          </div>
+        } @else {
+          <div class="list-group list-group-flush warnings-list">
+            @for (ev of events; track ev.id) {
+              <div class="list-group-item warning-row"
+                   role="button"
+                   tabindex="0"
+                   [class.warning-unread]="!isRead(ev.id)"
+                   [class.warning-read]="isRead(ev.id)"
+                   (click)="markAsRead(ev.id)">
+                <div class="d-flex justify-content-between flex-wrap gap-2 mb-2">
+                  <div class="d-flex align-items-center gap-2">
+                    <span class="source-badge"
+                          [class]="sourceClass(ev.source)">
+                      <i class="bi" [class]="sourceIcon(ev.source)"></i>
+                      {{ sourceLabel(ev.source) }}
+                    </span>
+                    @if (!isRead(ev.id)) {
+                      <span class="new-dot" title="Nouvelle alerte"></span>
+                    }
+                  </div>
+                  <small class="warning-time">{{ formatTime(ev.timestamp) }}</small>
+                </div>
+                @if (ev.seanceId != null) {
+                  <div class="session-ref mb-2">Session #{{ ev.seanceId }}</div>
+                }
+                <div class="warning-messages">
+                  @for (msg of ev.messages; track msg) {
+                    <p class="mb-0 warning-message" [class.unread-message]="!isRead(ev.id)">{{ msg }}</p>
+                  }
+                </div>
+              </div>
+            }
+          </div>
+        }
+      }
+    </div>
+  </div>
+</div>

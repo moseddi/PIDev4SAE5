@@ -1,0 +1,195 @@
+<div class="page-container">
+  <div class="page-header">
+    <h2><i class="bi bi-laptop"></i> Equipment Management</h2>
+    <button class="btn btn-primary" (click)="openAddModal()">
+      <i class="bi bi-plus-circle"></i> Add Equipment
+    </button>
+  </div>
+
+  @if (error) {
+  <div class="alert alert-danger">{{ error }}</div>
+  }
+  @if (successMessage) {
+  <div class="alert alert-success">{{ successMessage }}</div>
+  }
+
+  <!-- Search and Table -->
+  <div class="card">
+    <div class="card-header bg-white border-bottom-0 pt-4 pb-0">
+      <div class="row">
+        <div class="col-md-4">
+          <div class="input-group">
+            <span class="input-group-text bg-light border-end-0"><i class="bi bi-search"></i></span>
+            <input type="text" class="form-control border-start-0 bg-light" placeholder="Search equipment..."
+              [(ngModel)]="searchTerm">
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      @if (loading) {
+      <p class="text-center text-muted">Loading...</p>
+      } @else {
+      <div class="table-responsive">
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th (click)="sortBy('nom')" style="cursor:pointer">
+                Name @if (sortColumn === 'nom') { <i
+                  class="bi bi-arrow-{{ sortDirection === 'asc' ? 'up' : 'down' }}"></i> }
+              </th>
+              <th (click)="sortBy('status')" style="cursor:pointer">
+                Status @if (sortColumn === 'status') { <i
+                  class="bi bi-arrow-{{ sortDirection === 'asc' ? 'up' : 'down' }}"></i> }
+              </th>
+              <th (click)="sortBy('salle')" style="cursor:pointer">
+                Room @if (sortColumn === 'salle') { <i
+                  class="bi bi-arrow-{{ sortDirection === 'asc' ? 'up' : 'down' }}"></i> }
+              </th>
+              <th>Qty total</th>
+              <th>Qty assigned</th>
+              <th>Qty remaining</th>
+              <th>Maintenance threshold (h)</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (materiel of filteredMateriels; track materiel.id) {
+            <tr>
+              <td>{{ materiel.nom }}</td>
+              <td>
+                <span class="badge" [ngClass]="{
+                  'bg-success': materiel.status === 'AVAILABLE',
+                  'bg-danger': materiel.status === 'OUT_OF_ORDER'
+                }">
+                  {{ materiel.status === 'AVAILABLE' ? 'Available' : 'Out of Order' }}
+                </span>
+              </td>
+              <td>{{ materiel.salle?.nom ?? '-' }}</td>
+              <td>{{ materiel.quantiteTotale ?? 0 }}</td>
+              <td>{{ materiel.quantiteAssociee ?? 0 }}</td>
+              <td>{{ quantiteRestante(materiel) }}</td>
+              <td>{{ materiel.seuilMaintenance ?? 100 }}</td>
+              <td>
+                <button class="btn btn-sm btn-outline-primary me-2" (click)="openEditModal(materiel)">
+                  <i class="bi bi-pencil"></i>
+                </button>
+                @if (materiel.id != null) {
+                <button class="btn btn-sm btn-outline-danger" (click)="delete(materiel.id!)"
+                  [disabled]="deletingId === materiel.id" type="button">
+                  @if (deletingId === materiel.id) {
+                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                  } @else {
+                    <i class="bi bi-trash"></i>
+                  }
+                </button>
+                }
+              </td>
+            </tr>
+            }
+            @if (filteredMateriels.length === 0 && !error) {
+            <tr>
+              <td colspan="8" class="text-center text-muted">No equipment found matching the criteria</td>
+            </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+      }
+    </div>
+  </div>
+
+  <!-- Add/Edit Modal -->
+  <div class="modal fade" id="materielModal" tabindex="-1" aria-labelledby="materielModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="materielModalLabel">
+            {{ isEditMode ? 'Edit Equipment' : 'Add Equipment' }}
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form [formGroup]="materielForm" (ngSubmit)="saveMateriel()">
+            <div class="mb-3">
+              <label class="form-label">Name <span class="text-danger">*</span></label>
+              <input type="text" class="form-control"
+                [class.is-invalid]="materielForm.get('nom')?.invalid && materielForm.get('nom')?.touched"
+                [class.is-valid]="materielForm.get('nom')?.valid && materielForm.get('nom')?.touched"
+                formControlName="nom" placeholder="e.g. Laptop" maxlength="100" required>
+              @if (materielForm.get('nom')?.invalid && materielForm.get('nom')?.touched) {
+              <div class="invalid-feedback d-block">
+                @if (materielForm.get('nom')?.errors?.['required']) {
+                <div>Name is required</div>
+                }
+                @if (materielForm.get('nom')?.errors?.['minlength']) {
+                <div>Name must be at least 2 characters</div>
+                }
+                @if (materielForm.get('nom')?.errors?.['maxlength']) {
+                <div>Name cannot exceed 100 characters</div>
+                }
+                @if (materielForm.get('nom')?.errors?.['pattern']) {
+                <div>Name can only contain letters, numbers, spaces, hyphens and underscores</div>
+                }
+              </div>
+              }
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Status <span class="text-danger">*</span></label>
+              <select class="form-select"
+                [class.is-invalid]="materielForm.get('status')?.invalid && materielForm.get('status')?.touched"
+                [class.is-valid]="materielForm.get('status')?.valid && materielForm.get('status')?.touched"
+                formControlName="status" required>
+                <option [ngValue]="null">-- Select Status --</option>
+                <option value="AVAILABLE">Available</option>
+                <option value="OUT_OF_ORDER">Out of Order</option>
+              </select>
+              @if (materielForm.get('status')?.invalid && materielForm.get('status')?.touched) {
+              <div class="invalid-feedback d-block">
+                @if (materielForm.get('status')?.errors?.['required']) {
+                <div>Status is required</div>
+                }
+              </div>
+              }
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Room</label>
+              <select class="form-select"
+                [class.is-valid]="materielForm.get('salleId')?.value && materielForm.get('salleId')?.touched"
+                formControlName="salleId">
+                <option [ngValue]="null">-- None --</option>
+                @for (salle of salles; track salle.id) {
+                <option [ngValue]="salle.id">{{ salle.nom }} ({{ salle.capacite }} seats)</option>
+                }
+              </select>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Maintenance threshold (hours) <span class="text-danger">*</span></label>
+              <input type="number" min="0.01" step="0.1" class="form-control" formControlName="seuilMaintenance"
+                title="Cumulative usage above this value triggers maintenance warnings (same unit as session duration hours).">
+              <div class="form-text">Default 100. Used with equipment usage when sessions run in the room.</div>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Available quantity <span class="text-danger">*</span></label>
+              <input type="number" min="1" class="form-control" formControlName="quantiteTotale">
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Assigned quantity</label>
+              <input type="number" min="0" class="form-control" formControlName="quantiteAssociee">
+            </div>
+            <div class="mb-3">
+              <label class="form-label text-muted">Remaining quantity</label>
+              <input type="text" class="form-control bg-light" readonly [value]="quantiteRestanteModal()">
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+              <button type="submit" class="btn btn-primary" [disabled]="materielForm.invalid">
+                {{ isEditMode ? 'Update' : 'Add' }}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

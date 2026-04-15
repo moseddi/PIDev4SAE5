@@ -1,0 +1,179 @@
+<div class="page-container">
+  <div class="page-header">
+    <h2><i class="bi bi-building"></i> Rooms Management</h2>
+    <button class="btn btn-primary" (click)="openAddModal()">
+      <i class="bi bi-plus-circle"></i> Add Room
+    </button>
+  </div>
+
+  @if (error) {
+  <div class="alert alert-danger">{{ error }}</div>
+  }
+
+  <!-- Search and Table -->
+  <div class="card">
+    <div class="card-header bg-white border-bottom-0 pt-4 pb-0">
+      <div class="row">
+        <div class="col-md-4">
+          <div class="input-group">
+            <span class="input-group-text bg-light border-end-0"><i class="bi bi-search"></i></span>
+            <input type="text" class="form-control border-start-0 bg-light" placeholder="Search rooms..."
+              [(ngModel)]="searchTerm">
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      @if (loading) {
+      <p class="text-center text-muted">Loading...</p>
+      } @else {
+      <div class="table-responsive">
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th (click)="sortBy('nom')" style="cursor:pointer">
+                Name @if (sortColumn === 'nom') { <i
+                  class="bi bi-arrow-{{ sortDirection === 'asc' ? 'up' : 'down' }}"></i> }
+              </th>
+              <th (click)="sortBy('capacite')" style="cursor:pointer">
+                Capacity @if (sortColumn === 'capacite') { <i
+                  class="bi bi-arrow-{{ sortDirection === 'asc' ? 'up' : 'down' }}"></i> }
+              </th>
+              <th (click)="sortBy('materiels')" style="cursor:pointer">
+                Equipment @if (sortColumn === 'materiels') { <i
+                  class="bi bi-arrow-{{ sortDirection === 'asc' ? 'up' : 'down' }}"></i> }
+              </th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (salle of filteredSalles; track salle.id) {
+            <tr>
+              <td>{{ salle.nom }}</td>
+              <td>{{ salle.capacite }}</td>
+              <td>{{ salle.materiels?.length ?? 0 }}</td>
+              <td>
+                <button class="btn btn-sm btn-outline-info me-2" (click)="openMaterielsModal(salle)"
+                  title="View Equipment">
+                  <i class="bi bi-laptop"></i>
+                </button>
+                <button class="btn btn-sm btn-outline-primary me-2" (click)="openEditModal(salle)">
+                  <i class="bi bi-pencil"></i>
+                </button>
+                <button class="btn btn-sm btn-outline-danger" (click)="delete(salle.id!)">
+                  <i class="bi bi-trash"></i>
+                </button>
+              </td>
+            </tr>
+            }
+            @if (filteredSalles.length === 0 && !error) {
+            <tr>
+              <td colspan="4" class="text-center text-muted">No room found matching the criteria</td>
+            </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+      }
+    </div>
+  </div>
+
+  <!-- Add/Edit Modal -->
+  <div class="modal fade" id="salleModal" tabindex="-1" aria-labelledby="salleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="salleModalLabel">
+            {{ isEditMode ? 'Edit Room' : 'Add Room' }}
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form [formGroup]="salleForm" (ngSubmit)="saveSalle()">
+            <div class="mb-3">
+              <label class="form-label">Room name <span class="text-danger">*</span></label>
+              <input type="text" class="form-control"
+                [class.is-invalid]="salleForm.get('nom')?.invalid && salleForm.get('nom')?.touched"
+                [class.is-valid]="salleForm.get('nom')?.valid && salleForm.get('nom')?.touched" formControlName="nom"
+                placeholder="e.g. Room 101" maxlength="100">
+              @if (salleForm.get('nom')?.invalid && salleForm.get('nom')?.touched) {
+              <div class="invalid-feedback d-block">
+                @if (salleForm.get('nom')?.errors?.['required']) {
+                <div>Room name is required</div>
+                }
+                @if (salleForm.get('nom')?.errors?.['minlength']) {
+                <div>Name must be at least 2 characters</div>
+                }
+                @if (salleForm.get('nom')?.errors?.['maxlength']) {
+                <div>Name cannot exceed 100 characters</div>
+                }
+                @if (salleForm.get('nom')?.errors?.['pattern']) {
+                <div>Name can only contain letters, numbers, spaces, hyphens and underscores</div>
+                }
+              </div>
+              }
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Capacity <span class="text-danger">*</span></label>
+              <input type="number" class="form-control"
+                [class.is-invalid]="salleForm.get('capacite')?.invalid && salleForm.get('capacite')?.touched"
+                [class.is-valid]="salleForm.get('capacite')?.valid && salleForm.get('capacite')?.touched"
+                formControlName="capacite" min="1" max="1000" placeholder="e.g. 30">
+              @if (salleForm.get('capacite')?.invalid && salleForm.get('capacite')?.touched) {
+              <div class="invalid-feedback d-block">
+                @if (salleForm.get('capacite')?.errors?.['required']) {
+                <div>Capacity is required</div>
+                }
+                @if (salleForm.get('capacite')?.errors?.['min']) {
+                <div>Capacity must be at least 1</div>
+                }
+                @if (salleForm.get('capacite')?.errors?.['max']) {
+                <div>Capacity cannot exceed 1000</div>
+                }
+              </div>
+              }
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+              <button type="submit" class="btn btn-primary" [disabled]="salleForm.invalid">
+                {{ isEditMode ? 'Update' : 'Add' }}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Materiels Modal -->
+  <div class="modal fade" id="materielsModal" tabindex="-1" aria-labelledby="materielsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="materielsModalLabel">
+            Equipment in {{ selectedSalleForMateriels?.nom }}
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          @if (selectedSalleForMateriels?.materiels && selectedSalleForMateriels!.materiels!.length > 0) {
+          <ul class="list-group">
+            @for (materiel of selectedSalleForMateriels?.materiels; track materiel.id) {
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              {{ materiel.nom }}
+              <span class="badge bg-secondary rounded-pill">{{ materiel.status }}</span>
+            </li>
+            }
+          </ul>
+          } @else {
+          <p class="text-center text-muted my-4">No equipment assigned to this room.</p>
+          }
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

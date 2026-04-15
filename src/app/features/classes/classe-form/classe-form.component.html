@@ -1,0 +1,22 @@
+<div class="page">
+  <div class="header">
+    <h1>{{ id ? 'Modifier la classe' : 'Nouvelle classe' }}</h1>
+    <a routerLink="/classes" class="btn">Retour</a>
+  </div>
+  @if (error) {
+    <div class="alert alert-error">{{ error }}</div>
+  }
+  <form [formGroup]="form" (ngSubmit)="submit()" class="form">
+    <div class="field">
+      <label for="nom">Nom</label>
+      <input id="nom" type="text" formControlName="nom" />
+      @if (form.get('nom')?.invalid && form.get('nom')?.touched) {
+        <span class="error">Nom requis (max 100 caractères)</span>
+      }
+    </div>
+    <div class="actions">
+      <button type="submit" class="btn btn-primary" [disabled]="loading">{{ loading ? 'Enregistrement...' : 'Enregistrer' }}</button>
+      <a routerLink="/classes" class="btn">Annuler</a>
+    </div>
+  </form>
+</div>
