@@ -7,7 +7,7 @@ import { Classe } from '../../models';
 describe('ClasseService', () => {
   let service: ClasseService;
   let httpMock: HttpTestingController;
-  const base = 'http://localhost:8089/api/classes';
+  const base = 'http://localhost:8090/api/classes';
 
   beforeEach(() => {
     TestBed.configureTestingModule({

@@ -97,7 +97,7 @@ export class ClassesCalendarComponent implements OnInit {
         const msg = err?.error?.message ?? err?.error ?? err?.message ?? err?.statusText;
         const detail = typeof msg === 'string' ? msg : JSON.stringify(msg);
         this.error = status === 0
-          ? "Service classe-seance (port 8089) inaccessible. Vérifiez qu'il est démarré."
+          ? "Service classe-seance inaccessible via le gateway (port 8089). Vérifiez que le gateway et le microservice sont démarrés."
           : `Erreur chargement des séances (${status ?? '?'}): ${detail}`;
         this.loading = false;
       }

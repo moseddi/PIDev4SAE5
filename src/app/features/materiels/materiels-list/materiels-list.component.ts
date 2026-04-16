@@ -58,7 +58,7 @@ export class MaterielsListComponent implements OnInit {
         this.loading = false;
       },
       error: () => {
-        this.error = 'Cannot load equipment. Is the backend (port 8088) running?';
+        this.error = 'Cannot load equipment. Please ensure the API Gateway (port 8089) and salles-materiels service are running.';
         this.loading = false;
       },
     });

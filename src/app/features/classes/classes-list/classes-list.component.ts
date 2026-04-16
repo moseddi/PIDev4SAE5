@@ -48,7 +48,7 @@ export class ClassesListComponent implements OnInit {
         this.loading = false;
       },
       error: (err) => {
-        this.error = 'Unable to load classes. Please ensure the classe-seance service (port 8089) is running.';
+        this.error = 'Unable to load classes. Please ensure the API Gateway (port 8089) and classe-seance service are running.';
         this.loading = false;
       },
     });

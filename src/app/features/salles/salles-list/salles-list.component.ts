@@ -51,7 +51,7 @@ export class SallesListComponent implements OnInit {
       },
       error: (err) => {
         const msg = err?.error?.message ?? err?.error ?? err?.message ?? err?.status;
-        this.error = msg ? `Chargement: ${typeof msg === 'string' ? msg : String(msg)}` : 'Service salles-materiels (port 8088) indisponible.';
+        this.error = msg ? `Chargement: ${typeof msg === 'string' ? msg : String(msg)}` : 'Service salles-materiels indisponible via le gateway (port 8089).';
         this.loading = false;
       },
     });

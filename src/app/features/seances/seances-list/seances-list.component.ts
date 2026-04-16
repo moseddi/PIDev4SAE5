@@ -142,7 +142,7 @@ export class SeancesListComponent implements OnInit {
         this.loading = false;
       },
       error: () => {
-        this.error = 'Unable to load sessions. Please ensure the classe-seance service (port 8089) is running.';
+        this.error = 'Unable to load sessions. Please ensure the API Gateway (port 8089) and classe-seance service are running.';
         this.loading = false;
       },
     });
@@ -157,7 +157,7 @@ export class SeancesListComponent implements OnInit {
         this.sallesLoading = false;
       },
       error: () => {
-        this.sallesError = 'Unable to load rooms. Please ensure the salles-materiels service (port 8088) is running.';
+        this.sallesError = 'Unable to load rooms. Please ensure the API Gateway (port 8089) and salles-materiels service are running.';
         this.sallesLoading = false;
       },
     });
