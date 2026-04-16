@@ -1,0 +1,23 @@
+<div class="page">
+  <div class="header">
+    <h1>{{ id ? 'Modifier la salle' : 'Nouvelle salle' }}</h1>
+    <a routerLink="/salles" class="btn">Retour</a>
+  </div>
+  @if (error) {
+    <div class="alert alert-error">{{ error }}</div>
+  }
+  <form [formGroup]="form" (ngSubmit)="submit()" class="form">
+    <div class="field">
+      <label for="nom">Nom</label>
+      <input id="nom" type="text" formControlName="nom" />
+    </div>
+    <div class="field">
+      <label for="capacite">Capacité</label>
+      <input id="capacite" type="number" formControlName="capacite" min="1" />
+    </div>
+    <div class="actions">
+      <button type="submit" class="btn btn-primary" [disabled]="loading">{{ loading ? 'Enregistrement...' : 'Enregistrer' }}</button>
+      <a routerLink="/salles" class="btn">Annuler</a>
+    </div>
+  </form>
+</div>

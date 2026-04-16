@@ -12,7 +12,7 @@ import { ScheduleComponent } from './backoffice/tutor-view/schedule/schedule.com
 import { RoleGuard } from './guards/role.guard';
 import { EventsComponent } from './backoffice/admin-view/events/events.component';
 import { ClubsComponent } from './backoffice/admin-view/clubs/clubs.component';
-import { ClassesComponent } from './backoffice/admin-view/classes/classes.component';
+import { ClassesListComponent } from './features/classes/classes-list/classes-list.component';
 import { PhysicalspaceComponent } from './backoffice/admin-view/physicalspace/physicalspace.component';
 import { AuthGuard } from './guards/auth.guard';
 
@@ -44,6 +44,10 @@ import { NavbarFrontComponent } from './courses/navbar-front/navbar-front.compon
 import { ListLessonComponent } from './courses/list-lesson/list-lesson.component';
 import { ListLessonStudentComponent } from './courses/list-lesson-student/list-lesson-student.component';
 import { FooterFrontComponent } from './courses/footer-front/footer-front.component';
+import { SeancesListComponent } from './features/seances/seances-list/seances-list.component';
+import { SallesListComponent } from './features/salles/salles-list/salles-list.component';
+import { MaterielsListComponent } from './features/materiels/materiels-list/materiels-list.component';
+import { AlertsPageComponent } from './features/alerts/alerts-page/alerts-page.component';
 
 
 
@@ -152,7 +156,31 @@ export const routes: Routes = [
       },
       { 
         path: 'admin/classes', 
-        component: ClassesComponent,
+        component: ClassesListComponent,
+        canActivate: [RoleGuard],
+        data: { roles: ['ADMIN'] }
+      },
+      {
+        path: 'admin/seances',
+        component: SeancesListComponent,
+        canActivate: [RoleGuard],
+        data: { roles: ['ADMIN'] }
+      },
+      {
+        path: 'admin/salles',
+        component: SallesListComponent,
+        canActivate: [RoleGuard],
+        data: { roles: ['ADMIN'] }
+      },
+      {
+        path: 'admin/materiels',
+        component: MaterielsListComponent,
+        canActivate: [RoleGuard],
+        data: { roles: ['ADMIN'] }
+      },
+      {
+        path: 'admin/warnings',
+        component: AlertsPageComponent,
         canActivate: [RoleGuard],
         data: { roles: ['ADMIN'] }
       },

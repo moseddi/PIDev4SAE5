@@ -293,6 +293,25 @@
       </div>
     </div>
 
+    <div class="quick-actions-premium microservice-panel">
+      <div class="quick-actions-header">
+        <i class="bi bi-boxes"></i>
+        <span>Admin Microservices</span>
+      </div>
+      <div class="microservice-grid">
+        <button class="microservice-card" *ngFor="let item of microserviceActions" (click)="handleAction(item)">
+          <div class="microservice-icon">
+            <i class="bi" [ngClass]="item.icon"></i>
+          </div>
+          <div class="microservice-content">
+            <span class="microservice-title">{{ item.label }}</span>
+            <span class="microservice-description">{{ item.description }}</span>
+          </div>
+          <i class="bi bi-arrow-right microservice-arrow"></i>
+        </button>
+      </div>
+    </div>
+
     <!-- Premium Tables Section -->
     <div class="tables-premium">
       <div class="table-3d users-table">
