@@ -1,5 +1,4 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { TutorViewComponent } from './tutor-view.component';
 
 describe('TutorViewComponent', () => {
@@ -9,8 +8,7 @@ describe('TutorViewComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [TutorViewComponent]
-    })
-    .compileComponents();
+    }).compileComponents();
 
     fixture = TestBed.createComponent(TutorViewComponent);
     component = fixture.componentInstance;
