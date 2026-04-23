@@ -7,7 +7,7 @@ import { Salle } from '../../models';
 describe('SalleService', () => {
   let service: SalleService;
   let httpMock: HttpTestingController;
-  const base = 'http://localhost:8088/api/salles';
+  const base = 'http://localhost:8089/api/salles';
 
   beforeEach(() => {
     TestBed.configureTestingModule({

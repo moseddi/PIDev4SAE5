@@ -7,7 +7,7 @@ import { Seance, SeanceSaveResponse } from '../../models';
 describe('SeanceService', () => {
   let service: SeanceService;
   let httpMock: HttpTestingController;
-  const base = 'http://localhost:8090/api/seances';
+  const base = 'http://localhost:8089/api/seances';
 
   beforeEach(() => {
     TestBed.configureTestingModule({
