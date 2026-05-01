@@ -35,6 +35,7 @@ pipeline {
                         npx sonar-scanner ^
                           -Dsonar.projectKey=wall-street-english ^
                           -Dsonar.sources=src ^
+                          -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info ^
                           -Dsonar.token=%SONAR_TOKEN%
                     """
                 }
