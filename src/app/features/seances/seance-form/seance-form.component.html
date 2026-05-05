@@ -1,0 +1,77 @@
+<div class="page">
+  <div class="header">
+    <h1>{{ id ? 'Modifier la séance' : 'Nouvelle séance' }}</h1>
+    <a routerLink="/seances" class="btn">Retour</a>
+  </div>
+
+  @if (error) {
+    <div class="alert alert-error">{{ error }}</div>
+  }
+
+  <form [formGroup]="form" (ngSubmit)="submit()" class="form">
+
+    <!-- Date début -->
+    <div class="field">
+      <label for="dateDebut">Date et heure de début</label>
+      <input id="dateDebut" type="datetime-local" formControlName="dateDebut" />
+    </div>
+
+    <!-- Date fin -->
+    <div class="field">
+      <label for="dateFin">Date et heure de fin</label>
+      <input id="dateFin" type="datetime-local" formControlName="dateFin" />
+    </div>
+
+    <!-- Type -->
+    <div class="field">
+      <label for="type">Type</label>
+      <select id="type" formControlName="type">
+        @for (t of types; track t) {
+          <option [value]="t">{{ t }}</option>
+        }
+      </select>
+    </div>
+
+    <!-- Jour -->
+    <div class="field">
+      <label for="jour">Jour</label>
+      <input id="jour" type="text" formControlName="jour" placeholder="ex: Lundi" />
+    </div>
+
+    <!-- Salle — chargée depuis salles-materiels via RestTemplate -->
+    <div class="field">
+      <label for="salleId">
+        Salle
+        @if (sallesLoading) {
+          <span style="font-size: 0.85rem; color: #888;"> Chargement...</span>
+        }
+      </label>
+
+      @if (sallesError) {
+        <div class="alert alert-error" style="margin-bottom: 8px;">
+          {{ sallesError }}
+          <button type="button" class="btn" style="margin-left: 8px;" (click)="loadSalles()">
+            Réessayer
+          </button>
+        </div>
+      }
+
+      <select id="salleId" formControlName="salleId">
+        <option [ngValue]="null">-- Sélectionner une salle --</option>
+        @for (salle of salles; track salle.id) {
+          <option [ngValue]="salle.id">
+            {{ salle.nom }} — {{ salle.capacite }} places
+          </option>
+        }
+      </select>
+    </div>
+
+    <div class="actions">
+      <button type="submit" class="btn btn-primary" [disabled]="loading || form.invalid">
+        {{ loading ? 'Enregistrement...' : 'Enregistrer' }}
+      </button>
+      <a routerLink="/seances" class="btn">Annuler</a>
+    </div>
+
+  </form>
+</div>

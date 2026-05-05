@@ -1,0 +1,32 @@
+<div class="auth-wrapper">
+    <div class="auth-card">
+        <div class="auth-logo">
+            <span class="logo-icon">🎮</span>
+            <h1>KenWQ</h1>
+        </div>
+
+        <h2>Connexion</h2>
+
+        <div class="error-msg" *ngIf="error">{{ error }}</div>
+
+        <form (ngSubmit)="submit()">
+            <div class="field">
+                <label>Email</label>
+                <input type="email" [(ngModel)]="email" name="email" placeholder="votre@email.com" required />
+            </div>
+
+            <div class="field">
+                <label>Mot de passe</label>
+                <input type="password" [(ngModel)]="password" name="password" placeholder="••••••••" required />
+            </div>
+
+            <button type="submit" class="btn-primary" [disabled]="loading">
+                {{ loading ? 'Connexion...' : 'Se connecter' }}
+            </button>
+        </form>
+
+        <p class="auth-link">
+            Pas encore de compte ? <a routerLink="/assessment/register">S'inscrire</a>
+        </p>
+    </div>
+</div>

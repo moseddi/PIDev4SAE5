@@ -1,0 +1,233 @@
+ <div class="stats-container">
+  <!-- Header -->
+  <div class="stats-header">
+    <h2>
+      <i class="bi bi-bar-chart-steps"></i>
+      Tableau de bord d'activité
+    </h2>
+    <div class="header-actions">
+      <div class="period-selector">
+        <button [class.active]="selectedPeriod === 'day'" (click)="changePeriod('day')">Jour</button>
+        <button [class.active]="selectedPeriod === 'week'" (click)="changePeriod('week')">Semaine</button>
+        <button [class.active]="selectedPeriod === 'month'" (click)="changePeriod('month')">Mois</button>
+      </div>
+      <button class="btn-refresh" (click)="refresh()" [disabled]="loading">
+        <i class="bi bi-arrow-clockwise" [class.spinning]="loading"></i>
+      </button>
+    </div>
+  </div>
+  
+  <!-- Loader -->
+  <div class="loading-overlay" *ngIf="loading">
+    <div class="spinner"></div>
+    <p>Chargement des statistiques...</p>
+  </div>
+  
+  <!-- Error -->
+  <div class="error-message" *ngIf="error && !loading">
+    <i class="bi bi-exclamation-triangle-fill"></i>
+    {{ error }}
+  </div>
+  
+  <!-- Contenu -->
+  <div class="stats-content" *ngIf="!loading && !error">
+    
+    <!-- KPIs Cards -->
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="kpi-icon users"><i class="bi bi-people"></i></div>
+        <div class="kpi-info">
+          <h3>{{ stats.totalUsers || 0 }}</h3>
+          <p>Total utilisateurs</p>
+        </div>
+      </div>
+      
+      <div class="kpi-card">
+        <div class="kpi-icon active"><i class="bi bi-person-check"></i></div>
+        <div class="kpi-info">
+          <h3>{{ stats.activeUsersLastMonth || 0 }}</h3>
+          <p>Actifs (30 jours)</p>
+        </div>
+      </div>
+      
+      <div class="kpi-card">
+        <div class="kpi-icon new"><i class="bi bi-person-plus"></i></div>
+        <div class="kpi-info">
+          <h3>{{ stats.newUsersThisWeek || 0 }}</h3>
+          <p>Nouveaux cette semaine</p>
+        </div>
+      </div>
+      
+      <div class="kpi-card">
+        <div class="kpi-icon retention"><i class="bi bi-graph-up-arrow"></i></div>
+        <div class="kpi-info">
+          <h3>{{ (stats.retentionRate || 0).toFixed(1) }}%</h3>
+          <p>Taux de rétention</p>
+          <div class="mini-progress">
+            <div class="progress-bar" [style.width.%]="stats.retentionRate || 0" 
+                 [style.background-color]="getRetentionColor(stats.retentionRate || 0)"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Graphiques - Connexions par jour et répartition par rôle -->
+    <div class="charts-row">
+      <div class="chart-card">
+        <div class="chart-header">
+          <h4><i class="bi bi-calendar-check"></i> Connexions par jour</h4>
+          <span class="badge">30 derniers jours</span>
+        </div>
+        <div class="chart-container">
+          <canvas #lineChartCanvas></canvas>
+        </div>
+      </div>
+      
+      <div class="chart-card">
+        <div class="chart-header">
+          <h4><i class="bi bi-pie-chart"></i> Répartition par rôle</h4>
+        </div>
+        <div class="chart-container pie-chart">
+          <canvas #pieChartCanvas></canvas>
+          <div class="role-stats">
+            <div class="role-stat-item">
+              <span class="role-dot admin"></span>
+              <span>Administrateurs: {{ adminCount }}</span>
+            </div>
+            <div class="role-stat-item">
+              <span class="role-dot tutor"></span>
+              <span>Tuteurs: {{ tutorCount }}</span>
+            </div>
+            <div class="role-stat-item">
+              <span class="role-dot student"></span>
+              <span>Étudiants: {{ studentCount }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Heures de pointe -->
+    <div class="chart-card full-width">
+      <div class="chart-header">
+        <h4><i class="bi bi-clock-history"></i> Heures de pointe</h4>
+        <span class="badge">connexions par heure</span>
+      </div>
+      <div class="chart-container">
+        <canvas #barChartCanvas></canvas>
+      </div>
+    </div>
+    
+    <!-- Statistiques avancées -->
+    <div class="advanced-stats-row" *ngIf="advancedStats">
+      <div class="stat-chip">
+        <span class="stat-label">Total connexions</span>
+        <span class="stat-value">{{ totalLogins }}</span>
+      </div>
+      <div class="stat-chip">
+        <span class="stat-label">Moyenne/utilisateur</span>
+        <span class="stat-value">{{ avgLogins.toFixed(1) }}</span>
+      </div>
+      <div class="stat-chip">
+        <span class="stat-label">Administrateurs</span>
+        <span class="stat-value">{{ adminCount }}</span>
+      </div>
+      <div class="stat-chip">
+        <span class="stat-label">Tuteurs</span>
+        <span class="stat-value">{{ tutorCount }}</span>
+      </div>
+      <div class="stat-chip">
+        <span class="stat-label">Étudiants</span>
+        <span class="stat-value">{{ studentCount }}</span>
+      </div>
+    </div>
+    
+    <!-- Section du grand tableau d'activité -->
+    <div class="table-section">
+      <div class="section-header">
+        <h3><i class="bi bi-table"></i> Activité détaillée des utilisateurs</h3>
+        <div class="table-controls">
+          <select [(ngModel)]="filterRole" (ngModelChange)="applyFilters()" class="filter-select">
+            <option value="all">Tous les rôles</option>
+            <option value="STUDENT">Étudiants</option>
+            <option value="TUTOR">Tuteurs</option>
+            <option value="ADMIN">Administrateurs</option>
+          </select>
+          
+          <select [(ngModel)]="filterCity" (ngModelChange)="applyFilters()" class="filter-select">
+            <option value="all">Toutes les villes</option>
+            <option *ngFor="let city of uniqueCities" [value]="city">{{ city }}</option>
+          </select>
+          
+          <button class="btn-export" (click)="resetFilters()">
+            <i class="bi bi-x-circle"></i> Réinitialiser
+          </button>
+        </div>
+      </div>
+      
+      <!-- Grand tableau -->
+      <div class="table-responsive">
+        <table class="activity-table">
+          <thead>
+            <tr>
+              <th>Utilisateur</th>
+              <th>Email</th>
+              <th>Rôle</th>
+              <th>Ville</th>
+              <th>Dernière connexion</th>
+              <th>Total connexions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let user of filteredActivity">
+              <td>
+                <div class="user-cell">
+                  <div class="user-avatar">
+                    {{ (user.firstName?.charAt(0) || '?') + (user.lastName?.charAt(0) || '') }}
+                  </div>
+                  <span>{{ user.firstName || '' }} {{ user.lastName || '' }}</span>
+                </div>
+              </td>
+              <td>{{ user.email }}</td>
+              <td><span class="role-badge" [class.admin]="user.role === 'ADMIN'">{{ user.role || '-' }}</span></td>
+              <td>{{ user.city || '-' }}</td>
+              <td>{{ formatDate(user.lastLogin) }}</td>
+              <td class="text-center"><strong>{{ user.loginCount || 0 }}</strong></td>
+            </tr>
+            <tr *ngIf="filteredActivity.length === 0">
+              <td colspan="6" class="text-center empty-message">
+                Aucune activité trouvée
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    
+    <!-- Villes -->
+    <div class="chart-card full-width" *ngIf="stats.usersByCity && objectKeys(stats.usersByCity).length > 0">
+      <div class="chart-header">
+        <h4><i class="bi bi-geo-alt"></i> Répartition géographique</h4>
+      </div>
+      <div class="city-stats">
+        <div class="city-item" *ngFor="let city of objectKeys(stats.usersByCity)">
+          <span class="city-name">{{ city }}</span>
+          <div class="city-bar-container">
+            <div class="city-bar" [style.width.%]="(stats.usersByCity[city] / stats.totalUsers) * 100">
+              {{ stats.usersByCity[city] }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Légende -->
+    <div class="legend">
+      <span class="legend-item" style="background: #f7ede2;">0</span>
+      <span class="legend-item" style="background: #c1d5d5;">1-2</span>
+      <span class="legend-item" style="background: #8fb1b1;">3-5</span>
+      <span class="legend-item" style="background: #5d8c8c;">6-10</span>
+      <span class="legend-item" style="background: #2D5757;">10+</span>
+    </div>
+  </div>
+</div>

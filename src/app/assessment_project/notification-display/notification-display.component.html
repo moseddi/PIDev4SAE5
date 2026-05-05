@@ -1,0 +1,17 @@
+<div class="notification-container">
+  <div *ngFor="let n of notifications" 
+       class="notification-card" 
+       [ngClass]="{
+         'quiz-type': n.sender === 'QUIZ',
+         'career-type': n.sender === 'CAREER',
+         'cert-type': n.sender === 'CERTIFICATION'
+       }">
+    <div class="notification-header">
+      <strong>{{ n.sender }} - {{ n.type }}</strong>
+      <span class="timestamp">{{ n.timestamp }}</span>
+    </div>
+    <div class="notification-body">
+      {{ n.message }}
+    </div>
+  </div>
+</div>

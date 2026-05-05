@@ -1,0 +1,204 @@
+.lessons-container {
+  max-width: 1000px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+.lessons-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 2rem;
+}
+
+.back-link {
+  color: #2D5757;
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 600;
+  display: inline-block;
+  margin-bottom: 0.5rem;
+}
+
+.back-link:hover {
+  text-decoration: underline;
+}
+
+.back-link-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #2D5757;
+  display: inline-block;
+  margin-bottom: 0.5rem;
+}
+
+.back-link-btn:hover {
+  text-decoration: underline;
+}
+
+.lessons-header h2 {
+  color: #2D5757;
+  font-size: 1.8rem;
+  margin: 0 0 0.3rem 0;
+}
+
+.course-info {
+  color: #888;
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.btn-add {
+  background-color: #2D5757;
+  color: white;
+  padding: 0.6rem 1.4rem;
+  border-radius: 50px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: background-color 0.3s;
+  white-space: nowrap;
+}
+
+.btn-add:hover {
+  background-color: #1e3d3d;
+}
+
+/* Table */
+.lessons-table-wrapper {
+  overflow-x: auto;
+}
+
+.lessons-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.07);
+}
+
+.lessons-table thead {
+  background-color: #2D5757;
+  color: white;
+}
+
+.lessons-table th {
+  padding: 1rem;
+  text-align: left;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.lessons-table td {
+  padding: 0.9rem 1rem;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 0.9rem;
+  color: #444;
+}
+
+.lessons-table tbody tr:hover {
+  background-color: #f9f6f2;
+}
+
+.lesson-title {
+  font-weight: 600;
+  color: #2D5757;
+}
+
+.lesson-content {
+  max-width: 300px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.actions-cell {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.btn-small {
+  padding: 0.35rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  border: none;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.btn-edit {
+  background-color: #F7EDE2;
+  color: #2D5757;
+  border: 1px solid #2D5757;
+}
+
+.btn-edit:hover {
+  background-color: #2D5757;
+  color: white;
+}
+
+.btn-delete {
+  background-color: #fff;
+  color: #dc3545;
+  border: 1px solid #dc3545;
+}
+
+.btn-delete:hover {
+  background-color: #dc3545;
+  color: white;
+}
+
+/* Notification */
+.notification {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  padding: 1rem 1.5rem;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  z-index: 1000;
+  animation: slideIn 0.3s ease;
+}
+
+.notification.success {
+  background-color: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+}
+
+.notification.error {
+  background-color: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+}
+
+@keyframes slideIn {
+  from { transform: translateX(100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+/* Loading & Empty */
+.loading-spinner, .empty-state {
+  text-align: center;
+  padding: 3rem;
+  color: #666;
+}
+
+.empty-state p {
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+}
+
+@media (max-width: 600px) {
+  .lessons-header {
+    flex-direction: column;
+    gap: 1rem;
+  }
+}

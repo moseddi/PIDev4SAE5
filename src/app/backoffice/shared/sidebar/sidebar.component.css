@@ -1,0 +1,135 @@
+.sidebar {
+  width: 260px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background: #2D5757;
+  color: white;
+  height: 100vh;
+  padding: 20px 0;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 4px 0 15px rgba(0,0,0,0.1);
+  font-family: 'Merriweather Sans', sans-serif;
+  z-index: 1000;
+}
+
+.sidebar-brand {
+  padding: 0 20px 35px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  font-size: 1.4rem;
+  font-weight: 900;
+  color: #F7EDE2;
+  letter-spacing: 1.5px;
+  border-bottom: 1px solid rgba(247, 237, 226, 0.1);
+  margin-bottom: 20px;
+}
+
+.sidebar-brand i {
+  font-size: 1.8rem;
+  color: #F7EDE2;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+}
+
+.nav-link {
+  color: rgba(255, 255, 255, 0.7);
+  padding: 14px 25px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  transition: all 0.3s ease;
+  font-weight: 500;
+  border-left: 4px solid transparent;
+  text-decoration: none;
+}
+
+.nav-link i {
+  font-size: 1.2rem;
+  width: 24px;
+  text-align: center;
+}
+
+.nav-link:hover {
+  color: #F7EDE2;
+  background: rgba(255, 255, 255, 0.05);
+  padding-left: 30px;
+}
+
+.nav-link.active {
+  color: #2D5757 !important;
+  background: #F7EDE2 !important;
+  border-left-color: #F7EDE2;
+  font-weight: 700;
+  border-radius: 0 30px 30px 0;
+  margin-right: 15px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.nav-group-title {
+  padding: 25px 25px 12px;
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: rgba(247, 237, 226, 0.4);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.nav-group-title:hover {
+  color: rgba(247, 237, 226, 0.8);
+}
+
+.rotated {
+  transform: rotate(180deg);
+}
+
+.nav-group-items {
+  display: none;
+  background: rgba(0,0,0,0.1);
+  margin-bottom: 10px;
+}
+
+.nav-group-items.show {
+  display: block;
+}
+
+.sub-link {
+  padding-left: 55px;
+  font-size: 0.95rem;
+  opacity: 0.85;
+}
+
+.sidebar-footer {
+  margin-top: auto;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 10px 0;
+}
+
+.logout-link {
+  color: #ff6b6b !important;
+}
+
+.logout-link:hover {
+  background: rgba(255, 107, 107, 0.1) !important;
+  color: #ff4b4b !important;
+}
+
+.badge {
+  font-size: 0.65rem;
+  padding: 4px 8px;
+  border-radius: 6px;
+}
+
+/* Scrollbar styling */
+.sidebar::-webkit-scrollbar {
+  width: 5px;
+}
+.sidebar::-webkit-scrollbar-thumb {
+  background: rgba(247, 237, 226, 0.1);
+  border-radius: 10px;
+}

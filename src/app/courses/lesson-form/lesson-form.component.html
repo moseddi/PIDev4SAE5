@@ -1,0 +1,112 @@
+<!-- Notification Banner -->
+<div class="notification" *ngIf="notification" [ngClass]="notification.type">
+  {{ notification.message }}
+</div>
+
+<div class="course-form-container">
+  <!-- Header -->
+  <div class="form-header">
+    <h2>{{ pageTitle }}</h2>
+    <p class="subtitle">{{ isEditMode ? 'Update your lesson details' : 'Add a new lesson to this course' }}</p>
+    <div class="benefits">
+      <div class="benefit-item">
+        <i class="bi bi-check-circle-fill"></i> Interactive content
+      </div>
+      <div class="benefit-item">
+        <i class="bi bi-check-circle-fill"></i> PDF support
+      </div>
+      <div class="benefit-item">
+        <i class="bi bi-check-circle-fill"></i> Structured learning
+      </div>
+    </div>
+  </div>
+
+  <!-- Form -->
+  <form [formGroup]="lessonForm" (ngSubmit)="onSubmit()">
+    <!-- Lesson Title -->
+    <div class="form-group">
+      <label>Lesson Title *</label>
+      <input
+        type="text"
+        formControlName="lessontitle"
+        placeholder="Enter lesson title"
+        class="form-control"
+        [class.is-invalid]="lessonForm.get('lessontitle')?.invalid && lessonForm.get('lessontitle')?.touched"
+      />
+      <div class="error-message" *ngIf="lessonForm.get('lessontitle')?.invalid && lessonForm.get('lessontitle')?.touched">
+        Lesson title is required (min 3 characters)
+      </div>
+    </div>
+
+    <!-- Content -->
+    <div class="form-group">
+      <label>Content *</label>
+      <textarea
+        formControlName="content"
+        rows="6"
+        placeholder="Enter lesson content"
+        class="form-control"
+        [class.is-invalid]="lessonForm.get('content')?.invalid && lessonForm.get('content')?.touched"
+      ></textarea>
+      <div class="error-message" *ngIf="lessonForm.get('content')?.invalid && lessonForm.get('content')?.touched">
+        Content is required
+      </div>
+    </div>
+
+    <!-- Lesson Order -->
+    <div class="form-group">
+      <label>Lesson Order *</label>
+      <input
+        type="number"
+        formControlName="lessonorder"
+        placeholder="e.g., 1"
+        class="form-control"
+        [class.is-invalid]="lessonForm.get('lessonorder')?.invalid && lessonForm.get('lessonorder')?.touched"
+      />
+      <div class="error-message" *ngIf="lessonForm.get('lessonorder')?.invalid && lessonForm.get('lessonorder')?.touched">
+        Valid order required (min 1)
+      </div>
+    </div>
+
+    <!-- PDF Upload -->
+    <div class="form-group">
+      <label>Lesson PDF (optional)</label>
+      <div class="file-upload-wrapper">
+        <input
+          type="file"
+          accept=".pdf,application/pdf"
+          (change)="onFileSelected($event)"
+          id="pdfInput"
+          class="file-input"
+        />
+        <label for="pdfInput" class="file-label">
+          <span class="file-icon">📄</span>
+          <span>{{ pdfPreview || 'Choose PDF file' }}</span>
+        </label>
+        <button 
+          type="button" 
+          *ngIf="selectedPdf || existingPdfUrl" 
+          (click)="removePdf()" 
+          class="btn-remove">
+          ✕
+        </button>
+      </div>
+      <div *ngIf="existingPdfUrl && !selectedPdf" class="existing-pdf">
+        <a [href]="existingPdfUrl" target="_blank" class="pdf-link">View existing PDF</a>
+      </div>
+      <div *ngIf="uploadingPdf" class="uploading">
+        Uploading PDF...
+      </div>
+    </div>
+
+    <!-- Submit Button -->
+    <button type="submit" class="btn-submit" [disabled]="lessonForm.invalid || submitting">
+      {{ submitting ? 'Saving...' : (isEditMode ? 'Update Lesson' : 'Create Lesson') }}
+    </button>
+
+    <!-- Cancel Button -->
+    <button type="button" class="btn-outline" (click)="onCancel()">
+      Cancel
+    </button>
+  </form>
+</div>

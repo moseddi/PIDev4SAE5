@@ -1,0 +1,53 @@
+<div class="auth-wrapper">
+    <div class="auth-card">
+        <div class="auth-logo">
+            <span class="logo-icon">🎮</span>
+            <h1>KenWQ</h1>
+        </div>
+
+        <h2>Créer un compte</h2>
+
+        <div class="error-msg" *ngIf="error">{{ error }}</div>
+
+        <form (ngSubmit)="submit()">
+            <div class="field">
+                <label>Nom d'utilisateur</label>
+                <input type="text" [(ngModel)]="username" name="username" placeholder="ex: alice" required />
+            </div>
+
+            <div class="field">
+                <label>Email</label>
+                <input type="email" [(ngModel)]="email" name="email" placeholder="votre@email.com" required />
+            </div>
+
+            <div class="field">
+                <label>Mot de passe</label>
+                <input type="password" [(ngModel)]="password" name="password" placeholder="••••••••" required />
+            </div>
+
+            <div class="field">
+                <label>Rôle</label>
+                <div class="role-selector">
+                    <button type="button"
+                        [class.active]="role === 'PLAYER'"
+                        (click)="role = 'PLAYER'">
+                        🎮 Joueur
+                    </button>
+                    <button type="button"
+                        [class.active]="role === 'ADMIN'"
+                        (click)="role = 'ADMIN'">
+                        👑 Admin
+                    </button>
+                </div>
+            </div>
+
+            <button type="submit" class="btn-primary" [disabled]="loading">
+                {{ loading ? 'Création...' : 'Créer mon compte' }}
+            </button>
+        </form>
+
+        <p class="auth-link">
+            Déjà un compte ? <a routerLink="/assessment/login">Se connecter</a>
+        </p>
+    </div>
+</div>

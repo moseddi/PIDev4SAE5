@@ -1,0 +1,268 @@
+/* Fond global de la page */
+body {
+  background-color: #F7EDE2;
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+/* Conteneur principal du formulaire (carte blanche) */
+.course-form-container {
+  max-width: 500px;
+  margin: 2rem auto;
+  background-color: #ffffff;
+  border-radius: 32px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+  padding: 2.5rem;
+}
+
+/* En-tête */
+.form-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.form-header h2 {
+  color: #2D5757;
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+.subtitle {
+  color: #666;
+  margin-bottom: 1.5rem;
+}
+
+.benefits {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.benefit-item {
+  background-color: #F7EDE2;  /* beige clair pour les badges */
+  color: #2D5757;
+  padding: 0.5rem 1rem;
+  border-radius: 30px;
+  font-size: 0.9rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.benefit-item i {
+  color: #2D5757;
+  font-size: 1rem;
+}
+
+/* Groupes de formulaire */
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: #2D5757;  /* vert pour les labels */
+  font-size: 0.95rem;
+}
+
+.form-control {
+  width: 100%;
+  padding: 0.9rem 1.2rem;
+  border: 1px solid #e0e0e0;
+  border-radius: 50px;
+  font-size: 1rem;
+  transition: border-color 0.3s, box-shadow 0.3s;
+  background-color: #fafafa;
+  box-sizing: border-box;
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: #2D5757;
+  box-shadow: 0 0 0 3px rgba(45,87,87,0.1);
+  background-color: white;
+}
+
+.form-control.is-invalid {
+  border-color: #dc3545;
+  background-color: #fff8f8;
+}
+
+.error-message {
+  margin-top: 0.3rem;
+  color: #dc3545;
+  font-size: 0.8rem;
+  padding-left: 1rem;
+}
+
+/* File Upload Styles */
+.file-upload-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.file-input {
+  display: none;
+}
+
+.file-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0.9rem 1.2rem;
+  background-color: #fafafa;
+  border: 1px dashed #2D5757;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.3s;
+  color: #2D5757;
+  font-size: 14px;
+  flex: 1;
+}
+
+.file-label:hover {
+  background-color: #e0f0f0;
+  border-color: #1e3d3d;
+}
+
+.file-icon {
+  font-size: 20px;
+}
+
+.btn-remove {
+  padding: 0.8rem 1.2rem;
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.3s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-remove:hover {
+  background-color: #c82333;
+  transform: scale(1.05);
+}
+
+.existing-pdf {
+  margin-top: 0.5rem;
+}
+
+.pdf-link {
+  color: #2D5757;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.pdf-link:hover {
+  text-decoration: underline;
+}
+
+.uploading {
+  margin-top: 0.5rem;
+  color: #666;
+  font-size: 13px;
+  font-style: italic;
+}
+
+/* Bouton principal (vert) */
+.btn-submit {
+  width: 100%;
+  padding: 1rem;
+  background-color: #2D5757;
+  color: white;
+  border: none;
+  border-radius: 50px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  margin-bottom: 1rem;
+}
+
+.btn-submit:hover:not(:disabled) {
+  background-color: #1e3d3d;
+}
+
+.btn-submit:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Bouton secondaire (Annuler) en outline vert */
+.btn-outline {
+  width: 100%;
+  padding: 1rem;
+  background-color: transparent;
+  color: #2D5757;
+  border: 2px solid #2D5757;
+  border-radius: 50px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.btn-outline:hover {
+  background-color: #2D5757;
+  color: white;
+}
+
+/* Notification */
+.notification {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  padding: 1rem 1.5rem;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  z-index: 1000;
+  animation: slideIn 0.3s ease;
+}
+
+.notification.success {
+  background-color: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+}
+
+.notification.error {
+  background-color: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+}
+
+@keyframes slideIn {
+  from { transform: translateX(100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+/* Adaptation mobile */
+@media (max-width: 600px) {
+  .course-form-container {
+    padding: 1.5rem;
+    margin: 1rem;
+  }
+
+  .file-upload-wrapper {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .btn-remove {
+    width: 100%;
+  }
+}

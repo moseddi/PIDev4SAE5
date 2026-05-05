@@ -1,0 +1,100 @@
+<!-- Notification Banner -->
+<div class="notification" *ngIf="notification" [ngClass]="notification.type">
+  {{ notification.message }}
+</div>
+
+<div class="course-form-container">
+  <!-- Header -->
+  <div class="form-header">
+    <h2>{{ pageTitle }}</h2>
+    <p class="subtitle">{{ isEditMode ? 'Update your course details' : 'Start building your course today' }}</p>
+    <div class="benefits">
+      <div class="benefit-item">
+        <i class="bi bi-check-circle-fill"></i> Interactive lessons
+      </div>
+      <div class="benefit-item">
+        <i class="bi bi-check-circle-fill"></i> Expert guidance
+      </div>
+      <div class="benefit-item">
+        <i class="bi bi-check-circle-fill"></i> Flexible schedule
+      </div>
+    </div>
+  </div>
+
+  <!-- Form -->
+  <form [formGroup]="courseForm" (ngSubmit)="onSubmit()">
+    <!-- Title -->
+    <div class="form-group">
+      <label>Course Title *</label>
+      <input
+        type="text"
+        formControlName="title"
+        placeholder="Enter course title"
+        class="form-control"
+        [class.is-invalid]="courseForm.get('title')?.invalid && courseForm.get('title')?.touched"
+      />
+      <div class="error-message" *ngIf="courseForm.get('title')?.invalid && courseForm.get('title')?.touched">
+        Title is required (min 3 characters)
+      </div>
+    </div>
+
+    <!-- Level -->
+    <div class="form-group">
+      <label>Level *</label>
+      <select
+        formControlName="level"
+        class="form-control"
+        [class.is-invalid]="courseForm.get('level')?.invalid && courseForm.get('level')?.touched"
+      >
+        <option value="">Select level</option>
+        <option value="Beginner">Beginner</option>
+        <option value="Intermediate">Intermediate</option>
+        <option value="Advanced">Advanced</option>
+        <option value="Business">Business</option>
+      </select>
+      <div class="error-message" *ngIf="courseForm.get('level')?.invalid && courseForm.get('level')?.touched">
+        Level is required
+      </div>
+    </div>
+
+    <!-- Duration -->
+    <div class="form-group">
+      <label>Duration (hours) *</label>
+      <input
+        type="number"
+        formControlName="duration"
+        placeholder="e.g., 20"
+        class="form-control"
+        [class.is-invalid]="courseForm.get('duration')?.invalid && courseForm.get('duration')?.touched"
+      />
+      <div class="error-message" *ngIf="courseForm.get('duration')?.invalid && courseForm.get('duration')?.touched">
+        Valid duration required (min 1 hour)
+      </div>
+    </div>
+
+    <!-- Description -->
+    <div class="form-group">
+      <label>Description *</label>
+      <textarea
+        formControlName="description"
+        rows="4"
+        placeholder="Describe the course content and objectives"
+        class="form-control"
+        [class.is-invalid]="courseForm.get('description')?.invalid && courseForm.get('description')?.touched"
+      ></textarea>
+      <div class="error-message" *ngIf="courseForm.get('description')?.invalid && courseForm.get('description')?.touched">
+        Description is required
+      </div>
+    </div>
+
+    <!-- Submit Button -->
+    <button type="submit" class="btn-submit" [disabled]="courseForm.invalid || submitting">
+      {{ submitting ? 'Saving...' : (isEditMode ? 'Update Course' : 'Create Course') }}
+    </button>
+
+    <!-- Cancel Button -->
+    <button type="button" class="btn-outline" (click)="onCancel()">
+      Cancel
+    </button>
+  </form>
+</div>

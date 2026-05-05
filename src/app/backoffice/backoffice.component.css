@@ -1,0 +1,220 @@
+/* Premium Backoffice Design System */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+:host {
+  --primary: #2D5757;
+  --primary-light: #3e7070;
+  --primary-dark: #1a3a3a;
+  --secondary: #F7EDE2;
+  --accent: #a7d7a7;
+  --text-main: #1e293b;
+  --text-muted: #64748b;
+  --sidebar-width: 260px;
+  --glass-bg: rgba(255, 255, 255, 0.95);
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
+  --shadow-md: 0 4px 20px rgba(45, 87, 87, 0.08);
+  --shadow-lg: 0 10px 40px rgba(0,0,0,0.06);
+}
+
+.backoffice-container {
+  display: flex;
+  min-height: 100vh;
+  width: 100%;
+  background: #f8fafc;
+  font-family: 'Inter', sans-serif;
+  color: var(--text-main);
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* ── Main Content ─────────────────────────────────── */
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-width: 0; /* Important for flex child sizing */
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.content-area {
+  flex: 1;
+  padding: 2.5rem;
+  background: transparent;
+}
+
+/* Note: .sidebar styles are now handled in the sidebar component itself */
+app-sidebar {
+  display: block;
+  flex-shrink: 0;
+  width: var(--sidebar-width);
+  transition: width 0.3s ease;
+}
+
+/* Nav links are handled in the sidebar component */
+
+/* ── Cards ───────────────────────────────────────── */
+.card {
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 20px;
+  box-shadow: var(--shadow-md);
+  overflow: hidden;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.card:hover {
+  box-shadow: var(--shadow-lg);
+}
+
+.card-header {
+  background: white;
+  border-bottom: 1px solid #f1f5f9;
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* ── Tables ──────────────────────────────────────── */
+.table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.table thead th {
+  background: #f8fafc;
+  color: var(--text-muted);
+  font-weight: 700;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 1rem 1.5rem;
+  border-bottom: 2px solid #f1f5f9;
+}
+
+.table tbody td {
+  padding: 1.15rem 1.5rem;
+  border-bottom: 1px solid #f1f5f9;
+  font-size: 0.92rem;
+}
+
+.table tbody tr:hover td {
+  background: #fcfdfe;
+}
+
+/* ── Buttons ─────────────────────────────────────── */
+.btn-primary {
+  background: linear-gradient(135deg, var(--primary), var(--primary-light));
+  color: white;
+  border: none;
+  padding: 0.75rem 1.75rem;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 12px rgba(45, 87, 87, 0.25);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(45, 87, 87, 0.35);
+}
+
+.btn-outline-primary {
+  border: 2px solid var(--primary);
+  color: var(--primary);
+  background: transparent;
+  padding: 0.7rem 1.5rem;
+  border-radius: 12px;
+  font-weight: 700;
+  transition: all 0.25s;
+}
+
+.btn-outline-primary:hover {
+  background: var(--primary);
+  color: white;
+}
+
+/* ── Badges ──────────────────────────────────────── */
+.badge {
+  padding: 0.4rem 0.85rem;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.badge.bg-primary { background: var(--primary) !important; color: white; }
+.badge.bg-success { background: #dcfce7 !important; color: #166534; }
+.badge.bg-warning { background: #fef3c7 !important; color: #92400e; }
+.badge.bg-danger  { background: #fee2e2 !important; color: #991b1b; }
+
+/* ── Form Controls ───────────────────────────────── */
+.form-control, .form-select {
+  border: 1.5px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 0.75rem 1rem;
+  font-size: 0.95rem;
+  background: #f8fafc;
+  transition: all 0.2s;
+}
+
+.form-control:focus {
+  background: white;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4px rgba(45, 87, 87, 0.08);
+  outline: none;
+}
+
+/* ── Scrollbars ──────────────────────────────────── */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+/* ── Responsive ──────────────────────────────────── */
+@media (max-width: 1024px) {
+  :host {
+    --sidebar-width: 80px;
+  }
+  
+  ::ng-deep .sidebar {
+    width: 80px !important;
+  }
+  
+  ::ng-deep .sidebar span, 
+  ::ng-deep .sidebar .sidebar-brand span,
+  ::ng-deep .sidebar .nav-group-title {
+    display: none !important;
+  }
+  
+  ::ng-deep .sidebar .nav-link {
+    justify-content: center;
+    padding: 14px 0 !important;
+    border-radius: 0 !important;
+    margin-right: 0 !important;
+  }
+}
+
+@media (max-width: 768px) {
+  :host {
+    --sidebar-width: 0px;
+  }
+  
+  ::ng-deep .sidebar {
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+  }
+  
+  .main-content {
+    margin-left: 0;
+  }
+  
+  .content-area {
+    padding: 1.5rem;
+  }
+}

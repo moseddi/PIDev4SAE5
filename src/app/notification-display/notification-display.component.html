@@ -1,0 +1,30 @@
+<div class="notification-container">
+  <div *ngFor="let n of notifications" 
+       class="notification-card" 
+       [ngClass]="{
+         'quiz-type': n.sender === 'QUIZ',
+         'career-type': n.sender === 'CAREER',
+         'cert-type': n.sender === 'CERTIFICATION'
+       }">
+    <div class="notification-header">
+      <div class="header-left">
+        <div class="notif-icon">
+          <ng-container [ngSwitch]="n.sender">
+            <span *ngSwitchCase="'QUIZ'">🎮</span>
+            <span *ngSwitchCase="'CAREER'">💼</span>
+            <span *ngSwitchCase="'CERTIFICATION'">🎓</span>
+            <span *ngSwitchDefault>🔔</span>
+          </ng-container>
+        </div>
+        <div>
+          <h4 class="notif-title">{{ getTitle(n.sender) }}</h4>
+          <span class="notif-type">{{ n.type }}</span>
+        </div>
+      </div>
+      <span class="timestamp">{{ formatTime(n.timestamp) }}</span>
+    </div>
+    <div class="notification-body">
+      {{ n.message }}
+    </div>
+  </div>
+</div>

@@ -1,0 +1,40 @@
+<!-- Notification Banner -->
+<div class="notification" *ngIf="notification" [ngClass]="notification.type">
+  {{ notification.message }}
+</div>
+
+<div class="seances-container">
+  <div class="seances-header">
+    <h2>🏋️ Coaching Seances</h2>
+    <a routerLink="/seances/new" class="btn-add">+ New Seance</a>
+  </div>
+
+  <!-- Loading State -->
+  <div class="loading-spinner" *ngIf="loading">
+    <p>Loading seances...</p>
+  </div>
+
+  <!-- Empty State -->
+  <div class="empty-state" *ngIf="!loading && seances.length === 0">
+    <p>No seances found. Create your first seance!</p>
+    <a routerLink="/seances/new" class="btn-add">+ Create Seance</a>
+  </div>
+
+  <!-- Seance Grid -->
+  <div class="seances-grid" *ngIf="!loading && seances.length > 0">
+    <div class="seance-card" *ngFor="let seance of seances">
+      <span class="seance-badge">Seance</span>
+      <h3>{{ seance.goodName }}</h3>
+      <div class="seance-info">
+        <p><strong>📅 Date:</strong> {{ seance.seanceDate }}</p>
+        <p><strong>🕐 Time:</strong> {{ seance.seanceTime }}</p>
+        <p><strong>📋 Reservations:</strong> {{ seance.reservations?.length || 0 }}</p>
+      </div>
+      <div class="seance-actions">
+        <a [routerLink]="['/seances', seance.id, 'reservations']" class="btn-small btn-view">View Reservations</a>
+        <a [routerLink]="['/seances/edit', seance.id]" class="btn-small btn-edit">Edit</a>
+        <button (click)="deleteSeance(seance)" class="btn-small btn-delete">Delete</button>
+      </div>
+    </div>
+  </div>
+</div>

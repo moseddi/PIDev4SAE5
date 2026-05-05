@@ -1,0 +1,49 @@
+<div class="sidebar">
+  <div class="sidebar-brand">
+    <i class="bi bi-shield-shaded"></i>
+    <span>JUNGLE ADMIN</span>
+  </div>
+
+  <div class="nav flex-column">
+    <!-- Tableau de Bord -->
+    <a [routerLink]="backofficeNav.main.route" routerLinkActive="active" class="nav-link">
+      <i class="bi bi-speedometer2"></i> {{ backofficeNav.main.label }}
+    </a>
+
+    <!-- Sections Dynamiques (Projet Main) -->
+    <div *ngFor="let group of backofficeNav.groups">
+      <div class="nav-group-title" (click)="toggleDropdown(group.title)">
+        {{ group.title }}
+        <i class="bi bi-chevron-down ms-auto" [class.rotated]="isDropdownOpen[group.title]"></i>
+      </div>
+
+      <div class="nav-group-items" [class.show]="isDropdownOpen[group.title]">
+        <a *ngFor="let item of group.items" 
+           [routerLink]="item.route" 
+           routerLinkActive="active" 
+           class="nav-link sub-link">
+          <ng-container *ngIf="item.icon.startsWith('bi-')">
+            <i class="bi" [ngClass]="item.icon"></i>
+          </ng-container>
+          <ng-container *ngIf="!item.icon.startsWith('bi-')">
+            <span style="font-size: 1.2rem; width: 24px; text-align: center; font-style: normal; font-family: 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji', sans-serif;">{{ item.icon }}</span>
+          </ng-container>
+          {{ item.label }}
+          <span *ngIf="item.badge" class="badge bg-warning text-dark">{{ item.badge }}</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="sidebar-footer">
+    <a [routerLink]="['/backoffice/profile-completion']" routerLinkActive="active" class="nav-link">
+      <i class="bi bi-person-circle"></i> Mon Profil
+    </a>
+    <a routerLink="/home" class="nav-link">
+      <i class="bi bi-globe"></i> Voir le site
+    </a>
+    <a href="javascript:void(0)" (click)="onLogout()" class="nav-link logout-link">
+      <i class="bi bi-box-arrow-right"></i> Déconnexion
+    </a>
+  </div>
+</div>

@@ -1,0 +1,59 @@
+<!-- Notification Banner -->
+<div class="notification" *ngIf="notification" [ngClass]="notification.type">
+  {{ notification.message }}
+</div>
+
+<div class="form-container">
+  <div class="form-header">
+    <h2>{{ isEditMode ? '✏️ Edit Reservation' : '➕ New Reservation' }}</h2>
+    <a [routerLink]="seanceId ? ['/seances', seanceId, 'reservations'] : ['/reservations']" class="btn-back">← Back</a>
+  </div>
+
+  <div class="loading-spinner" *ngIf="loading">
+    <p>Loading reservation...</p>
+  </div>
+
+  <form *ngIf="!loading" (ngSubmit)="onSubmit()" class="reservation-form">
+    <div class="form-group">
+      <label for="studidname">Student Name</label>
+      <input
+        type="text"
+        id="studidname"
+        [(ngModel)]="reservation.studidname"
+        name="studidname"
+        required
+        placeholder="e.g. Ahmed Ben Ali"
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="merenumber">Reservation Date</label>
+      <input
+        type="date"
+        id="merenumber"
+        [(ngModel)]="reservation.merenumber"
+        name="merenumber"
+        required
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="status">Status</label>
+      <select
+        id="status"
+        [(ngModel)]="reservation.status"
+        name="status"
+        required
+      >
+        <option *ngFor="let s of statusOptions" [value]="s">{{ s }}</option>
+      </select>
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" class="btn-submit">
+        {{ isEditMode ? 'Update Reservation' : 'Create Reservation' }}
+      </button>
+      <a [routerLink]="seanceId ? ['/seances', seanceId, 'reservations'] : ['/reservations']" class="btn-cancel">Cancel</a>
+    </div>
+  </form>
+</div>

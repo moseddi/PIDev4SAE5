@@ -1,0 +1,48 @@
+<div class="page">
+  <div class="header">
+    <h1>{{ id ? 'Modifier le matériel' : 'Nouveau matériel' }}</h1>
+    <a routerLink="/materiels" class="btn">Retour</a>
+  </div>
+  @if (error) {
+    <div class="alert alert-error">{{ error }}</div>
+  }
+  <form [formGroup]="form" (ngSubmit)="submit()" class="form">
+    <div class="field">
+      <label for="nom">Nom</label>
+      <input id="nom" type="text" formControlName="nom" />
+    </div>
+    <div class="field">
+      <label for="status">Statut</label>
+      <input id="status" type="text" formControlName="status" placeholder="ex: Disponible, En panne" />
+    </div>
+    <div class="field">
+      <label for="seuilMaintenance">Seuil maintenance (heures)</label>
+      <input id="seuilMaintenance" type="number" min="0.01" step="0.1" formControlName="seuilMaintenance" />
+    </div>
+    <div class="field">
+      <label for="quantiteTotale">Available quantity</label>
+      <input id="quantiteTotale" type="number" min="1" formControlName="quantiteTotale" />
+    </div>
+    <div class="field">
+      <label for="quantiteAssociee">Assigned quantity (to room)</label>
+      <input id="quantiteAssociee" type="number" min="0" formControlName="quantiteAssociee" />
+    </div>
+    <div class="field">
+      <label>Remaining quantity</label>
+      <input type="text" readonly [value]="quantiteRestanteDisplay()" />
+    </div>
+    <div class="field">
+      <label for="salleId">Salle</label>
+      <select id="salleId" formControlName="salleId">
+        <option [ngValue]="null">-- Aucune --</option>
+        @for (s of salles; track s.id) {
+          <option [ngValue]="s.id">{{ s.nom }} ({{ s.capacite }} places)</option>
+        }
+      </select>
+    </div>
+    <div class="actions">
+      <button type="submit" class="btn btn-primary" [disabled]="loading">{{ loading ? 'Enregistrement...' : 'Enregistrer' }}</button>
+      <a routerLink="/materiels" class="btn">Annuler</a>
+    </div>
+  </form>
+</div>

@@ -1,0 +1,165 @@
+<!-- Dynamic Navigation Bar -->
+<nav class="navbar navbar-expand-xl dynamic-navbar" [class.scrolled]="isNavbarScrolled">
+  <div class="container-fluid px-4">
+    <!-- Brand Logo -->
+    <a class="nav-brand" routerLink="/home">
+      <div class="nav-logo">WSE</div>
+      <span>Wall Street English</span>
+    </a>
+
+    <!-- Mobile Toggle -->
+    <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#dynamicNavbar">
+      <i class="bi bi-list fs-4"></i>
+    </button>
+
+    <!-- Main Navigation -->
+    <div class="collapse navbar-collapse" id="dynamicNavbar">
+      <ul class="navbar-nav mx-auto">
+        <!-- Backoffice Link - Only visible to ADMIN and TUTOR -->
+        <li class="nav-item nav-item-wrapper" *ngIf="canAccessBackoffice">
+          <a class="nav-link nav-main-link" routerLink="/backoffice">
+            <i class="bi bi-speedometer2"></i>
+            Dashboard
+          </a>
+        </li>
+        
+        <!-- Courses Mega Menu -->
+        <li class="nav-item nav-item-wrapper mega-menu">
+          <a class="nav-link nav-main-link active" href="javascript:void(0)">
+            <i class="bi bi-book-half"></i>
+            Courses
+            <span class="nav-badge badge-hot">HOT</span>
+          </a>
+          <div class="mega-menu-content">
+            <div class="mega-grid">
+              <div class="mega-section">
+                <h5 class="mega-title"><i class="bi bi-laptop"></i> Online Courses</h5>
+                <ul class="mega-links">
+                  <li><a routerLink="/chat"><i class="bi bi-chat-dots-fill"></i> Live Chat <span class="nav-badge badge-hot">HOT</span></a></li>
+                  <li><a routerLink="/cours"><i class="bi bi-check-circle"></i> General English</a></li>
+                  <li><a routerLink="/courses/new"><i class="bi bi-check-circle"></i> Business English <span class="nav-badge badge-new">NEW</span></a></li>
+                  <li><a routerLink="/seances"><i class="bi bi-check-circle"></i> TOEFL/IELTS Prep</a></li>
+                  <li><a href="javascript:void(0)"><i class="bi bi-check-circle"></i> Intensive Courses</a></li>
+                  <li><a href="javascript:void(0)"><i class="bi bi-check-circle"></i> English for Beginners</a></li>
+                </ul>
+              </div>
+              <div class="mega-section">
+                <h5 class="mega-title"><i class="bi bi-building"></i> In-Person</h5>
+                <ul class="mega-links">
+                  <li><a href="javascript:void(0)"><i class="bi bi-geo-alt"></i> Center Classes</a></li>
+                  <li><a href="javascript:void(0)"><i class="bi bi-people"></i> Group Classes <span class="nav-badge badge-sale">-30%</span></a></li>
+                  <li><a href="javascript:void(0)"><i class="bi bi-person"></i> Private Lessons</a></li>
+                  <li><a href="javascript:void(0)"><i class="bi bi-briefcase"></i> Corporate Training</a></li>
+                  <li><a href="javascript:void(0)"><i class="bi bi-calendar-week"></i> Evening Classes</a></li>
+                  <li><a routerLink="/find-coach"><i class="bi bi-person-search"></i> Find Coach <span class="nav-badge badge-new">NEW</span></a></li>
+                </ul>
+              </div>
+              <div class="mega-section">
+                <h5 class="mega-title"><i class="bi bi-award"></i> Exams & Tests</h5>
+                <ul class="mega-links">
+                  <li><a href="javascript:void(0)"><i class="bi bi-pencil-square"></i> Free Level Test</a></li>
+                  <li><a href="javascript:void(0)"><i class="bi bi-file-text"></i> Official Exam Prep</a></li>
+                  <li><a href="javascript:void(0)"><i class="bi bi-clock-history"></i> Practice Tests</a></li>
+                  <li><a href="javascript:void(0)"><i class="bi bi-trophy"></i> Certifications</a></li>
+                  <li><a href="javascript:void(0)"><i class="bi bi-calendar-check"></i> Session Dates</a></li>
+                </ul>
+              </div>
+              <div class="mega-section">
+                <h5 class="mega-title"><i class="bi bi-stars"></i> Specialties</h5>
+                <ul class="mega-links">
+                  <li><a href="javascript:void(0)"><i class="bi bi-chat-left-text"></i> Conversation Club</a></li>
+                  <li><a href="javascript:void(0)"><i class="bi bi-headphones"></i> Listening Workshops</a></li>
+                  <li><a href="javascript:void(0)"><i class="bi bi-mic"></i> Pronunciation</a></li>
+                  <li><a href="javascript:void(0)"><i class="bi bi-file-earmark-text"></i> Professional Writing</a></li>
+                  <li><a href="javascript:void(0)"><i class="bi bi-translate"></i> Specialized Translation</a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </li>
+
+        <li class="nav-item nav-item-wrapper">
+          <a class="nav-link nav-main-link" href="javascript:void(0)">
+            <i class="bi bi-calendar-event"></i>
+            Events & Clubs
+          </a>
+        </li>
+        <li class="nav-item nav-item-wrapper">
+          <a class="nav-link nav-main-link" routerLink="/recruitment">
+            <i class="bi bi-person-badge"></i>
+            Recrutement
+          </a>
+        </li>
+        <li class="nav-item nav-item-wrapper has-dropdown">
+          <a class="nav-link nav-main-link" href="javascript:void(0)">
+            <i class="bi bi-controller"></i>
+            Quiz
+            <i class="bi bi-chevron-down sub-icon"></i>
+          </a>
+          <ul class="nav-dropdown">
+            <li><a routerLink="/assessment/frontoffice/quiz">Quiz Interactif</a></li>
+            <li><a routerLink="/assessment/frontoffice/quiz/live">Quiz Live</a></li>
+          </ul>
+        </li>
+        <li class="nav-item nav-item-wrapper has-dropdown">
+          <a class="nav-link nav-main-link" href="javascript:void(0)">
+            <i class="bi bi-clipboard-pulse"></i>
+            Exam and Evaluation
+            <i class="bi bi-chevron-down sub-icon"></i>
+          </a>
+          <ul class="nav-dropdown">
+            <li><a routerLink="/assessment/frontoffice/examens">Examen</a></li>
+            <li><a routerLink="/assessment/frontoffice/canaux">Canaux</a></li>
+            <li><a routerLink="/assessment/frontoffice/mes-resultats">Mes Résultats</a></li>
+            <li><a routerLink="/assessment/frontoffice/mes-notes-examen">Mes Notes</a></li>
+          </ul>
+        </li>
+        <li class="nav-item nav-item-wrapper">
+          <a class="nav-link nav-main-link" routerLink="/login">
+            <i class="bi bi-person-workspace"></i>
+            Student Portal
+          </a>
+        </li>
+      </ul>
+
+      <!-- Right Side Actions -->
+      <div class="nav-actions">
+        <!-- Show user info when logged in -->
+        <div *ngIf="isLoggedIn" class="d-flex align-items-center gap-2">
+          <!-- GREEN PROFILE BUTTON - This opens the modal -->
+          <button class="btn" style="background: #2D5757; color: #F7EDE2; border: none; padding: 8px 16px; border-radius: 30px; display: flex; align-items: center; gap: 8px; font-weight: 500;" 
+                  (click)="openProfileModal()">
+            <i class="bi bi-person-circle"></i>
+            <span>{{ user?.firstName || user?.email || 'My Profile' }}</span>
+          </button>
+          
+          <!-- Logout Button -->
+          <button class="btn btn-sm btn-outline-danger" (click)="logout()">
+            <i class="bi bi-box-arrow-right"></i> Logout
+          </button>
+        </div>
+        
+        <!-- Show login buttons when not logged in -->
+        <div *ngIf="!isLoggedIn">
+          <button class="login-icon-btn" title="Student Login" routerLink="/login">
+            <i class="bi bi-box-arrow-in-right"></i>
+          </button>
+          <button class="btn simple-login-btn full-text" routerLink="/login">
+            <i class="bi bi-box-arrow-in-right"></i>
+            Student Login
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- Profile Modal - YOUR EXACT MODAL CODE -->
+<div class="modal" [ngClass]="{'show': showProfileModal}" *ngIf="showProfileModal" (click)="closeModal()" 
+     style="display: block; background: rgba(0,0,0,0.5); position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 9999;">
+  <div class="modal-dialog modal-lg" (click)="$event.stopPropagation()" style="width: 90%; max-width: 900px; margin: 1.75rem auto;">
+    <div class="modal-content" style="border-radius: 30px; overflow: hidden; box-shadow: 0 30px 60px rgba(45,87,87,0.3); border: none;">
+      <app-profile-completion (profileUpdated)="onProfileUpdated()"></app-profile-completion>
+    </div>
+  </div>
+</div>
