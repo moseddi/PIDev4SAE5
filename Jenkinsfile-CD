@@ -1,0 +1,31 @@
+pipeline {
+    agent any
+    environment {
+        DOCKER_HUB_USER = 'troudicheima30979'
+        VM_IP = '192.168.168.128'
+    }
+    stages {
+        stage('Deploy to Kubernetes') {
+            steps {
+                echo "Deploying Frontend to Kubernetes..."
+                bat "kubectl set image deployment/frontend frontend=%DOCKER_HUB_USER%/wall-street-english:latest -n default"
+                bat "kubectl rollout status deployment/frontend -n default"
+                echo "Frontend Deployed"
+            }
+        }
+        stage('Verify Deployment') {
+            steps {
+                bat "kubectl get pods -l app=frontend"
+                bat "kubectl get svc frontend"
+            }
+        }
+    }
+    post {
+        success {
+            echo "Frontend CD Pipeline termine avec succes! Frontend: http://${VM_IP}:32708"
+        }
+        failure {
+            echo "Frontend CD Pipeline echoue"
+        }
+    }
+}
