@@ -5,6 +5,13 @@
     "changeOrigin": true,
     "logLevel": "debug"
   },
+  "/ml-api": {
+    "target": "http://localhost:5050",
+    "secure": false,
+    "changeOrigin": true,
+    "pathRewrite": {"^/ml-api": ""},
+    "logLevel": "debug"
+  },
   "/ws-popularity": {
     "target": "http://localhost:7071",
     "secure": false,

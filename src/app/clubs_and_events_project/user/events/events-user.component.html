@@ -49,6 +49,156 @@
             </div>
         </div>
 
+        <!-- ══════════════════════════════════════════════════════════ -->
+        <!-- ML RECOMMENDATION SECTION                                  -->
+        <!-- Algorithm: Content-Based Filtering (adapted from notebook) -->
+        <!-- ══════════════════════════════════════════════════════════ -->
+        @if (showRecommendations) {
+        <div class="mb-14">
+
+            <!-- Section Header -->
+            <div class="flex items-center justify-between mb-6">
+                <div class="flex items-center gap-3">
+                    <div class="bg-gradient-to-br from-amber-400 to-orange-500 p-2.5 rounded-xl shadow-lg">
+                        <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                        </svg>
+                    </div>
+                    <div>
+                        <h2 class="text-xl font-extrabold text-[#F7EDE2] tracking-tight">Recommended for You</h2>
+                        <p class="text-[#F7EDE2]/40 text-xs font-medium tracking-wide">
+                            Powered by ML · {{ recommendationInfo?.algorithm || 'Content-Based Filtering' }}
+                        </p>
+                    </div>
+                </div>
+                @if (recommendationInfo) {
+                <div class="flex items-center gap-2 px-4 py-2 bg-white/5 rounded-xl border border-white/10">
+                    <div class="w-2 h-2 rounded-full animate-pulse"
+                        [class]="recommendationInfo.userEngagementLevel === 'High' ? 'bg-green-400' :
+                                 recommendationInfo.userEngagementLevel === 'Medium' ? 'bg-yellow-400' : 'bg-blue-400'">
+                    </div>
+                    <span class="text-[#F7EDE2]/60 text-xs font-bold uppercase tracking-widest">
+                        {{ recommendationInfo.userEngagementLevel }} Engagement
+                    </span>
+                </div>
+                }
+            </div>
+
+            <!-- Loading Skeleton -->
+            @if (isLoadingRecommendations) {
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                @for (i of [1,2,3,4]; track i) {
+                <div class="bg-white/5 rounded-2xl p-5 animate-pulse border border-white/5">
+                    <div class="h-4 bg-white/10 rounded-lg mb-3 w-2/3"></div>
+                    <div class="h-3 bg-white/10 rounded-lg mb-2 w-full"></div>
+                    <div class="h-3 bg-white/10 rounded-lg mb-4 w-3/4"></div>
+                    <div class="h-2 bg-white/10 rounded-full mb-1 w-full"></div>
+                    <div class="h-8 bg-white/10 rounded-xl mt-4 w-full"></div>
+                </div>
+                }
+            </div>
+            }
+
+            <!-- Recommendation Cards -->
+            @if (!isLoadingRecommendations && recommendations.length > 0) {
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                @for (rec of recommendations; track rec.eventId) {
+                <div class="group relative bg-gradient-to-br from-white/10 to-white/5 rounded-2xl border border-white/10
+                            hover:border-white/25 hover:from-white/15 hover:to-white/8 transition-all duration-300
+                            shadow-lg hover:shadow-2xl overflow-hidden cursor-pointer"
+                    (click)="openRecommendedEvent(rec)">
+
+                    <!-- Score Bar (top) -->
+                    <div class="h-1 w-full bg-white/10">
+                        <div class="h-full transition-all duration-700 rounded-full"
+                            [class]="getScoreBarColor(rec.percentage)"
+                            [style.width.%]="rec.percentage">
+                        </div>
+                    </div>
+
+                    <div class="p-5">
+                        <!-- Badge Row -->
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="text-[9px] font-black uppercase tracking-widest px-2.5 py-1 rounded-full border"
+                                [class]="getBadgeColor(rec.badge)">
+                                {{ rec.badge }}
+                            </span>
+                            <span class="text-[#F7EDE2]/40 text-xs font-bold">{{ rec.percentage }}%</span>
+                        </div>
+
+                        <!-- Title -->
+                        <h3 class="text-[#F7EDE2] font-bold text-sm leading-snug mb-2 line-clamp-2 group-hover:text-white transition-colors">
+                            {{ rec.title }}
+                        </h3>
+
+                        <!-- Reason -->
+                        <p class="text-[#F7EDE2]/50 text-xs leading-relaxed mb-4 line-clamp-2">
+                            {{ rec.reason }}
+                        </p>
+
+                        <!-- Score Progress Bar -->
+                        <div class="mb-3">
+                            <div class="flex items-center justify-between mb-1">
+                                <span class="text-[#F7EDE2]/30 text-[9px] font-bold uppercase tracking-widest">Match Score</span>
+                                <span class="text-[#F7EDE2]/60 text-[9px] font-bold">{{ rec.score }}</span>
+                            </div>
+                            <div class="h-1.5 bg-white/10 rounded-full overflow-hidden">
+                                <div class="h-full rounded-full transition-all duration-1000"
+                                    [class]="getScoreBarColor(rec.percentage)"
+                                    [style.width.%]="rec.percentage">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Engagement Tag -->
+                        <div class="flex items-center gap-1.5 mb-4">
+                            <svg class="w-3 h-3 text-[#F7EDE2]/30" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                            </svg>
+                            <span class="text-[#F7EDE2]/40 text-[9px] font-bold uppercase tracking-widest">
+                                {{ rec.engagementTag }}
+                            </span>
+                        </div>
+
+                        <!-- CTA Button -->
+                        <button class="w-full py-2.5 bg-[#F7EDE2]/10 hover:bg-[#F7EDE2] text-[#F7EDE2] hover:text-[#2D5757]
+                                       font-bold text-xs rounded-xl transition-all duration-200 border border-white/10
+                                       hover:border-transparent flex items-center justify-center gap-2 group/btn">
+                            <svg class="w-3.5 h-3.5 group-hover/btn:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                            </svg>
+                            Register Now
+                        </button>
+                    </div>
+                </div>
+                }
+            </div>
+
+            <!-- Info footer -->
+            <p class="mt-4 text-center text-[#F7EDE2]/20 text-[10px] font-medium tracking-wide">
+                {{ recommendations.length }} events recommended from {{ recommendationInfo?.totalAnalyzed || 0 }} analyzed
+                — Engagement level: <strong class="text-[#F7EDE2]/35">{{ recommendationInfo?.userEngagementLevel }}</strong>
+            </p>
+            }
+
+            <!-- Empty state for recommendations -->
+            @if (!isLoadingRecommendations && recommendations.length === 0) {
+            <div class="text-center py-8 bg-white/5 rounded-2xl border border-white/5">
+                <p class="text-[#F7EDE2]/30 text-sm font-medium">No recommendations yet. Explore some events first!</p>
+            </div>
+            }
+        </div>
+        }
+
+        <!-- Divider -->
+        <div class="flex items-center gap-4 mb-10">
+            <div class="flex-1 h-px bg-white/10"></div>
+            <span class="text-[#F7EDE2]/30 text-xs font-bold uppercase tracking-widest">All Events</span>
+            <div class="flex-1 h-px bg-white/10"></div>
+        </div>
+
         <!-- Page Title -->
         <div class="text-center mb-16">
             <h2 class="text-4xl font-extrabold text-[#F7EDE2] mb-4 tracking-tight">Upcoming Events</h2>

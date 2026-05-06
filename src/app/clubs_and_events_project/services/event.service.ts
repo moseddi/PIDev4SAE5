@@ -1,10 +1,53 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { tap, catchError } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 import { throwError } from 'rxjs';
 import { Event, EventCreateRequest, EventUpdateRequest, EventCreateRequestBackend, EventUpdateRequestBackend } from '../models/event.model';
 import { AuthService } from '../../services/auth.service';
+
+// ─── Recommendation Types ────────────────────────────────────────────────────
+
+export interface RecommendedEvent {
+  eventId: number;
+  title: string;
+  score: number;
+  percentage: number;
+  reason: string;
+  badge: string;
+  engagementTag: string;
+}
+
+export interface RecommendationResponse {
+  recommendations: RecommendedEvent[];
+  userEngagementLevel: string;
+  algorithm: string;
+  totalAnalyzed: number;
+}
+
+export interface RecommendationRequest {
+  user: {
+    userId: number;
+    specialty?: string;
+    engagementLevel?: string;
+    registeredEventTypes?: string[];
+    registeredClubIds?: number[];
+    totalRegistrations?: number;
+  };
+  events: {
+    id: number;
+    title: string;
+    type: string;
+    status: string;
+    maxParticipants: number;
+    currentParticipants: number;
+    clubId?: number;
+    estimatedCost?: number;
+  }[];
+  topN?: number;
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
 
 @Injectable({
   providedIn: 'root'
@@ -12,6 +55,7 @@ import { AuthService } from '../../services/auth.service';
 export class EventService {
 
   private apiUrl = '/api/events';
+  private mlApiUrl = '/ml-api';
 
   constructor(
     private http: HttpClient,
@@ -105,5 +149,79 @@ export class EventService {
 
   promoteFromWaitlist(regId: number): Observable<any> {
     return this.http.post(`${this.apiUrl}/registrations/${regId}/promote`, {}, this.getHttpOptions());
+  }
+
+  /**
+   * Get personalized event recommendations using the ML API.
+   * Adapted from Notebook Objective 3: Système de Recommandation.
+   * Falls back to client-side scoring if the Python API is unavailable.
+   */
+  getRecommendations(request: RecommendationRequest): Observable<RecommendationResponse> {
+    return this.http.post<RecommendationResponse>(
+      `${this.mlApiUrl}/recommend`,
+      request,
+      {
+        headers: new HttpHeaders({
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        })
+      }
+    ).pipe(
+      catchError(err => {
+        console.warn('[Recommendations] Python API unavailable, using client-side fallback:', err.message);
+        return of(this.fallbackRecommendations(request));
+      })
+    );
+  }
+
+  /**
+   * Client-side fallback — mirrors the Python algorithm.
+   * Activated automatically when the Python API is offline.
+   */
+  private fallbackRecommendations(request: RecommendationRequest): RecommendationResponse {
+    const typeScores: Record<string, number> = {
+      'Competition': 0.92, 'Workshop': 0.88,
+      'Conference': 0.74,  'Seminar': 0.68, 'Other': 0.60
+    };
+    const totalReg = request.user.totalRegistrations || 0;
+    const engagementLevel = totalReg >= 5 ? 'High' : totalReg >= 2 ? 'Medium' : 'Low';
+    const multipliers: Record<string, number> = { High: 1.25, Medium: 1.0, Low: 0.9 };
+
+    const scored = request.events
+      .filter(e => !['COMPLETED', 'CANCELLED'].includes((e.status || '').toUpperCase()))
+      .map(e => {
+        const eType = e.type || 'Other';
+        let score = (typeScores[eType] || 0.60) * 0.25;
+        if ((request.user.registeredEventTypes || []).includes(eType)) score += 0.20;
+        const fillRate = e.maxParticipants > 0 ? e.currentParticipants / e.maxParticipants : 0;
+        if (fillRate >= 0.3 && fillRate <= 0.75) score += 0.15;
+        score += 0.08;
+        score *= (multipliers[engagementLevel] || 1.0);
+        score = Math.min(1.0, score);
+        const pct = Math.round(score * 100);
+        const badge = score >= 0.85 ? '🏆 Top Pick' : score >= 0.75 ? '🔥 Trending' :
+                      score >= 0.65 ? '✨ Perfect Match' : '👍 Recommended';
+        return {
+          eventId: e.id,
+          title: e.title,
+          score: Math.round(score * 1000) / 1000,
+          percentage: pct,
+          reason: (request.user.registeredEventTypes || []).includes(eType)
+            ? `Matches your interest in ${eType}s`
+            : `Recommended ${eType} event`,
+          badge,
+          engagementTag: engagementLevel === 'High' ? 'For Active Members' :
+                         engagementLevel === 'Low'  ? 'Great for Beginners' : 'You Might Like This'
+        } as RecommendedEvent;
+      })
+      .sort((a, b) => b.score - a.score)
+      .slice(0, request.topN || 5);
+
+    return {
+      recommendations: scored,
+      userEngagementLevel: engagementLevel,
+      algorithm: 'Client-Side Fallback (mirrors Python ML engine)',
+      totalAnalyzed: request.events.length
+    };
   }
 }
