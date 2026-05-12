@@ -1,0 +1,1 @@
+// src/main/java/com/example/eureka/Application.java - contenu minimal pour le projet

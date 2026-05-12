@@ -1,0 +1,1 @@
+// src/main/java/com/example/gateway/Application.java - contenu minimal pour le projet
