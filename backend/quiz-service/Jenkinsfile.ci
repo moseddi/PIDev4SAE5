@@ -1,0 +1,40 @@
+pipeline {
+    agent any
+
+    tools {
+        maven 'maven3'
+    }
+
+    environment {
+        SONAR_TOKEN = credentials('sonar-cloud-token')
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Build & Unit Tests') {
+            steps {
+                sh 'mvn clean verify'
+            }
+        }
+
+        stage('SonarQube Analysis') {
+            steps {
+                sh "mvn sonar:sonar -Dsonar.projectKey=fatmasboui_Esprit-PiDev-4SAE5-2026-WallStreetEnglish-Quiz-MS -Dsonar.organization=fatmasboui -Dsonar.host.url=https://sonarcloud.io -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml -Dsonar.token=\${SONAR_TOKEN}"
+            }
+        }
+    }
+
+    post {
+        success {
+            echo "CI Pipeline (Validation) réussie !"
+        }
+        failure {
+            echo "CI Pipeline échouée. Réparez le code avant de déployer."
+        }
+    }
+}

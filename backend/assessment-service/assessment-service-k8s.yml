@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: assessment-service
+  namespace: assessment-ms
+  labels:
+    app: assessment-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: assessment-service
+  template:
+    metadata:
+      labels:
+        app: assessment-service
+    spec:
+      containers:
+        - name: assessment-service
+          image: fatmasboui/assessment-service:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8088
+          env:
+            - name: SPRING_DATASOURCE_URL
+              value: jdbc:mysql://mysql-service:3306/assessment_db?createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true&useSSL=false
+            - name: SPRING_DATASOURCE_USERNAME
+              value: root
+            - name: SPRING_DATASOURCE_PASSWORD
+              value: root
+            - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
+              value: http://eureka-service:8761/eureka/
+            - name: SPRING_PROFILES_ACTIVE
+              value: "dev"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: assessment-service
+  namespace: assessment-ms
+spec:
+  selector:
+    app: assessment-service
+  ports:
+    - protocol: TCP
+      port: 8088
+      targetPort: 8088
+      nodePort: 30088
+  type: NodePort

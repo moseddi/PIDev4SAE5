@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: quiz-service
+  namespace: assessment-ms
+  labels:
+    app: quiz-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: quiz-service
+  template:
+    metadata:
+      labels:
+        app: quiz-service
+    spec:
+      containers:
+        - name: quiz-service
+          image: fatmasboui/quiz-service:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8085
+          env:
+            - name: SPRING_DATASOURCE_URL
+              value: jdbc:mysql://mysql-service:3306/quiz_db?createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true&useSSL=false
+            - name: SPRING_DATASOURCE_USERNAME
+              value: root
+            - name: SPRING_DATASOURCE_PASSWORD
+              value: root
+            - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
+              value: http://eureka-service:8761/eureka/
+            - name: SPRING_PROFILES_ACTIVE
+              value: "dev"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: quiz-service
+  namespace: assessment-ms
+spec:
+  selector:
+    app: quiz-service
+  ports:
+    - protocol: TCP
+      port: 8085
+      targetPort: 8085
+      nodePort: 30085
+  type: NodePort

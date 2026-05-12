@@ -1,0 +1,33 @@
+name: Quiz Service CI
+
+on:
+  push:
+    branches:
+      - main
+      - quizMS
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    name: Build and Analyze
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Build and analyze
+        env:
+          SONAR_TOKEN: ${{ secrets.sonartoken }}
+        run: mvn clean verify sonar:sonar -Dsonar.token=$SONAR_TOKEN
