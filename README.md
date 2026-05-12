@@ -1,4 +1,4 @@
-# English School Platform - Monorepo (Branch: fatma)
+
 
 Ce dépôt centralise l'ensemble du projet **English School Platform**. Il est organisé selon une architecture **Monorepo** regroupant le frontend et les microservices backend.
 
